@@ -1,6 +1,15 @@
 import { pythonDomain } from "@/domains/python";
 import { postgresqlDomain } from "@/domains/postgresql";
 import { redisStreamsDomain } from "@/domains/redisStreams";
+import { springBootDomain } from "@/domains/springBoot";
+import { javaDomain } from "@/domains/java";
+import { sqldDomain } from "@/domains/sqld";
+import { informationProcessingPracticalDomain } from "@/domains/informationProcessingPractical";
+import { linuxDomain } from "@/domains/linux";
+import { kafkaDomain } from "@/domains/kafka";
+import { sparkDomain } from "@/domains/spark";
+import { flinkDomain } from "@/domains/flink";
+import { dsaDomain } from "@/domains/dsa";
 import type { LearningDomain as LearningDomainConfig, TrackId } from "@/data/dojoTypes";
 
 export type {
@@ -12,7 +21,20 @@ export type {
   TrackId
 } from "@/data/dojoTypes";
 
-export const learningDomains = [pythonDomain, postgresqlDomain, redisStreamsDomain] satisfies LearningDomainConfig[];
+export const learningDomains = [
+  pythonDomain,
+  postgresqlDomain,
+  redisStreamsDomain,
+  springBootDomain,
+  javaDomain,
+  sqldDomain,
+  informationProcessingPracticalDomain,
+  linuxDomain,
+  kafkaDomain,
+  sparkDomain,
+  flinkDomain,
+  dsaDomain
+] satisfies LearningDomainConfig[];
 
 export const defaultDomain: LearningDomainConfig = pythonDomain;
 

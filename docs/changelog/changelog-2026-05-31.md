@@ -42,3 +42,8 @@
 - Added a reusable curriculum factory and full topic banks so Python expands to 300 drills, while PostgreSQL and Redis Streams expand to 296 drills each, preserving Pick, Reverse, Input, and Debug modes.
 - Raised the full-curriculum test floor to at least 280 drills per registered domain and at least 70 drills per track so future edits cannot silently return to a thin sample set.
 - Added `data/curriculumRequirements.ts` and `docs/curriculum-audit.md` so the full-curriculum claim is checked against required concept coverage, not only drill counts.
+- Researched current official sources before adding the next domain set: Spring Boot 4.0.6 docs, Java SE 26 docs, DataQ SQLD pages, Q-Net Information Processing Engineer pages, Linux kernel/man-pages/coreutils/systemd docs, Apache Kafka 4.x docs, Apache Spark 4.1.2 docs, Apache Flink 2.2 docs, and canonical DSA references from MIT OCW/OpenDSA plus platform collection APIs.
+- Added a small `createLearningDomain` factory because future domains should only need metadata, tracks, token backdrop terms, cards, and a topic bank rather than duplicated shell wiring.
+- Added a `defineTopics` helper so each domain can declare official-source-backed concepts once and still generate Pick, Reverse, Input, and Debug drills consistently.
+- Added full beginner-to-expertise curricula for Spring Boot, Java, SQLD, Information Processing Practical, Linux, Apache Kafka, Apache Spark, Apache Flink, and Data Structures and Algorithms. Each new domain has four tracks, eighteen concepts per track, and 288 generated drills.
+- Updated the domain switcher layout to wrap and scroll cleanly because twelve registered domains no longer fit the earlier three-domain grid or compact sidebar assumptions.

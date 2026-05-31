@@ -1,4 +1,18 @@
-import type { DrillMode, TrackId } from "@/data/dojoTypes";
+import type { DrillMode, LearningTrack, TrackId } from "@/data/dojoTypes";
+import type { CurriculumTopic } from "@/data/curriculumFactory";
+import { conceptsForTrack } from "@/data/topicBank";
+import { topics as springBootTopics, tracks as springBootTracks } from "@/data/springBootCurriculum";
+import { topics as javaTopics, tracks as javaTracks } from "@/data/javaCurriculum";
+import { topics as sqldTopics, tracks as sqldTracks } from "@/data/sqldCurriculum";
+import {
+  topics as informationProcessingPracticalTopics,
+  tracks as informationProcessingPracticalTracks
+} from "@/data/informationProcessingPracticalCurriculum";
+import { topics as linuxTopics, tracks as linuxTracks } from "@/data/linuxCurriculum";
+import { topics as kafkaTopics, tracks as kafkaTracks } from "@/data/kafkaCurriculum";
+import { topics as sparkTopics, tracks as sparkTracks } from "@/data/sparkCurriculum";
+import { topics as flinkTopics, tracks as flinkTracks } from "@/data/flinkCurriculum";
+import { topics as dsaTopics, tracks as dsaTracks } from "@/data/dsaCurriculum";
 
 type TrackRequirement = {
   id: TrackId;
@@ -17,6 +31,26 @@ export type DomainCurriculumRequirement = {
 
 const allModes: DrillMode[] = ["pick", "reverse", "input", "debug"];
 const minimumTrackDrills = 70;
+
+function buildTopicRequirement(
+  domainId: string,
+  tracks: readonly LearningTrack[],
+  topics: readonly CurriculumTopic[],
+  sourceRefs: string[]
+): DomainCurriculumRequirement {
+  return {
+    domainId,
+    minimumDrills: 280,
+    modes: allModes,
+    sourceRefs,
+    tracks: tracks.map((track) => ({
+      id: track.id,
+      level: track.level,
+      minimumDrills: minimumTrackDrills,
+      requiredConcepts: conceptsForTrack(topics, track.id)
+    }))
+  };
+}
 
 export const curriculumRequirements: DomainCurriculumRequirement[] = [
   {
@@ -319,5 +353,58 @@ export const curriculumRequirements: DomainCurriculumRequirement[] = [
         ]
       }
     ]
-  }
+  },
+  buildTopicRequirement("spring-boot", springBootTracks, springBootTopics, [
+    "https://docs.spring.io/spring-boot/index.html",
+    "https://docs.spring.io/spring-boot/4.0.6/reference/",
+    "https://docs.spring.io/spring-boot/4.0.6/api/"
+  ]),
+  buildTopicRequirement("java", javaTracks, javaTopics, [
+    "https://docs.oracle.com/en/java/javase/26/",
+    "https://docs.oracle.com/en/java/javase/26/docs/api/index.html",
+    "https://openjdk.org/projects/jdk/"
+  ]),
+  buildTopicRequirement("sqld", sqldTracks, sqldTopics, [
+    "https://www.dataq.or.kr/www/sub/a_04.do",
+    "https://www.dataq.or.kr/www/sub/a_04_01.do"
+  ]),
+  buildTopicRequirement(
+    "information-processing-practical",
+    informationProcessingPracticalTracks,
+    informationProcessingPracticalTopics,
+    [
+      "https://www.q-net.or.kr/crf005.do?id=crf00503s02&jmCd=1320",
+      "https://www.q-net.or.kr/crf005.do?gId=&gSite=Q&id=crf00503s02&jmCd=1320&jmInfoDivCcd=B04"
+    ]
+  ),
+  buildTopicRequirement("linux", linuxTracks, linuxTopics, [
+    "https://docs.kernel.org/",
+    "https://www.man7.org/linux/man-pages/index.html",
+    "https://www.gnu.org/software/coreutils/manual/",
+    "https://www.freedesktop.org/software/systemd/man/latest/"
+  ]),
+  buildTopicRequirement("kafka", kafkaTracks, kafkaTopics, [
+    "https://kafka.apache.org/documentation/",
+    "https://kafka.apache.org/43/documentation.html",
+    "https://kafka.apache.org/documentation/streams/",
+    "https://kafka.apache.org/documentation/#connect"
+  ]),
+  buildTopicRequirement("spark", sparkTracks, sparkTopics, [
+    "https://spark.apache.org/documentation.html",
+    "https://spark.apache.org/docs/4.1.2/",
+    "https://spark.apache.org/docs/4.1.2/sql-programming-guide.html",
+    "https://spark.apache.org/docs/4.1.2/structured-streaming-programming-guide.html"
+  ]),
+  buildTopicRequirement("flink", flinkTracks, flinkTopics, [
+    "https://nightlies.apache.org/flink/flink-docs-release-2.2/",
+    "https://nightlies.apache.org/flink/flink-docs-release-2.2/docs/dev/datastream/overview/",
+    "https://nightlies.apache.org/flink/flink-docs-release-2.2/docs/dev/table/overview/",
+    "https://nightlies.apache.org/flink/flink-docs-release-2.2/docs/ops/state/checkpoints/"
+  ]),
+  buildTopicRequirement("dsa", dsaTracks, dsaTopics, [
+    "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+    "https://opendsa-server.cs.vt.edu/ODSA/Books/Everything/html/",
+    "https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/package-summary.html",
+    "https://docs.python.org/3/library/collections.html"
+  ])
 ];

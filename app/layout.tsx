@@ -5,7 +5,7 @@ import "./globals.css";
 const subjectList = learningDomains.map((domain) => domain.subject.name).join(", ");
 
 export const metadata: Metadata = {
-  title: "DojoLab - Learn Python, PostgreSQL, and Redis Streams",
+  title: `DojoLab - Learn ${learningDomains.length} technical domains`,
   description: `KanaDojo-inspired training for ${subjectList}, with reusable domains for more topics later.`,
   icons: {
     icon: [{ url: defaultDomain.metadata.iconPath, type: "image/svg+xml" }]

@@ -66,8 +66,9 @@ describe("training logic", () => {
 
   it("keeps each learning domain independently trainable", () => {
     const storageKeys = new Set(learningDomains.map((domain) => domain.storageKey));
+    const requiredDomainIds = curriculumRequirements.map((requirement) => requirement.domainId);
 
-    expect(learningDomains.map((domain) => domain.id)).toEqual(["python", "postgresql", "redis-streams"]);
+    expect(learningDomains.map((domain) => domain.id)).toEqual(requiredDomainIds);
     expect(storageKeys.size).toBe(learningDomains.length);
 
     for (const domain of learningDomains) {

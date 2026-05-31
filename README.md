@@ -1,6 +1,6 @@
 # DojoLab
 
-DojoLab is a KanaDojo-style learning app family for Python, PostgreSQL, and Redis Streams. It keeps the same dojo shell, short drills, typing practice, progress tracking, and click-sound feedback while swapping the learning material by domain.
+DojoLab is a KanaDojo-style learning app family for Python, PostgreSQL, Redis Streams, Spring Boot, Java, SQLD, Information Processing Practical, Linux, Apache Kafka, Apache Spark, Apache Flink, and Data Structures and Algorithms. It keeps the same dojo shell, short drills, typing practice, progress tracking, and click-sound feedback while swapping the learning material by domain.
 
 ## Repo Shape
 
@@ -11,8 +11,17 @@ This is one lightweight repo with two clear layers:
   - Python: `domains/python.ts` and `data/pythonCurriculum.ts`.
   - PostgreSQL: `domains/postgresql.ts` and `data/postgresqlCurriculum.ts`.
   - Redis Streams: `domains/redisStreams.ts` and `data/redisStreamsCurriculum.ts`.
+  - Spring Boot: `domains/springBoot.ts` and `data/springBootCurriculum.ts`.
+  - Java: `domains/java.ts` and `data/javaCurriculum.ts`.
+  - SQLD: `domains/sqld.ts` and `data/sqldCurriculum.ts`.
+  - Information Processing Practical: `domains/informationProcessingPractical.ts` and `data/informationProcessingPracticalCurriculum.ts`.
+  - Linux: `domains/linux.ts` and `data/linuxCurriculum.ts`.
+  - Apache Kafka: `domains/kafka.ts` and `data/kafkaCurriculum.ts`.
+  - Apache Spark: `domains/spark.ts` and `data/sparkCurriculum.ts`.
+  - Apache Flink: `domains/flink.ts` and `data/flinkCurriculum.ts`.
+  - Data Structures and Algorithms: `domains/dsa.ts` and `data/dsaCurriculum.ts`.
 
-`data/dojoDomain.ts` registers the available domains and picks the default. `data/curriculumRequirements.ts` records the required beginner-to-expertise concept map that tests enforce for every domain. To make another domain, add a new `domains/<name>.ts` module with its own tracks, drills, labels, tokens, marks, metadata, and storage key, then add it to `learningDomains` and the curriculum requirements.
+`data/dojoDomain.ts` registers the available domains and picks the default. `data/curriculumRequirements.ts` records the required beginner-to-expertise concept map that tests enforce for every domain. To make another domain, add a new `data/<name>Curriculum.ts` topic bank with four tracks, then wire a small `domains/<name>.ts` module through `createLearningDomain`.
 
 ## Curriculum Depth
 
@@ -22,7 +31,9 @@ PostgreSQL follows the same full-content rule with 296 drills: SQL Foundations, 
 
 Redis Streams follows the same full-content rule with 296 drills: Stream Basics, Producer Flow, Consumer Groups, and Reliability Lab move from XADD and IDs through trimming, event contracts, outbox patterns, consumer groups, pending entries, recovery, dead-letter streams, monitoring, Redis Cluster concerns, replay, capacity planning, and at-least-once processing.
 
-The full-curriculum floor is enforced in tests: every registered domain must keep at least 280 drills, every track must keep at least 70 drills, and every required concept must exist in Pick, Reverse, Input, and Debug modes. See `docs/curriculum-audit.md` for the completion criteria.
+Each newly added domain has 288 drills: four tracks, eighteen official-source-backed concepts per track, and four drill modes per concept. The Spring Boot, Java, SQLD, Information Processing Practical, Linux, Kafka, Spark, Flink, and DSA banks start at beginner recognition and move into production or exam expertise.
+
+The full-curriculum floor is enforced in tests: every registered domain must keep at least 280 drills, every track must keep at least 70 drills, and every required concept must exist in Pick, Reverse, Input, and Debug modes. See `docs/curriculum-audit.md` for the completion criteria and source references.
 
 ## Run
 
@@ -42,4 +53,4 @@ npm run build
 
 ## Source Note
 
-The product direction references `https://github.com/lingdojo/kana-dojo`. This implementation changes the learning material to Python, PostgreSQL, and Redis Streams, and uses KanaDojo's AGPL-3.0 `nk-creams` click samples. See `THIRD_PARTY_NOTICES.md`.
+The product direction references `https://github.com/lingdojo/kana-dojo`. This implementation changes the learning material to technical domains and uses KanaDojo's AGPL-3.0 `nk-creams` click samples. See `THIRD_PARTY_NOTICES.md`.
