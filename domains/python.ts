@@ -10,7 +10,7 @@ export const pythonDomain = {
   },
   brand: {
     primaryName: "PythonDojo",
-    secondaryName: "파이썬道場",
+    secondaryName: "파이썬",
     displayName: "PythonDojo"
   },
   subject: {

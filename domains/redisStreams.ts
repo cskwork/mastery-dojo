@@ -10,7 +10,7 @@ export const redisStreamsDomain = {
   },
   brand: {
     primaryName: "StreamsDojo",
-    secondaryName: "Redis道場",
+    secondaryName: "Redis",
     displayName: "StreamsDojo"
   },
   subject: {

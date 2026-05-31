@@ -1,6 +1,6 @@
-# DojoLab
+# MasteryDojo
 
-DojoLab is a KanaDojo-style learning app family for Python, PostgreSQL, Redis Streams, Spring Boot, Java, SQLD, Information Processing Practical, Linux, Apache Kafka, Apache Spark, Apache Flink, and Data Structures and Algorithms. It keeps the same dojo shell, short drills, typing practice, progress tracking, and click-sound feedback while swapping the learning material by domain.
+MasteryDojo is a KanaDojo-style learning app family for Python, PostgreSQL, Redis Streams, Spring Boot, Java, SQLD, Information Processing Practical, Linux, Apache Kafka, Apache Spark, Apache Flink, and Data Structures and Algorithms. It keeps the same dojo shell, short drills, typing practice, progress tracking, and click-sound feedback while swapping the learning material by domain.
 
 ## Repo Shape
 

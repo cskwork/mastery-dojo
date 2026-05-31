@@ -6,7 +6,7 @@ export const dsaDomain = createLearningDomain({
   title: "DSADojo - Learn Data Structures and Algorithms from Beginner to Expertise",
   description: "KanaDojo-inspired data structures and algorithms drills from complexity to advanced patterns.",
   primaryName: "DSADojo",
-  secondaryName: "Algo道場",
+  secondaryName: "Algo",
   subjectName: "Data Structures and Algorithms",
   subjectAdjective: "DSA",
   storageKey: "dsa-dojo-progress-v1",

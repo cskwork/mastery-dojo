@@ -6,7 +6,7 @@ export const informationProcessingPracticalDomain = createLearningDomain({
   title: "PracticalDojo - Learn Information Processing Practical from Beginner to Expertise",
   description: "KanaDojo-inspired drills for the Korean Information Processing Engineer practical exam.",
   primaryName: "PracticalDojo",
-  secondaryName: "실기道場",
+  secondaryName: "실기",
   displayName: "InfoPractical",
   subjectName: "Information Processing Practical",
   subjectAdjective: "practical exam",

@@ -895,3 +895,271 @@ a {
     font-size: 16px;
   }
 }
+
+/* Theme toggle: light palette overrides the dark defaults under [data-theme="light"] */
+html {
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+:root[data-theme="light"] {
+  --kd-bg: #f1eefb;
+  --kd-bg-soft: rgba(255, 255, 255, 0.9);
+  --kd-panel: rgba(255, 255, 255, 0.92);
+  --kd-line: rgba(95, 70, 170, 0.2);
+  --kd-line-strong: rgba(95, 70, 170, 0.38);
+  --kd-accent: oklch(0.52 0.16 299.66);
+  --kd-mint: oklch(0.58 0.13 171.49);
+  --kd-text: #1f1b33;
+  --kd-muted: rgba(31, 27, 51, 0.72);
+  --kd-dim: rgba(31, 27, 51, 0.52);
+  --kd-shadow: 0 26px 90px rgba(120, 110, 170, 0.22);
+}
+
+:root[data-theme="light"] .kana-page {
+  background:
+    radial-gradient(circle at 50% 32%, rgba(165, 138, 235, 0.16), transparent 36%),
+    linear-gradient(180deg, #f7f5fe 0%, #ece8fa 100%);
+}
+
+:root[data-theme="light"] .kana-app-page {
+  background: linear-gradient(180deg, #f7f5fe 0%, #ece8fa 100%);
+}
+
+:root[data-theme="light"] .kana-sidebar {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+:root[data-theme="light"] .kana-domain-switcher button,
+:root[data-theme="light"] .kana-metric,
+:root[data-theme="light"] .kana-progress-track,
+:root[data-theme="light"] .kana-achievement {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+:root[data-theme="light"] .kana-action-bar {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+:root[data-theme="light"] .kana-drill-card pre,
+:root[data-theme="light"] .kana-concept-chip {
+  background: #1b1d2e;
+}
+
+/* Progress screen */
+.kana-progress-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.kana-progress-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 16px;
+  border: 1px solid var(--kd-line);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--kd-muted);
+  font-weight: 700;
+}
+
+.kana-progress-tabs button:hover,
+.kana-progress-tabs button.active {
+  color: var(--kd-accent);
+  background: rgba(206, 187, 255, 0.08);
+  box-shadow: inset 0 0 0 1px var(--kd-line-strong);
+}
+
+.kana-progress-panel {
+  margin-top: 16px;
+}
+
+.kana-progress-tracks {
+  margin-top: 20px;
+}
+
+.kana-progress-tracks h3 {
+  margin: 0 0 12px;
+  color: var(--kd-accent);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+}
+
+.kana-progress-track {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--kd-line);
+  border-radius: 16px;
+  background: rgba(19, 23, 42, 0.62);
+}
+
+.kana-progress-track-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.kana-progress-track-head strong {
+  flex: 1;
+  color: var(--kd-text);
+}
+
+.kana-progress-track-head small {
+  color: var(--kd-dim);
+}
+
+.kana-progress-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(206, 187, 255, 0.14);
+  overflow: hidden;
+}
+
+.kana-progress-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--kd-accent);
+}
+
+.kana-streak-hero {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 28px 0;
+  color: var(--kd-accent);
+}
+
+.kana-streak-hero strong {
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 56px;
+  line-height: 1;
+}
+
+.kana-streak-hero span {
+  color: var(--kd-dim);
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.kana-achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.kana-achievement {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid var(--kd-line);
+  border-radius: 16px;
+  background: rgba(19, 23, 42, 0.62);
+  color: var(--kd-muted);
+  opacity: 0.6;
+}
+
+.kana-achievement.unlocked {
+  opacity: 1;
+  color: var(--kd-accent);
+  box-shadow: inset 0 0 0 1px var(--kd-line-strong);
+}
+
+.kana-achievement strong {
+  color: var(--kd-text);
+  text-transform: capitalize;
+}
+
+.kana-achievement small {
+  color: var(--kd-dim);
+}
+
+.kana-achievement em {
+  font-style: normal;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Settings modal */
+.kana-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(5, 7, 18, 0.58);
+  backdrop-filter: blur(8px);
+}
+
+.kana-modal {
+  width: min(440px, 100%);
+  padding: 22px;
+  border: 1px solid var(--kd-line-strong);
+  border-radius: 20px;
+  background: var(--kd-panel);
+  box-shadow: var(--kd-shadow);
+}
+
+.kana-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.kana-modal-head h2 {
+  margin: 0;
+  color: var(--kd-accent);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+}
+
+.kana-modal-head button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--kd-line);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--kd-muted);
+}
+
+.kana-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid var(--kd-line);
+}
+
+.kana-setting-row strong {
+  display: block;
+  color: var(--kd-text);
+}
+
+.kana-setting-row small {
+  color: var(--kd-dim);
+}
+
+.kana-setting-row button {
+  min-width: 84px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--kd-line-strong);
+  border-radius: 12px;
+  background: rgba(206, 187, 255, 0.08);
+  color: var(--kd-accent);
+  font-weight: 700;
+}
+
+.kana-setting-row button.danger {
+  border-color: rgba(255, 126, 160, 0.5);
+  background: rgba(255, 126, 160, 0.1);
+  color: #ff91b3;
+}

@@ -1,4 +1,4 @@
-# PythonDojo Agent Notes
+# MasteryDojo Agent Notes
 
 ## Product Direction
 

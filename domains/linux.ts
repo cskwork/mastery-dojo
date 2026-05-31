@@ -6,7 +6,7 @@ export const linuxDomain = createLearningDomain({
   title: "LinuxDojo - Learn Linux from Beginner to Expertise",
   description: "KanaDojo-inspired Linux drills from shell basics to production operations.",
   primaryName: "LinuxDojo",
-  secondaryName: "Linux道場",
+  secondaryName: "Linux",
   subjectName: "Linux",
   storageKey: "linux-dojo-progress-v1",
   tokenPool: ["ls", "grep", "find", "chmod", "systemd", "ip", "ssh", "nft", "cgroup", "perf", "bpf", "sudo"],

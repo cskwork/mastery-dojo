@@ -6,7 +6,7 @@ export const sparkDomain = createLearningDomain({
   title: "SparkDojo - Learn Apache Spark from Beginner to Expertise",
   description: "KanaDojo-inspired Apache Spark drills from DataFrames to production pipelines.",
   primaryName: "SparkDojo",
-  secondaryName: "Spark道場",
+  secondaryName: "Spark",
   subjectName: "Apache Spark",
   subjectAdjective: "Spark",
   storageKey: "spark-dojo-progress-v1",

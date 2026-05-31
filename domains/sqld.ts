@@ -6,7 +6,7 @@ export const sqldDomain = createLearningDomain({
   title: "SQLDDojo - Learn SQLD from Beginner to Expertise",
   description: "KanaDojo-inspired SQLD drills aligned to the official DataQ SQL Developer exam scope.",
   primaryName: "SQLDDojo",
-  secondaryName: "SQLD道場",
+  secondaryName: "SQLD",
   subjectName: "SQLD",
   subjectAdjective: "SQL Developer exam",
   storageKey: "sqld-dojo-progress-v1",

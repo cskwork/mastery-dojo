@@ -6,7 +6,7 @@ export const kafkaDomain = createLearningDomain({
   title: "KafkaDojo - Learn Apache Kafka from Beginner to Expertise",
   description: "KanaDojo-inspired Apache Kafka drills from topics to production stream platforms.",
   primaryName: "KafkaDojo",
-  secondaryName: "Kafka道場",
+  secondaryName: "Kafka",
   subjectName: "Apache Kafka",
   subjectAdjective: "Kafka",
   storageKey: "kafka-dojo-progress-v1",

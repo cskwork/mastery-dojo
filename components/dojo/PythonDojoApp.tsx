@@ -3,14 +3,19 @@
 import {
   BarChart3,
   Code2,
+  Flame,
   Github,
   Home,
   Moon,
   Radio,
   Settings,
   SlidersHorizontal,
+  Sun,
+  TrendingUp,
+  Trophy,
   Volume2,
-  VolumeX
+  VolumeX,
+  X
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -33,6 +38,7 @@ import {
   getNextDrill,
   getTrackDrills,
   getTrackSummary,
+  getUnlockedAchievements,
   recordAttempt,
   type ProgressSnapshot
 } from "@/lib/training";
@@ -49,6 +55,9 @@ type Feedback = {
   state: "idle" | "correct" | "miss";
   text: string;
 };
+
+type ThemeMode = "dark" | "light";
+type ProgressTab = "statistics" | "streak" | "achievements";
 
 function readProgress(value: string | null): ProgressSnapshot {
   if (!value) return emptyProgress;
@@ -90,24 +99,29 @@ function TokenBackdrop({ domain }: { domain: LearningDomain }) {
 
 function HeaderControls({
   soundEnabled,
-  onTap,
-  onToggleSound
+  theme,
+  onToggleTheme,
+  onToggleSound,
+  onOpenSettings
 }: {
   soundEnabled: boolean;
-  onTap: () => void;
+  theme: ThemeMode;
+  onToggleTheme: () => void;
   onToggleSound: () => void;
+  onOpenSettings: () => void;
 }) {
   const SoundIcon = soundEnabled ? Volume2 : VolumeX;
+  const ThemeIcon = theme === "dark" ? Sun : Moon;
 
   return (
     <div className="kana-controls" aria-label="Display controls">
-      <button type="button" aria-label="Toggle theme" onClick={onTap}>
-        <Moon size={20} />
+      <button type="button" aria-label="Toggle theme" onClick={onToggleTheme}>
+        <ThemeIcon size={20} />
       </button>
       <button type="button" aria-label="Toggle sound" onClick={onToggleSound} aria-pressed={soundEnabled}>
         <SoundIcon size={20} />
       </button>
-      <button type="button" aria-label="Open settings" onClick={onTap}>
+      <button type="button" aria-label="Open settings" onClick={onOpenSettings}>
         <Settings size={20} />
       </button>
     </div>
@@ -217,18 +231,24 @@ function HomeScreen({
   activeId,
   domain,
   soundEnabled,
+  theme,
   onDomainChange,
   onPlay,
   onStart,
-  onToggleSound
+  onToggleSound,
+  onToggleTheme,
+  onOpenSettings
 }: {
   activeId: TrackId;
   domain: LearningDomain;
   soundEnabled: boolean;
+  theme: ThemeMode;
   onDomainChange: (domainId: string) => void;
   onPlay: (sound: DojoSound) => void;
   onStart: (id: TrackId) => void;
   onToggleSound: () => void;
+  onToggleTheme: () => void;
+  onOpenSettings: () => void;
 }) {
   const activeCard = domain.home.cards.find((card) => card.id === activeId);
   const activeLabel = activeCard?.label ?? getTrack(domain, activeId).title;
@@ -245,7 +265,13 @@ function HomeScreen({
             <span>{domain.brand.primaryName}</span>
             <span>{domain.brand.secondaryName}</span>
           </h1>
-          <HeaderControls soundEnabled={soundEnabled} onTap={() => onPlay("tap")} onToggleSound={onToggleSound} />
+          <HeaderControls
+            soundEnabled={soundEnabled}
+            theme={theme}
+            onToggleTheme={onToggleTheme}
+            onToggleSound={onToggleSound}
+            onOpenSettings={onOpenSettings}
+          />
         </header>
         <DomainSwitcher domain={domain} onSelect={onDomainChange} />
         <WelcomePanel activeLabel={activeLabel} domain={domain} />
@@ -265,21 +291,25 @@ function Sidebar({
   domain,
   progress,
   soundEnabled,
+  progressActive = false,
   onDomainChange,
   onHome,
   onPlay,
   onSelectTrack,
-  onToggleSound
+  onToggleSound,
+  onOpenProgress
 }: {
   activeId: TrackId;
   domain: LearningDomain;
   progress: ProgressSnapshot;
   soundEnabled: boolean;
+  progressActive?: boolean;
   onDomainChange: (domainId: string) => void;
   onHome: () => void;
   onPlay: (sound: DojoSound) => void;
   onSelectTrack: (id: TrackId) => void;
   onToggleSound: () => void;
+  onOpenProgress: () => void;
 }) {
   const SoundIcon = soundEnabled ? Volume2 : VolumeX;
 
@@ -295,7 +325,7 @@ function Sidebar({
           <Home size={24} />
           <span>Home</span>
         </button>
-        <button type="button" onClick={() => onPlay("tap")}>
+        <button type="button" className={progressActive ? "active" : ""} onClick={onOpenProgress}>
           <BarChart3 size={24} />
           <span>Progress</span>
           <small>{progress.completedIds.length}</small>
@@ -419,11 +449,15 @@ function TrainingView({
   mode,
   progress,
   soundEnabled,
+  theme,
   onDomainChange,
   onHome,
   onModeChange,
   onSelectTrack,
   onToggleSound,
+  onToggleTheme,
+  onOpenSettings,
+  onOpenProgress,
   onProgress,
   play
 }: {
@@ -432,11 +466,15 @@ function TrainingView({
   mode: DrillMode;
   progress: ProgressSnapshot;
   soundEnabled: boolean;
+  theme: ThemeMode;
   onDomainChange: (domainId: string) => void;
   onHome: () => void;
   onModeChange: (mode: DrillMode) => void;
   onSelectTrack: (id: TrackId) => void;
   onToggleSound: () => void;
+  onToggleTheme: () => void;
+  onOpenSettings: () => void;
+  onOpenProgress: () => void;
   onProgress: (progress: ProgressSnapshot) => void;
   play: (sound: DojoSound) => void;
 }) {
@@ -489,6 +527,7 @@ function TrainingView({
         onPlay={play}
         onSelectTrack={onSelectTrack}
         onToggleSound={onToggleSound}
+        onOpenProgress={onOpenProgress}
       />
       <section className="kana-dojo-main" aria-label={`${track.title} dojo`}>
         <header className="kana-dojo-title">
@@ -496,7 +535,13 @@ function TrainingView({
             <span>{getTrackMark(domain, track.id)}</span>
             {track.title}
           </h2>
-          <HeaderControls soundEnabled={soundEnabled} onTap={() => play("tap")} onToggleSound={onToggleSound} />
+          <HeaderControls
+            soundEnabled={soundEnabled}
+            theme={theme}
+            onToggleTheme={onToggleTheme}
+            onToggleSound={onToggleSound}
+            onOpenSettings={onOpenSettings}
+          />
         </header>
         <section className="kana-section-panel">
           <h3>{fillDomainTemplate(domain.training.welcomeTitleTemplate, { trackTitle: track.title.toLowerCase() })}</h3>
@@ -536,8 +581,253 @@ function TrainingView({
   );
 }
 
+const achievementDefs: Array<{ key: keyof LearningDomain["achievements"]; description: string }> = [
+  { key: "firstClear", description: "Clear your first drill." },
+  { key: "eightClears", description: "Clear eight drills." },
+  { key: "allTracksStarted", description: "Land at least one clear in every track." },
+  { key: "streakFive", description: "Reach a five-answer streak." },
+  { key: "highAccuracy", description: "Hold 85%+ accuracy across 10+ attempts." },
+  { key: "fullMastery", description: "Complete every drill in the domain." }
+];
+
+function ProgressTabsBar({ tab, onSelect }: { tab: ProgressTab; onSelect: (next: ProgressTab) => void }) {
+  const tabs: Array<{ id: ProgressTab; label: string; Icon: typeof TrendingUp }> = [
+    { id: "statistics", label: "Stats", Icon: TrendingUp },
+    { id: "streak", label: "Streak", Icon: Flame },
+    { id: "achievements", label: "Achievements", Icon: Trophy }
+  ];
+
+  return (
+    <div className="kana-progress-tabs" role="tablist" aria-label="Progress views">
+      {tabs.map(({ id, label, Icon }) => (
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === id}
+          className={tab === id ? "active" : ""}
+          key={id}
+          onClick={() => onSelect(id)}
+        >
+          <Icon size={18} />
+          <span>{label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function StatisticsPanel({ domain, progress }: { domain: LearningDomain; progress: ProgressSnapshot }) {
+  const totalDrills = domain.drills.length;
+  const completed = progress.completedIds.length;
+  const overallPercent = totalDrills === 0 ? 0 : Math.round((completed / totalDrills) * 100);
+
+  return (
+    <div className="kana-progress-panel">
+      <section className="kana-stat-grid" aria-label="Overall statistics">
+        <Metric label="XP" value={progress.xp} />
+        <Metric label="Attempts" value={progress.attempts} />
+        <Metric label="Correct" value={progress.correct} />
+        <Metric label="Accuracy" value={`${getAccuracy(progress)}%`} />
+        <Metric label="Cleared" value={`${completed}/${totalDrills}`} />
+        <Metric label="Complete" value={`${overallPercent}%`} />
+      </section>
+      <section className="kana-progress-tracks" aria-label="Track completion">
+        <h3>Tracks</h3>
+        {domain.tracks.map((track) => {
+          const summary = getTrackSummary(track.id, progress, domain);
+          return (
+            <div className="kana-progress-track" key={track.id}>
+              <div className="kana-progress-track-head">
+                <span className="kana-nav-mark">{getTrackMark(domain, track.id)}</span>
+                <strong>{track.title}</strong>
+                <small>
+                  {summary.completed}/{summary.total}
+                </small>
+              </div>
+              <div className="kana-progress-bar">
+                <span style={{ width: `${summary.percent}%` }} />
+              </div>
+            </div>
+          );
+        })}
+      </section>
+    </div>
+  );
+}
+
+function StreakPanel({ progress }: { progress: ProgressSnapshot }) {
+  return (
+    <div className="kana-progress-panel">
+      <section className="kana-streak-hero" aria-label="Current streak">
+        <Flame size={44} />
+        <strong>{progress.streak}</strong>
+        <span>current streak</span>
+      </section>
+      <section className="kana-stat-grid" aria-label="Streak statistics">
+        <Metric label="Current" value={progress.streak} />
+        <Metric label="Best" value={progress.bestStreak} />
+        <Metric label="Attempts" value={progress.attempts} />
+        <Metric label="Correct" value={progress.correct} />
+      </section>
+    </div>
+  );
+}
+
+function AchievementsPanel({ domain, progress }: { domain: LearningDomain; progress: ProgressSnapshot }) {
+  const unlocked = new Set(getUnlockedAchievements(progress, domain));
+
+  return (
+    <div className="kana-progress-panel">
+      <section className="kana-achievement-grid" aria-label="Achievements">
+        {achievementDefs.map(({ key, description }) => {
+          const name = domain.achievements[key];
+          const isUnlocked = unlocked.has(name);
+          return (
+            <article className={isUnlocked ? "kana-achievement unlocked" : "kana-achievement"} key={key}>
+              <Trophy size={20} />
+              <strong>{name}</strong>
+              <small>{description}</small>
+              <em>{isUnlocked ? "Unlocked" : "Locked"}</em>
+            </article>
+          );
+        })}
+      </section>
+    </div>
+  );
+}
+
+function ProgressView({
+  activeId,
+  domain,
+  progress,
+  soundEnabled,
+  theme,
+  tab,
+  onDomainChange,
+  onHome,
+  onSelectTrack,
+  onTabChange,
+  onToggleSound,
+  onToggleTheme,
+  onOpenSettings,
+  play
+}: {
+  activeId: TrackId;
+  domain: LearningDomain;
+  progress: ProgressSnapshot;
+  soundEnabled: boolean;
+  theme: ThemeMode;
+  tab: ProgressTab;
+  onDomainChange: (domainId: string) => void;
+  onHome: () => void;
+  onSelectTrack: (id: TrackId) => void;
+  onTabChange: (next: ProgressTab) => void;
+  onToggleSound: () => void;
+  onToggleTheme: () => void;
+  onOpenSettings: () => void;
+  play: (sound: DojoSound) => void;
+}) {
+  return (
+    <main className="kana-app-page">
+      <Sidebar
+        activeId={activeId}
+        domain={domain}
+        progress={progress}
+        soundEnabled={soundEnabled}
+        progressActive
+        onDomainChange={onDomainChange}
+        onHome={onHome}
+        onPlay={play}
+        onSelectTrack={onSelectTrack}
+        onToggleSound={onToggleSound}
+        onOpenProgress={() => play("tap")}
+      />
+      <section className="kana-dojo-main" aria-label="Progress">
+        <header className="kana-dojo-title">
+          <h2>
+            <span>
+              <BarChart3 size={18} />
+            </span>
+            Progress
+          </h2>
+          <HeaderControls
+            soundEnabled={soundEnabled}
+            theme={theme}
+            onToggleTheme={onToggleTheme}
+            onToggleSound={onToggleSound}
+            onOpenSettings={onOpenSettings}
+          />
+        </header>
+        <ProgressTabsBar tab={tab} onSelect={onTabChange} />
+        {tab === "statistics" ? <StatisticsPanel domain={domain} progress={progress} /> : null}
+        {tab === "streak" ? <StreakPanel progress={progress} /> : null}
+        {tab === "achievements" ? <AchievementsPanel domain={domain} progress={progress} /> : null}
+      </section>
+      <BottomMeta domain={domain} />
+    </main>
+  );
+}
+
+function SettingsOverlay({
+  domain,
+  theme,
+  soundEnabled,
+  onClose,
+  onToggleTheme,
+  onToggleSound,
+  onResetProgress
+}: {
+  domain: LearningDomain;
+  theme: ThemeMode;
+  soundEnabled: boolean;
+  onClose: () => void;
+  onToggleTheme: () => void;
+  onToggleSound: () => void;
+  onResetProgress: () => void;
+}) {
+  return (
+    <div className="kana-overlay" role="dialog" aria-modal="true" aria-label="Settings" onClick={onClose}>
+      <div className="kana-modal" onClick={(event) => event.stopPropagation()}>
+        <header className="kana-modal-head">
+          <h2>Settings</h2>
+          <button type="button" aria-label="Close settings" onClick={onClose}>
+            <X size={20} />
+          </button>
+        </header>
+        <div className="kana-setting-row">
+          <div>
+            <strong>Theme</strong>
+            <small>Light or dark appearance</small>
+          </div>
+          <button type="button" onClick={onToggleTheme}>
+            {theme === "dark" ? "Dark" : "Light"}
+          </button>
+        </div>
+        <div className="kana-setting-row">
+          <div>
+            <strong>Sound</strong>
+            <small>Drill feedback audio</small>
+          </div>
+          <button type="button" aria-pressed={soundEnabled} onClick={onToggleSound}>
+            {soundEnabled ? "On" : "Off"}
+          </button>
+        </div>
+        <div className="kana-setting-row">
+          <div>
+            <strong>Reset progress</strong>
+            <small>Clear {domain.brand.primaryName} XP, streak, and clears</small>
+          </div>
+          <button type="button" className="danger" onClick={onResetProgress}>
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function PythonDojoApp() {
-  const [view, setView] = useState<"home" | "dojo">("home");
+  const [view, setView] = useState<"home" | "dojo" | "progress">("home");
   const [domainId, setDomainId] = useState(defaultDomain.id);
   const domain = useMemo(() => getDomainById(domainId), [domainId]);
   const defaultTrackId = useMemo(() => getDefaultTrackId(domain), [domain]);
@@ -546,6 +836,9 @@ export function PythonDojoApp() {
   const [ready, setReady] = useState(false);
   const [loadedStorageKey, setLoadedStorageKey] = useState<string | null>(null);
   const [progress, setProgress] = useState<ProgressSnapshot>(emptyProgress);
+  const [theme, setTheme] = useState<ThemeMode>("dark");
+  const [progressTab, setProgressTab] = useState<ProgressTab>("statistics");
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const audio = useDojoAudio();
 
   useEffect(() => {
@@ -561,6 +854,16 @@ export function PythonDojoApp() {
       window.localStorage.setItem(domain.storageKey, JSON.stringify(progress));
     }
   }, [domain.storageKey, loadedStorageKey, progress, ready]);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem("dojo-theme");
+    if (stored === "light" || stored === "dark") setTheme(stored);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem("dojo-theme", theme);
+  }, [theme]);
 
   function changeDomain(nextDomainId: string) {
     audio.play(nextDomainId === domain.id ? "tap" : "confirm");
@@ -586,34 +889,93 @@ export function PythonDojoApp() {
     setView("home");
   }
 
-  if (view === "home") {
-    return (
+  function openProgress() {
+    audio.play("confirm");
+    setView("progress");
+  }
+
+  function toggleTheme() {
+    audio.play("tap");
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
+  }
+
+  function resetProgress() {
+    audio.play("tap");
+    setProgress(emptyProgress);
+    setSettingsOpen(false);
+  }
+
+  function openSettings() {
+    audio.play("tap");
+    setSettingsOpen(true);
+  }
+
+  const screen =
+    view === "home" ? (
       <HomeScreen
         activeId={activeId}
         domain={domain}
         soundEnabled={audio.enabled}
+        theme={theme}
         onDomainChange={changeDomain}
         onPlay={audio.play}
         onStart={startDojo}
         onToggleSound={audio.toggleSound}
+        onToggleTheme={toggleTheme}
+        onOpenSettings={openSettings}
+      />
+    ) : view === "progress" ? (
+      <ProgressView
+        activeId={activeId}
+        domain={domain}
+        progress={progress}
+        soundEnabled={audio.enabled}
+        theme={theme}
+        tab={progressTab}
+        onDomainChange={changeDomain}
+        onHome={goHome}
+        onSelectTrack={startDojo}
+        onTabChange={setProgressTab}
+        onToggleSound={audio.toggleSound}
+        onToggleTheme={toggleTheme}
+        onOpenSettings={openSettings}
+        play={audio.play}
+      />
+    ) : (
+      <TrainingView
+        activeId={activeId}
+        domain={domain}
+        mode={mode}
+        progress={progress}
+        soundEnabled={audio.enabled}
+        theme={theme}
+        onDomainChange={changeDomain}
+        onHome={goHome}
+        onModeChange={changeMode}
+        onSelectTrack={startDojo}
+        onToggleSound={audio.toggleSound}
+        onToggleTheme={toggleTheme}
+        onOpenSettings={openSettings}
+        onOpenProgress={openProgress}
+        onProgress={setProgress}
+        play={audio.play}
       />
     );
-  }
 
   return (
-    <TrainingView
-      activeId={activeId}
-      domain={domain}
-      mode={mode}
-      progress={progress}
-      soundEnabled={audio.enabled}
-      onDomainChange={changeDomain}
-      onHome={goHome}
-      onModeChange={changeMode}
-      onSelectTrack={startDojo}
-      onToggleSound={audio.toggleSound}
-      onProgress={setProgress}
-      play={audio.play}
-    />
+    <>
+      {screen}
+      {settingsOpen ? (
+        <SettingsOverlay
+          domain={domain}
+          theme={theme}
+          soundEnabled={audio.enabled}
+          onClose={() => setSettingsOpen(false)}
+          onToggleTheme={toggleTheme}
+          onToggleSound={audio.toggleSound}
+          onResetProgress={resetProgress}
+        />
+      ) : null}
+    </>
   );
 }

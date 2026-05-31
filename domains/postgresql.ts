@@ -10,7 +10,7 @@ export const postgresqlDomain = {
   },
   brand: {
     primaryName: "PostgresDojo",
-    secondaryName: "SQL道場",
+    secondaryName: "SQL",
     displayName: "PostgresDojo"
   },
   subject: {

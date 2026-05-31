@@ -6,7 +6,7 @@ export const javaDomain = createLearningDomain({
   title: "JavaDojo - Learn Java from Beginner to Expertise",
   description: "KanaDojo-inspired Java drills from JDK basics to runtime expertise.",
   primaryName: "JavaDojo",
-  secondaryName: "Java道場",
+  secondaryName: "Java",
   subjectName: "Java",
   storageKey: "java-dojo-progress-v1",
   tokenPool: ["class", "record", "var", "List", "Map", "JVM", "JFR", "Thread", "module", "sealed", "try", "Stream"],

@@ -6,7 +6,7 @@ export const springBootDomain = createLearningDomain({
   title: "SpringBootDojo - Learn Spring Boot from Beginner to Expertise",
   description: "KanaDojo-inspired Spring Boot drills from project setup to production operations.",
   primaryName: "SpringBootDojo",
-  secondaryName: "Spring道場",
+  secondaryName: "Spring",
   subjectName: "Spring Boot",
   storageKey: "spring-boot-dojo-progress-v1",
   tokenPool: ["@Bean", "@GetMapping", "Actuator", "JPA", "MVC", "AOT", "Boot", "Test", "HTTP", "OAuth2", "Kafka", "Profile"],

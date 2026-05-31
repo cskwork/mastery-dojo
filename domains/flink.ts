@@ -6,7 +6,7 @@ export const flinkDomain = createLearningDomain({
   title: "FlinkDojo - Learn Apache Flink from Beginner to Expertise",
   description: "KanaDojo-inspired Apache Flink drills from DataStream basics to stateful operations.",
   primaryName: "FlinkDojo",
-  secondaryName: "Flink道場",
+  secondaryName: "Flink",
   subjectName: "Apache Flink",
   subjectAdjective: "Flink",
   storageKey: "flink-dojo-progress-v1",
