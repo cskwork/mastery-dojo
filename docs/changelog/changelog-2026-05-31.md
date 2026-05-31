@@ -36,3 +36,5 @@
 - Added curriculum-depth tests requiring the Python domain to keep at least 14 drills per track and finish at an Expertise level.
 - Expanded the PostgreSQL curriculum to 56 drills across SQL Foundations, Query Fluency, Schema Design, and Production Lab, using current PostgreSQL documentation for SELECT, constraints, indexes, transactions, EXPLAIN, VACUUM, logical replication, and roles.
 - Raised the PostgreSQL Production Lab track to Expertise and extended curriculum-depth tests so Python and PostgreSQL both keep at least 14 drills per track.
+- Expanded the Redis Streams curriculum to 56 drills across Stream Basics, Producer Flow, Consumer Groups, and Reliability Lab, using current Redis command documentation for XADD, XREAD, XREADGROUP, XACK, XPENDING, XAUTOCLAIM, XINFO, and XTRIM.
+- Raised the Redis Streams Reliability Lab track to Expertise and extended curriculum-depth tests so all registered domains keep at least 14 drills per track.

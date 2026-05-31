@@ -20,7 +20,7 @@ Python is the reference full-content conversion. It currently spans Foundations,
 
 PostgreSQL now follows the same full-content rule: SQL Foundations, Query Fluency, Schema Design, and Production Lab each carry 14 drills, moving from SELECT basics through joins, constraints, indexes, transactions, EXPLAIN, VACUUM, replication, backup recovery, and least-privilege roles.
 
-Redis Streams is registered as a real domain with starter curriculum. It should be expanded with the same beginner-to-expertise density before being considered complete.
+Redis Streams now follows the same full-content rule: Stream Basics, Producer Flow, Consumer Groups, and Reliability Lab each carry 14 drills, moving from XADD and IDs through trimming, consumer groups, pending entries, recovery, monitoring, replay, and at-least-once processing.
 
 ## Run
 

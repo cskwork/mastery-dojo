@@ -25,7 +25,7 @@ export const tracks: LearningTrack[] = [
   {
     id: "stream-operations",
     title: "Reliability Lab",
-    level: "Advanced",
+    level: "Expertise",
     focus: "recovery, backpressure, monitoring, replay",
     accent: "#5b8bd8"
   }
@@ -84,6 +84,143 @@ export const drills: LearningDrill[] = [
     explanation: "XADD needs pairs such as user_id 42 action signup."
   },
   {
+    id: "stream-foundations-id-format",
+    trackId: "stream-foundations",
+    mode: "pick",
+    level: 1,
+    concept: "ID format",
+    prompt: "What does a typical Redis stream ID look like?",
+    answer: "milliseconds-sequence",
+    choices: ["milliseconds-sequence", "uuid-only", "topic:partition:offset", "json timestamp field"],
+    hint: "It has two numeric parts separated by a hyphen.",
+    explanation: "A stream ID such as 1717000000000-0 combines a millisecond time part with a sequence part."
+  },
+  {
+    id: "stream-foundations-xlen",
+    trackId: "stream-foundations",
+    mode: "input",
+    level: 2,
+    concept: "XLEN",
+    prompt: "Which command returns the number of entries in a stream?",
+    answer: "xlen",
+    acceptedAnswers: ["XLEN"],
+    choices: ["XLEN", "LLEN", "SCARD", "COUNT"],
+    hint: "It is the stream counterpart to length checks.",
+    explanation: "XLEN mystream returns the stream's entry count."
+  },
+  {
+    id: "stream-foundations-bounds",
+    trackId: "stream-foundations",
+    mode: "reverse",
+    level: 2,
+    concept: "range bounds",
+    prompt: "In XRANGE, which bounds mean from the smallest ID to the largest ID?",
+    answer: "- +",
+    acceptedAnswers: ["- to +", "minus plus"],
+    choices: ["- +", "0 $", "* >", "START END"],
+    hint: "Redis uses symbolic minimum and maximum stream IDs.",
+    explanation: "XRANGE mystream - + returns entries from the stream's first ID through its last ID."
+  },
+  {
+    id: "stream-foundations-xrevrange",
+    trackId: "stream-foundations",
+    mode: "pick",
+    level: 2,
+    concept: "XREVRANGE",
+    prompt: "Which command reads stream entries newest-first?",
+    answer: "XREVRANGE",
+    choices: ["XREVRANGE", "XRANGE DESC", "XREAD REVERSE", "XTAIL"],
+    hint: "It is the reverse range command.",
+    explanation: "XREVRANGE returns entries in descending ID order."
+  },
+  {
+    id: "stream-foundations-xread",
+    trackId: "stream-foundations",
+    mode: "reverse",
+    level: 3,
+    concept: "XREAD",
+    prompt: "Which command reads from one or more streams without a consumer group?",
+    answer: "XREAD",
+    choices: ["XREAD", "XREADGROUP", "XRANGEGROUP", "SUBSCRIBE"],
+    hint: "Consumer groups add GROUP to the read command.",
+    explanation: "XREAD reads stream entries directly and can block for new entries."
+  },
+  {
+    id: "stream-foundations-block",
+    trackId: "stream-foundations",
+    mode: "input",
+    level: 3,
+    concept: "blocking reads",
+    prompt: "Which XREAD option waits for entries instead of returning immediately?",
+    answer: "block",
+    acceptedAnswers: ["BLOCK", "block milliseconds"],
+    choices: ["BLOCK", "WAIT", "SLEEP", "HOLD"],
+    hint: "It takes a millisecond timeout.",
+    explanation: "XREAD BLOCK 5000 STREAMS events $ waits up to five seconds for a new entry."
+  },
+  {
+    id: "stream-foundations-multi-stream",
+    trackId: "stream-foundations",
+    mode: "pick",
+    level: 3,
+    concept: "STREAMS clause",
+    prompt: "Which XREAD shape reads two streams from explicit IDs?",
+    answer: "XREAD STREAMS orders payments 0-0 0-0",
+    choices: [
+      "XREAD STREAMS orders payments 0-0 0-0",
+      "XREAD orders 0-0 payments 0-0",
+      "XREAD STREAM orders:0-0 payments:0-0",
+      "XREAD MULTI orders payments"
+    ],
+    hint: "List stream keys first, then the same number of IDs.",
+    explanation: "The STREAMS clause groups keys before offsets, so each stream key has a matching ID."
+  },
+  {
+    id: "stream-foundations-debug-start-id",
+    trackId: "stream-foundations",
+    mode: "debug",
+    level: 3,
+    concept: "replay start",
+    prompt: "Why does this replay miss the first stream entry?",
+    answer: "XREAD returns entries after the supplied ID",
+    acceptedAnswers: ["after supplied id", "use 0", "xread is exclusive"],
+    choices: [
+      "XREAD returns entries after the supplied ID",
+      "Redis streams cannot replay history",
+      "BLOCK must always be zero",
+      "XREAD requires a consumer group"
+    ],
+    code: "XREAD STREAMS events 0-0",
+    hint: "The ID is the last seen ID, not an inclusive lower bound.",
+    explanation: "For XREAD, Redis returns entries with IDs greater than the supplied ID. Use 0 to include the first 0-0 style entry."
+  },
+  {
+    id: "stream-foundations-debug-old-id",
+    trackId: "stream-foundations",
+    mode: "debug",
+    level: 4,
+    concept: "monotonic IDs",
+    prompt: "Why can this second append fail?",
+    answer: "Stream IDs must increase",
+    acceptedAnswers: ["ids must increase", "id not greater", "monotonic ids"],
+    choices: ["Stream IDs must increase", "XADD cannot use explicit IDs", "Fields must be JSON", "The stream key expired"],
+    code: "XADD events 1000-0 type first\nXADD events 999-0 type second",
+    hint: "A new explicit ID must be greater than the last stream ID.",
+    explanation: "Redis rejects a stream entry ID that is not greater than the stream's top ID."
+  },
+  {
+    id: "stream-foundations-xdel",
+    trackId: "stream-foundations",
+    mode: "reverse",
+    level: 4,
+    concept: "XDEL",
+    prompt: "Which command removes specific entries by ID from a stream?",
+    answer: "XDEL",
+    choices: ["XDEL", "DELENTRY", "XACK", "XTRIM ID"],
+    hint: "It deletes entries, not pending references.",
+    explanation: "XDEL key id removes the listed stream entries while consumer-group state may still reference delivered IDs."
+  },
+  {
     id: "stream-producers-basic",
     trackId: "stream-producers",
     mode: "pick",
@@ -137,7 +274,154 @@ export const drills: LearningDrill[] = [
     choices: ["Read from 0-0 instead of $", "Delete the stream", "Use SET before XREAD", "Disable blocking"],
     code: "XREAD STREAMS events $",
     hint: "$ skips old entries.",
-    explanation: "0-0 replays from the beginning. $ is for only future entries."
+    explanation: "0-0 replays from history. $ is for only future entries after the read starts."
+  },
+  {
+    id: "stream-producers-approx-trim",
+    trackId: "stream-producers",
+    mode: "pick",
+    level: 4,
+    concept: "approximate trim",
+    prompt: "Which XADD option uses approximate trimming for better performance?",
+    answer: "MAXLEN ~ 10000",
+    choices: ["MAXLEN ~ 10000", "MAXLEN FAST 10000", "TRIM APPROX 10000", "COUNT ~ 10000"],
+    hint: "The tilde marks approximate trimming.",
+    explanation: "MAXLEN ~ lets Redis trim near the target instead of forcing exact trimming every append."
+  },
+  {
+    id: "stream-producers-minid",
+    trackId: "stream-producers",
+    mode: "reverse",
+    level: 4,
+    concept: "MINID",
+    prompt: "Which trimming strategy removes entries older than an ID threshold?",
+    answer: "MINID",
+    choices: ["MINID", "MAXLEN", "MAXID", "OLDERTHAN"],
+    hint: "It is based on IDs, not entry count.",
+    explanation: "MINID trims entries with IDs below the supplied threshold."
+  },
+  {
+    id: "stream-producers-nomkstream",
+    trackId: "stream-producers",
+    mode: "input",
+    level: 5,
+    concept: "NOMKSTREAM",
+    prompt: "Which XADD option prevents Redis from creating the stream key automatically?",
+    answer: "nomkstream",
+    acceptedAnswers: ["NOMKSTREAM"],
+    choices: ["NOMKSTREAM", "NXSTREAM", "NOAUTO", "EXISTS"],
+    hint: "The name says do not make a stream.",
+    explanation: "NOMKSTREAM makes XADD fail when the stream key does not already exist."
+  },
+  {
+    id: "stream-producers-schema-version",
+    trackId: "stream-producers",
+    mode: "pick",
+    level: 5,
+    concept: "event schema",
+    prompt: "Which field helps consumers evolve event parsing safely?",
+    answer: "schema_version",
+    choices: ["schema_version", "random_padding", "redis_password", "last_seen_id"],
+    hint: "Consumers need to know how to decode the event shape.",
+    explanation: "A schema_version field lets producers change event fields while consumers branch by version."
+  },
+  {
+    id: "stream-producers-debug-field-order",
+    trackId: "stream-producers",
+    mode: "debug",
+    level: 5,
+    concept: "field/value pairs",
+    prompt: "What fixes this malformed event append?",
+    answer: "Add a value for every field",
+    acceptedAnswers: ["field value pairs", "add missing value", "even number of field values"],
+    choices: ["Add a value for every field", "Use XREADGROUP instead", "Put STREAMS before the key", "Replace type with $"],
+    code: "XADD events * type signup user_id",
+    hint: "After the ID, the tokens must come in pairs.",
+    explanation: "XADD requires field value pairs, so user_id needs a value such as user_id 42."
+  },
+  {
+    id: "stream-producers-count-batch",
+    trackId: "stream-producers",
+    mode: "reverse",
+    level: 5,
+    concept: "batch size",
+    prompt: "Which XREAD option limits how many entries are returned per stream?",
+    answer: "COUNT",
+    choices: ["COUNT", "LIMIT", "MAXLEN", "BATCHONLY"],
+    hint: "It appears before STREAMS in XREAD.",
+    explanation: "COUNT lets a reader bound the size of each response and keep processing batches predictable."
+  },
+  {
+    id: "stream-producers-pipeline",
+    trackId: "stream-producers",
+    mode: "pick",
+    level: 6,
+    concept: "producer throughput",
+    prompt: "What helps high-volume producers reduce network round trips?",
+    answer: "Pipeline multiple XADD commands",
+    choices: [
+      "Pipeline multiple XADD commands",
+      "Call KEYS before every XADD",
+      "Use one stream per field",
+      "Block inside the producer"
+    ],
+    hint: "Batch the client/server exchange.",
+    explanation: "Pipelining sends multiple XADD commands without waiting for each response before sending the next."
+  },
+  {
+    id: "stream-producers-debug-unbounded",
+    trackId: "stream-producers",
+    mode: "debug",
+    level: 6,
+    concept: "retention",
+    prompt: "What is missing from this high-volume event stream?",
+    answer: "A retention policy such as MAXLEN or XTRIM",
+    acceptedAnswers: ["maxlen", "xtrim", "retention policy"],
+    choices: [
+      "A retention policy such as MAXLEN or XTRIM",
+      "A second value for every consumer name",
+      "A GROUP option on XADD",
+      "A manual COMMIT command"
+    ],
+    code: "XADD pageviews * path /pricing user_id 42",
+    hint: "Streams can grow without bound if you never trim them.",
+    explanation: "Use XADD MAXLEN/MINID or XTRIM to keep memory growth aligned with retention goals."
+  },
+  {
+    id: "stream-producers-xtrim-exact",
+    trackId: "stream-producers",
+    mode: "pick",
+    level: 6,
+    concept: "XTRIM",
+    prompt: "Which command trims an existing stream to an exact maximum length?",
+    answer: "XTRIM events MAXLEN = 10000",
+    choices: [
+      "XTRIM events MAXLEN = 10000",
+      "XDEL events MAXLEN 10000",
+      "XRANGE events MAXLEN 10000",
+      "TRIM events 10000"
+    ],
+    hint: "XTRIM is the standalone trimming command.",
+    explanation: "XTRIM can trim existing stream entries by length or minimum ID, exact or approximate."
+  },
+  {
+    id: "stream-producers-debug-json-blob",
+    trackId: "stream-producers",
+    mode: "debug",
+    level: 6,
+    concept: "event shape",
+    prompt: "What is the tradeoff in this event shape?",
+    answer: "A single JSON blob hides fields from simple stream inspection",
+    acceptedAnswers: ["json blob hides fields", "harder to inspect fields", "opaque payload"],
+    choices: [
+      "A single JSON blob hides fields from simple stream inspection",
+      "Redis streams forbid JSON text",
+      "XADD cannot store strings",
+      "Consumers will acknowledge automatically"
+    ],
+    code: "XADD events * payload '{\"type\":\"signup\",\"user_id\":42}'",
+    hint: "It works, but field-level visibility changes.",
+    explanation: "A JSON payload can be valid, but explicit fields make basic stream inspection and routing easier."
   },
   {
     id: "stream-consumers-group",
@@ -174,7 +458,7 @@ export const drills: LearningDrill[] = [
     answer: "XACK",
     choices: ["XACK", "XDEL", "XTRIM", "XINFO"],
     hint: "It acknowledges successful processing to the group.",
-    explanation: "XACK marks entries as handled for the consumer group."
+    explanation: "XACK marks entries as handled for the consumer group and removes them from the PEL."
   },
   {
     id: "stream-consumers-debug-pending",
@@ -194,6 +478,143 @@ export const drills: LearningDrill[] = [
     code: "XREADGROUP GROUP workers c1 STREAMS events >",
     hint: "The group needs a success signal.",
     explanation: "Without XACK, Redis keeps delivered entries in the pending entries list."
+  },
+  {
+    id: "stream-consumers-create-mkstream",
+    trackId: "stream-consumers",
+    mode: "pick",
+    level: 5,
+    concept: "MKSTREAM",
+    prompt: "Which XGROUP CREATE option creates the stream key if it does not exist?",
+    answer: "MKSTREAM",
+    choices: ["MKSTREAM", "NOMKSTREAM", "CREATEKEY", "AUTOSTREAM"],
+    hint: "It is the opposite setup concern from XADD NOMKSTREAM.",
+    explanation: "XGROUP CREATE mystream workers $ MKSTREAM creates the group and the stream key when needed."
+  },
+  {
+    id: "stream-consumers-readgroup-syntax",
+    trackId: "stream-consumers",
+    mode: "reverse",
+    level: 5,
+    concept: "XREADGROUP syntax",
+    prompt: "Which read uses group workers and consumer c1 for new events?",
+    answer: "XREADGROUP GROUP workers c1 STREAMS events >",
+    choices: [
+      "XREADGROUP GROUP workers c1 STREAMS events >",
+      "XREADGROUP events GROUP workers c1 >",
+      "XREAD GROUP workers c1 STREAMS events >",
+      "XGROUP READ workers c1 events >"
+    ],
+    hint: "GROUP appears before STREAMS.",
+    explanation: "XREADGROUP GROUP <group> <consumer> STREAMS <key> > reads new messages for that consumer group."
+  },
+  {
+    id: "stream-consumers-pel",
+    trackId: "stream-consumers",
+    mode: "input",
+    level: 6,
+    concept: "PEL",
+    prompt: "What is the short name for delivered but unacknowledged entries?",
+    answer: "pel",
+    acceptedAnswers: ["pending entries list", "pending entry list", "Pending Entries List"],
+    choices: ["PEL", "AOF", "RDB", "TTL"],
+    hint: "It expands to Pending Entries List.",
+    explanation: "The PEL tracks entries delivered to consumers but not yet acknowledged."
+  },
+  {
+    id: "stream-consumers-xpending",
+    trackId: "stream-consumers",
+    mode: "pick",
+    level: 6,
+    concept: "XPENDING",
+    prompt: "Which command inspects a group's pending entries?",
+    answer: "XPENDING",
+    choices: ["XPENDING", "XWAITING", "XINFO STREAM", "XREAD PENDING"],
+    hint: "The command name matches the state.",
+    explanation: "XPENDING shows pending summary and extended details for a consumer group's PEL."
+  },
+  {
+    id: "stream-consumers-history-id",
+    trackId: "stream-consumers",
+    mode: "reverse",
+    level: 7,
+    concept: "pending replay",
+    prompt: "In XREADGROUP, which ID range style lets a consumer reread its pending history?",
+    answer: "0",
+    acceptedAnswers: ["0-0", "an old id"],
+    choices: ["0", ">", "$", "*"],
+    hint: "> means never-delivered entries; an older ID asks for pending history.",
+    explanation: "With XREADGROUP, IDs other than > read pending entries already delivered to that consumer."
+  },
+  {
+    id: "stream-consumers-noack",
+    trackId: "stream-consumers",
+    mode: "pick",
+    level: 7,
+    concept: "NOACK",
+    prompt: "Which option skips adding delivered entries to the PEL?",
+    answer: "NOACK",
+    choices: ["NOACK", "AUTOACK", "SKIPPEL", "ACKEDONLY"],
+    hint: "Only use it when message loss is acceptable.",
+    explanation: "NOACK avoids pending tracking and is equivalent to acknowledging as entries are read."
+  },
+  {
+    id: "stream-consumers-consumer-name",
+    trackId: "stream-consumers",
+    mode: "input",
+    level: 7,
+    concept: "consumer identity",
+    prompt: "Inside a group, each worker process should use a unique what?",
+    answer: "consumer name",
+    acceptedAnswers: ["consumer", "unique consumer name", "consumer id"],
+    choices: ["consumer name", "stream key", "field name", "trim threshold"],
+    hint: "Redis tracks pending entries by this identity.",
+    explanation: "Each client identifies itself with a consumer name so Redis can track ownership and pending work."
+  },
+  {
+    id: "stream-consumers-debug-no-shared-name",
+    trackId: "stream-consumers",
+    mode: "debug",
+    level: 7,
+    concept: "consumer identity",
+    prompt: "What is wrong with these two workers?",
+    answer: "They share the same consumer name",
+    acceptedAnswers: ["same consumer name", "not unique consumer", "shared consumer name"],
+    choices: [
+      "They share the same consumer name",
+      "They read from different groups",
+      "They cannot use BLOCK",
+      "They must use XADD first"
+    ],
+    code: "worker-a: XREADGROUP GROUP workers api STREAMS events >\nworker-b: XREADGROUP GROUP workers api STREAMS events >",
+    hint: "Ownership and idle time are tracked by consumer.",
+    explanation: "Separate worker instances should use distinct consumer names so pending ownership is observable and recoverable."
+  },
+  {
+    id: "stream-consumers-xinfo-groups",
+    trackId: "stream-consumers",
+    mode: "reverse",
+    level: 8,
+    concept: "group inspection",
+    prompt: "Which command lists groups, lag, pending count, and last-delivered information?",
+    answer: "XINFO GROUPS events",
+    choices: ["XINFO GROUPS events", "XPENDING GROUPS events", "XREADGROUP INFO events", "INFO STREAM events"],
+    hint: "It is part of the XINFO family.",
+    explanation: "XINFO GROUPS reports operational state for every consumer group on the stream."
+  },
+  {
+    id: "stream-consumers-debug-autoclaim-vs-xpending",
+    trackId: "stream-consumers",
+    mode: "debug",
+    level: 8,
+    concept: "stale pending",
+    prompt: "What is the cleaner recovery command for scanning and claiming old pending work?",
+    answer: "Use XAUTOCLAIM",
+    acceptedAnswers: ["xautoclaim", "use xautoclaim"],
+    choices: ["Use XAUTOCLAIM", "Use XDEL on every pending ID", "Use NOACK forever", "Create a new stream"],
+    code: "XPENDING events workers - + 100\nXCLAIM events workers c2 60000 <many ids>",
+    hint: "Redis has a SCAN-like command for this pattern.",
+    explanation: "XAUTOCLAIM combines scanning pending entries and claiming stale ones into a simpler recovery loop."
   },
   {
     id: "stream-operations-claim",
@@ -250,5 +671,169 @@ export const drills: LearningDrill[] = [
     code: "XREADGROUP GROUP workers c1 BLOCK 0 STREAMS events >",
     hint: "Control batch size and add capacity.",
     explanation: "COUNT limits batch size, and more consumers can share work within the same group."
+  },
+  {
+    id: "stream-operations-xautoclaim-cursor",
+    trackId: "stream-operations",
+    mode: "pick",
+    level: 8,
+    concept: "XAUTOCLAIM cursor",
+    prompt: "What should a recovery loop keep from each XAUTOCLAIM response?",
+    answer: "The next start ID cursor",
+    choices: ["The next start ID cursor", "The Redis password", "The previous COUNT value only", "The stream field order"],
+    hint: "XAUTOCLAIM uses SCAN-like iteration.",
+    explanation: "XAUTOCLAIM returns the next start ID so the recovery worker can continue scanning the PEL."
+  },
+  {
+    id: "stream-operations-poison-message",
+    trackId: "stream-operations",
+    mode: "reverse",
+    level: 8,
+    concept: "poison messages",
+    prompt: "What pattern handles entries that fail processing repeatedly?",
+    answer: "Move them to a dead-letter stream after a retry limit",
+    choices: [
+      "Move them to a dead-letter stream after a retry limit",
+      "Leave them pending forever",
+      "Trim the whole stream immediately",
+      "Rename every consumer group"
+    ],
+    hint: "Reliable systems need an explicit failure lane.",
+    explanation: "After bounded retries, a dead-letter stream preserves the event for inspection without blocking the main group."
+  },
+  {
+    id: "stream-operations-pending-idle",
+    trackId: "stream-operations",
+    mode: "input",
+    level: 9,
+    concept: "idle pending",
+    prompt: "Which XPENDING option filters pending entries by idle time?",
+    answer: "idle",
+    acceptedAnswers: ["IDLE", "idle min-idle-time"],
+    choices: ["IDLE", "BLOCK", "COUNT", "STALE"],
+    hint: "It is used before the range bounds in extended XPENDING.",
+    explanation: "XPENDING key group IDLE ms start end count filters pending entries that have been idle long enough."
+  },
+  {
+    id: "stream-operations-retention-vs-pel",
+    trackId: "stream-operations",
+    mode: "debug",
+    level: 9,
+    concept: "retention safety",
+    prompt: "What risk does aggressive trimming create?",
+    answer: "Consumers may still have pending references to deleted entries",
+    acceptedAnswers: ["pending references", "pel references deleted entries", "trimmed pending entries"],
+    choices: [
+      "Consumers may still have pending references to deleted entries",
+      "XADD will stop creating IDs",
+      "XREADGROUP will turn into Pub/Sub",
+      "All groups are automatically acknowledged"
+    ],
+    code: "XTRIM events MAXLEN = 100\nXPENDING events workers",
+    hint: "Retention and group delivery state are related but separate.",
+    explanation: "Trimming deletes stream entries while consumer groups can still track pending references depending on trim behavior and Redis version."
+  },
+  {
+    id: "stream-operations-fanout",
+    trackId: "stream-operations",
+    mode: "pick",
+    level: 9,
+    concept: "fanout",
+    prompt: "How should billing and analytics both receive every event independently?",
+    answer: "Use separate consumer groups",
+    choices: ["Use separate consumer groups", "Share one consumer name", "Use NOACK in one group", "Delete entries after billing reads"],
+    hint: "Each group has its own delivery cursor.",
+    explanation: "Multiple consumer groups can read the same stream independently, while consumers inside one group share work."
+  },
+  {
+    id: "stream-operations-ordering",
+    trackId: "stream-operations",
+    mode: "reverse",
+    level: 9,
+    concept: "ordering",
+    prompt: "What ordering guarantee should you assume inside one stream?",
+    answer: "Entries are delivered in stream ID order",
+    choices: [
+      "Entries are delivered in stream ID order",
+      "Entries are sorted by field name",
+      "Consumers always finish in append order",
+      "Multiple streams have one global order"
+    ],
+    hint: "IDs are the stream ordering key.",
+    explanation: "Redis reports entries in ID order for a stream, but processing completion can still vary by consumer."
+  },
+  {
+    id: "stream-operations-debug-non-idempotent",
+    trackId: "stream-operations",
+    mode: "debug",
+    level: 10,
+    concept: "at-least-once effects",
+    prompt: "What is the reliability bug in this worker?",
+    answer: "Processing is not idempotent before acknowledgement",
+    acceptedAnswers: ["not idempotent", "duplicate side effects", "idempotent processing"],
+    choices: [
+      "Processing is not idempotent before acknowledgement",
+      "XACK happens too early",
+      "The stream ID is too long",
+      "COUNT must be removed"
+    ],
+    code: "charge_credit_card(order_id)\n# process crashes before XACK",
+    hint: "The message can be delivered again after a crash.",
+    explanation: "Consumer groups are at-least-once. Side effects need idempotency because unacknowledged messages can be retried."
+  },
+  {
+    id: "stream-operations-monitoring",
+    trackId: "stream-operations",
+    mode: "pick",
+    level: 10,
+    concept: "monitoring",
+    prompt: "Which signals belong on a Redis Streams reliability dashboard?",
+    answer: "Lag, pending count, idle time, retry count",
+    choices: [
+      "Lag, pending count, idle time, retry count",
+      "Only total key count",
+      "Only producer hostname",
+      "Random sample of field names"
+    ],
+    hint: "Watch both backlog and stuck work.",
+    explanation: "Lag shows backlog, pending count and idle time show stuck work, and retry counts expose failing messages."
+  },
+  {
+    id: "stream-operations-debug-count-zero",
+    trackId: "stream-operations",
+    mode: "debug",
+    level: 10,
+    concept: "batch control",
+    prompt: "What should this worker add before production rollout?",
+    answer: "A COUNT limit and processing timeout strategy",
+    acceptedAnswers: ["count limit", "add count", "processing timeout"],
+    choices: [
+      "A COUNT limit and processing timeout strategy",
+      "A second stream key named COUNT",
+      "NOACK on every read",
+      "An XDEL before every process call"
+    ],
+    code: "XREADGROUP GROUP workers c1 BLOCK 0 STREAMS events >",
+    hint: "A forever-blocking read can be fine, but the returned batch and work time still need bounds.",
+    explanation: "COUNT bounds each batch, and timeouts or heartbeats help detect workers that stop making progress."
+  },
+  {
+    id: "stream-operations-xack-before-side-effect",
+    trackId: "stream-operations",
+    mode: "debug",
+    level: 10,
+    concept: "ack timing",
+    prompt: "Why is this worker unsafe?",
+    answer: "It acknowledges before the side effect succeeds",
+    acceptedAnswers: ["ack before processing", "xack too early", "ack before side effect"],
+    choices: [
+      "It acknowledges before the side effect succeeds",
+      "It reads from too old an ID",
+      "It uses field value pairs",
+      "It does not trim exactly"
+    ],
+    code: "XACK events workers 1717000000000-0\nsend_email(user_id)",
+    hint: "A crash after XACK loses the work.",
+    explanation: "Acknowledge after durable successful processing, otherwise Redis will not redeliver failed work."
   }
 ];

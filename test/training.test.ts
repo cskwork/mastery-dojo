@@ -91,7 +91,7 @@ describe("training logic", () => {
   });
 
   it("keeps full curricula deep enough for beginner to expertise study", () => {
-    for (const domainId of ["python", "postgresql"]) {
+    for (const domainId of ["python", "postgresql", "redis-streams"]) {
       const domain = learningDomains.find((item) => item.id === domainId);
 
       expect(domain).toBeDefined();

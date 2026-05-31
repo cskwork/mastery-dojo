@@ -4,8 +4,8 @@ import type { LearningDomain } from "@/data/dojoTypes";
 export const redisStreamsDomain = {
   id: "redis-streams",
   metadata: {
-    title: "StreamsDojo - Learn Redis Streams from Beginner to Reliable Systems",
-    description: "A KanaDojo-inspired Redis Streams learning app from XADD basics to consumer group reliability.",
+    title: "StreamsDojo - Learn Redis Streams from Beginner to Expertise",
+    description: "A KanaDojo-inspired Redis Streams learning app from XADD basics to reliable stream systems.",
     iconPath: "/redis-streams-dojo-mark.svg"
   },
   brand: {
@@ -53,7 +53,7 @@ export const redisStreamsDomain = {
       { id: "stream-foundations", mark: "x", label: "Basics", summary: "entries, IDs, reads" },
       { id: "stream-producers", mark: "add", label: "Producers", summary: "XADD, trim, shape" },
       { id: "stream-consumers", mark: "grp", label: "Groups", summary: "read, ack, pending" },
-      { id: "stream-operations", mark: "ops", label: "Reliability", summary: "claim, lag, monitor" }
+      { id: "stream-operations", mark: "ops", label: "Reliability", summary: "claim, lag, replay" }
     ]
   },
   training: {
