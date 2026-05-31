@@ -12,6 +12,9 @@
   --kd-muted: rgba(236, 233, 255, 0.7);
   --kd-dim: rgba(236, 233, 255, 0.48);
   --kd-shadow: 0 26px 90px rgba(5, 7, 18, 0.34);
+  --kd-ledge: #0a0d1c;
+  --kd-ledge-accent: oklch(0.5932 0.1742 299.66);
+  --kd-face: rgba(38, 43, 66, 0.92);
 }
 
 * {
@@ -913,6 +916,9 @@ html {
   --kd-muted: rgba(31, 27, 51, 0.72);
   --kd-dim: rgba(31, 27, 51, 0.52);
   --kd-shadow: 0 26px 90px rgba(120, 110, 170, 0.22);
+  --kd-ledge: rgba(120, 98, 180, 0.55);
+  --kd-ledge-accent: oklch(0.42 0.16 299.66);
+  --kd-face: rgba(255, 255, 255, 0.92);
 }
 
 :root[data-theme="light"] .kana-page {
@@ -1162,4 +1168,87 @@ html {
   border-color: rgba(255, 126, 160, 0.5);
   background: rgba(255, 126, 160, 0.1);
   color: #ff91b3;
+}
+
+/* 3D raised buttons (KanaDojo-style depth): solid bottom ledge + soft elevation, press-in on active.
+   Appended last so it owns box-shadow on these buttons; earlier rules still supply background/color. */
+.kana-dojo-card,
+.kana-domain-switcher button,
+.kana-mode-row button,
+.kana-choice-grid button,
+.kana-sidebar nav button,
+.kana-progress-tabs button,
+.kana-setting-row button,
+.kana-controls button,
+.kana-action-bar button,
+.kana-floating-action {
+  box-shadow:
+    0 8px 0 0 var(--kd-ledge),
+    0 16px 26px -18px rgba(0, 0, 0, 0.7);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease, color 0.2s ease;
+}
+
+/* Transparent-faced buttons need a solid face so the ledge reads as a raised key */
+.kana-action-bar button,
+.kana-sidebar nav button,
+.kana-progress-tabs button {
+  background: var(--kd-face);
+  border-color: var(--kd-line-strong);
+}
+
+/* Solid-accent buttons use a darker shade of their own face as the edge (KanaDojo-style) */
+.kana-floating-action,
+.kana-action-bar button.primary {
+  --kd-ledge: var(--kd-ledge-accent);
+}
+
+.kana-dojo-card:hover,
+.kana-domain-switcher button:hover,
+.kana-mode-row button:hover,
+.kana-choice-grid button:hover:not(:disabled),
+.kana-sidebar nav button:hover,
+.kana-progress-tabs button:hover,
+.kana-setting-row button:hover,
+.kana-controls button:hover,
+.kana-action-bar button:hover,
+.kana-floating-action:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 0 1px var(--kd-line-strong),
+    0 10px 0 0 var(--kd-ledge),
+    0 22px 32px -18px rgba(0, 0, 0, 0.8);
+}
+
+.kana-dojo-card:active,
+.kana-domain-switcher button:active,
+.kana-mode-row button:active,
+.kana-choice-grid button:active:not(:disabled),
+.kana-sidebar nav button:active,
+.kana-progress-tabs button:active,
+.kana-setting-row button:active,
+.kana-controls button:active,
+.kana-action-bar button:active,
+.kana-floating-action:active {
+  transform: translateY(7px);
+  box-shadow:
+    0 1px 0 0 var(--kd-ledge),
+    0 4px 10px -10px rgba(0, 0, 0, 0.7);
+}
+
+/* Selected/active dojo cards and switcher entries keep the highlight ring on top of the ledge */
+.kana-dojo-card.active,
+.kana-domain-switcher button.active,
+.kana-mode-row button.active,
+.kana-sidebar nav button.active,
+.kana-progress-tabs button.active {
+  box-shadow:
+    inset 0 0 0 1px var(--kd-line-strong),
+    0 8px 0 0 var(--kd-ledge),
+    0 16px 26px -18px rgba(0, 0, 0, 0.7);
+}
+
+/* Disabled answer choices stay flat */
+.kana-choice-grid button:disabled {
+  box-shadow: none;
+  transform: none;
 }
