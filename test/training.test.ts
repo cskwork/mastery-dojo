@@ -70,6 +70,15 @@ describe("training logic", () => {
     expect(storageKeys.size).toBe(learningDomains.length);
 
     for (const domain of learningDomains) {
+      const drillIds = new Set(domain.drills.map((drill) => drill.id));
+      const trackIds = new Set(domain.tracks.map((track) => track.id));
+
+      expect(drillIds.size).toBe(domain.drills.length);
+
+      for (const drill of domain.drills) {
+        expect(trackIds.has(drill.trackId)).toBe(true);
+      }
+
       for (const track of domain.tracks) {
         for (const mode of ["pick", "reverse", "input", "debug"] as const) {
           const drill = getNextDrill(track.id, mode, emptyProgress, domain);
@@ -81,15 +90,17 @@ describe("training logic", () => {
     }
   });
 
-  it("keeps Python curriculum deep enough for beginner to expertise study", () => {
-    const python = learningDomains.find((domain) => domain.id === "python");
+  it("keeps full curricula deep enough for beginner to expertise study", () => {
+    for (const domainId of ["python", "postgresql"]) {
+      const domain = learningDomains.find((item) => item.id === domainId);
 
-    expect(python).toBeDefined();
-    expect(python!.drills.length).toBeGreaterThanOrEqual(56);
-    expect(python!.tracks.at(-1)?.level).toBe("Expertise");
+      expect(domain).toBeDefined();
+      expect(domain!.drills.length).toBeGreaterThanOrEqual(56);
+      expect(domain!.tracks.at(-1)?.level).toBe("Expertise");
 
-    for (const track of python!.tracks) {
-      expect(python!.drills.filter((drill) => drill.trackId === track.id).length).toBeGreaterThanOrEqual(14);
+      for (const track of domain!.tracks) {
+        expect(domain!.drills.filter((drill) => drill.trackId === track.id).length).toBeGreaterThanOrEqual(14);
+      }
     }
   });
 });

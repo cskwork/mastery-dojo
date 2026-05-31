@@ -4,8 +4,8 @@ import type { LearningDomain } from "@/data/dojoTypes";
 export const postgresqlDomain = {
   id: "postgresql",
   metadata: {
-    title: "PostgresDojo - Learn PostgreSQL from Beginner to Production",
-    description: "A KanaDojo-inspired PostgreSQL learning app from SQL foundations to production operations.",
+    title: "PostgresDojo - Learn PostgreSQL from Beginner to Expertise",
+    description: "A KanaDojo-inspired PostgreSQL learning app from SQL foundations to production expertise.",
     iconPath: "/postgresql-dojo-mark.svg"
   },
   brand: {
@@ -53,7 +53,7 @@ export const postgresqlDomain = {
       { id: "pg-foundations", mark: "sql", label: "Basics", summary: "tables, rows, filters" },
       { id: "pg-querying", mark: "join", label: "Queries", summary: "joins, groups, limits" },
       { id: "pg-schema", mark: "ddl", label: "Schema", summary: "keys, indexes, constraints" },
-      { id: "pg-production", mark: "ops", label: "Production", summary: "plans, vacuum, pooling" }
+      { id: "pg-production", mark: "ops", label: "Production", summary: "plans, vacuum, replication" }
     ]
   },
   training: {

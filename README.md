@@ -18,7 +18,9 @@ This is one lightweight repo with two clear layers:
 
 Python is the reference full-content conversion. It currently spans Foundations, Data Fluency, Program Design, and Mastery Lab with 56 drills across Pick, Reverse, Input, and Debug modes. The content moves from syntax, values, loops, and files through testing, packaging, concurrency, protocols, profiling, and production observability.
 
-PostgreSQL and Redis Streams are registered as real domains with starter curricula. They should be expanded with the same beginner-to-expertise density before being considered complete.
+PostgreSQL now follows the same full-content rule: SQL Foundations, Query Fluency, Schema Design, and Production Lab each carry 14 drills, moving from SELECT basics through joins, constraints, indexes, transactions, EXPLAIN, VACUUM, replication, backup recovery, and least-privilege roles.
+
+Redis Streams is registered as a real domain with starter curriculum. It should be expanded with the same beginner-to-expertise density before being considered complete.
 
 ## Run
 
