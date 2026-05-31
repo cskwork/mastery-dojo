@@ -14,6 +14,12 @@ This is one lightweight repo with two clear layers:
 
 `data/dojoDomain.ts` registers the available domains and picks the default. To make another domain, add a new `domains/<name>.ts` module with its own tracks, drills, labels, tokens, marks, metadata, and storage key, then add it to `learningDomains`.
 
+## Curriculum Depth
+
+Python is the reference full-content conversion. It currently spans Foundations, Data Fluency, Program Design, and Mastery Lab with 56 drills across Pick, Reverse, Input, and Debug modes. The content moves from syntax, values, loops, and files through testing, packaging, concurrency, protocols, profiling, and production observability.
+
+PostgreSQL and Redis Streams are registered as real domains with starter curricula. They should be expanded with the same beginner-to-expertise density before being considered complete.
+
 ## Run
 
 ```bash

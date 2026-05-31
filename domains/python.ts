@@ -57,7 +57,7 @@ export const pythonDomain = {
       { id: "foundations", mark: "py", label: "Basics", summary: "syntax, values, branches" },
       { id: "data", mark: "{ }", label: "Data", summary: "lists, dicts, files" },
       { id: "design", mark: "<>", label: "Design", summary: "functions, modules, tests" },
-      { id: "mastery", mark: "fn", label: "Mastery", summary: "classes, async, speed" }
+      { id: "mastery", mark: "fn", label: "Mastery", summary: "async, protocols, packaging" }
     ]
   },
   training: {

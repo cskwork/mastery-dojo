@@ -32,3 +32,5 @@
 - Added PostgreSQL and Redis Streams curricula with one drill per mode on every track so each registered domain can be trained through Pick, Reverse, Input, and Debug without special cases.
 - Added a domain switcher on the home and training surfaces, with separate storage keys per domain so progress does not bleed between topics.
 - Recorded that every domain needs beginner-to-expertise curriculum depth, and added git checkpoint guidance after successful verification.
+- Expanded the Python curriculum from a starter set to 56 drills across Foundations, Data Fluency, Program Design, and Mastery Lab so the default domain better matches the beginner-to-expertise requirement.
+- Added curriculum-depth tests requiring the Python domain to keep at least 14 drills per track and finish at an Expertise level.

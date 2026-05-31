@@ -51,7 +51,11 @@ describe("training logic", () => {
   });
 
   it("unlocks achievements from real progress thresholds", () => {
-    const progress = drills.slice(0, 10).reduce((state, drill) => recordAttempt(state, drill, true), emptyProgress);
+    const foundationDrills = drills.filter((drill) => drill.trackId === "foundations");
+    const progress = [...foundationDrills, ...drills.filter((drill) => drill.trackId !== "foundations").slice(0, 4)].reduce(
+      (state, drill) => recordAttempt(state, drill, true),
+      emptyProgress
+    );
 
     expect(getTrackSummary("foundations", progress).percent).toBe(100);
     expect(getUnlockedAchievements(progress)).toContain("first-clear");
@@ -74,6 +78,18 @@ describe("training logic", () => {
           expect(drill.mode).toBe(mode);
         }
       }
+    }
+  });
+
+  it("keeps Python curriculum deep enough for beginner to expertise study", () => {
+    const python = learningDomains.find((domain) => domain.id === "python");
+
+    expect(python).toBeDefined();
+    expect(python!.drills.length).toBeGreaterThanOrEqual(56);
+    expect(python!.tracks.at(-1)?.level).toBe("Expertise");
+
+    for (const track of python!.tracks) {
+      expect(python!.drills.filter((drill) => drill.trackId === track.id).length).toBeGreaterThanOrEqual(14);
     }
   });
 });
