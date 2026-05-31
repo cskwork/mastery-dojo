@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { learningDomains } from "@/data/dojoDomain";
+import { curriculumRequirements } from "@/data/curriculumRequirements";
 import { drills } from "@/data/pythonCurriculum";
 import {
   emptyProgress,
@@ -91,15 +92,46 @@ describe("training logic", () => {
   });
 
   it("keeps full curricula deep enough for beginner to expertise study", () => {
-    for (const domainId of ["python", "postgresql", "redis-streams"]) {
-      const domain = learningDomains.find((item) => item.id === domainId);
+    for (const requirement of curriculumRequirements) {
+      const domain = learningDomains.find((item) => item.id === requirement.domainId);
 
       expect(domain).toBeDefined();
-      expect(domain!.drills.length).toBeGreaterThanOrEqual(280);
+      expect(domain!.drills.length).toBeGreaterThanOrEqual(requirement.minimumDrills);
       expect(domain!.tracks.at(-1)?.level).toBe("Expertise");
 
-      for (const track of domain!.tracks) {
-        expect(domain!.drills.filter((drill) => drill.trackId === track.id).length).toBeGreaterThanOrEqual(70);
+      for (const trackRequirement of requirement.tracks) {
+        const track = domain!.tracks.find((item) => item.id === trackRequirement.id);
+        const trackDrills = domain!.drills.filter((drill) => drill.trackId === trackRequirement.id);
+        const trackModes = new Set(trackDrills.map((drill) => drill.mode));
+
+        expect(track).toBeDefined();
+        expect(track!.level).toBe(trackRequirement.level);
+        expect(trackDrills.length).toBeGreaterThanOrEqual(trackRequirement.minimumDrills);
+
+        for (const mode of requirement.modes) {
+          expect(trackModes.has(mode)).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("covers every required curriculum concept in every training mode", () => {
+    for (const requirement of curriculumRequirements) {
+      const domain = learningDomains.find((item) => item.id === requirement.domainId);
+
+      expect(domain).toBeDefined();
+
+      for (const trackRequirement of requirement.tracks) {
+        for (const concept of trackRequirement.requiredConcepts) {
+          const conceptDrills = domain!.drills.filter(
+            (drill) => drill.trackId === trackRequirement.id && drill.concept === concept
+          );
+          const conceptModes = new Set(conceptDrills.map((drill) => drill.mode));
+
+          for (const mode of requirement.modes) {
+            expect(conceptModes.has(mode)).toBe(true);
+          }
+        }
       }
     }
   });

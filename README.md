@@ -12,7 +12,7 @@ This is one lightweight repo with two clear layers:
   - PostgreSQL: `domains/postgresql.ts` and `data/postgresqlCurriculum.ts`.
   - Redis Streams: `domains/redisStreams.ts` and `data/redisStreamsCurriculum.ts`.
 
-`data/dojoDomain.ts` registers the available domains and picks the default. To make another domain, add a new `domains/<name>.ts` module with its own tracks, drills, labels, tokens, marks, metadata, and storage key, then add it to `learningDomains`.
+`data/dojoDomain.ts` registers the available domains and picks the default. `data/curriculumRequirements.ts` records the required beginner-to-expertise concept map that tests enforce for every domain. To make another domain, add a new `domains/<name>.ts` module with its own tracks, drills, labels, tokens, marks, metadata, and storage key, then add it to `learningDomains` and the curriculum requirements.
 
 ## Curriculum Depth
 
@@ -22,7 +22,7 @@ PostgreSQL follows the same full-content rule with 296 drills: SQL Foundations, 
 
 Redis Streams follows the same full-content rule with 296 drills: Stream Basics, Producer Flow, Consumer Groups, and Reliability Lab move from XADD and IDs through trimming, event contracts, outbox patterns, consumer groups, pending entries, recovery, dead-letter streams, monitoring, Redis Cluster concerns, replay, capacity planning, and at-least-once processing.
 
-The full-curriculum floor is enforced in tests: every registered domain must keep at least 280 drills and every track must keep at least 70 drills.
+The full-curriculum floor is enforced in tests: every registered domain must keep at least 280 drills, every track must keep at least 70 drills, and every required concept must exist in Pick, Reverse, Input, and Debug modes. See `docs/curriculum-audit.md` for the completion criteria.
 
 ## Run
 

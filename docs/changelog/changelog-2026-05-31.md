@@ -41,3 +41,4 @@
 - Checked the upstream `lingdojo/kana-dojo` repository directly and confirmed its content is data-heavy: kana groups, JLPT kanji JSON, JLPT vocabulary JSON, and community content live in repo/public data files rather than only on the deployed site.
 - Added a reusable curriculum factory and full topic banks so Python expands to 300 drills, while PostgreSQL and Redis Streams expand to 296 drills each, preserving Pick, Reverse, Input, and Debug modes.
 - Raised the full-curriculum test floor to at least 280 drills per registered domain and at least 70 drills per track so future edits cannot silently return to a thin sample set.
+- Added `data/curriculumRequirements.ts` and `docs/curriculum-audit.md` so the full-curriculum claim is checked against required concept coverage, not only drill counts.
