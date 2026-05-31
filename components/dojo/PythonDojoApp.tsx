@@ -6,6 +6,7 @@ import {
   Flame,
   Github,
   Home,
+  Languages,
   Moon,
   Radio,
   Settings,
@@ -32,6 +33,18 @@ import {
   type TrackId
 } from "@/data/dojoDomain";
 import {
+  DEFAULT_LANGUAGE,
+  LANGUAGE_STORAGE_KEY,
+  LanguageContext,
+  isLanguage,
+  otherLanguage,
+  useLanguage,
+  useT,
+  type Language
+} from "@/lib/i18n";
+import { localizeDomain } from "@/lib/localize";
+import type { UiStringKey } from "@/data/i18n/uiStrings";
+import {
   emptyProgress,
   evaluateAnswer,
   getAccuracy,
@@ -44,11 +57,11 @@ import {
 } from "@/lib/training";
 import { useDojoAudio, type DojoSound } from "@/components/dojo/useDojoAudio";
 
-const modeOptions: Array<{ id: DrillMode; label: string }> = [
-  { id: "pick", label: "Pick" },
-  { id: "reverse", label: "Reverse" },
-  { id: "input", label: "Input" },
-  { id: "debug", label: "Debug" }
+const modeOptions: Array<{ id: DrillMode; labelKey: UiStringKey }> = [
+  { id: "pick", labelKey: "modePick" },
+  { id: "reverse", labelKey: "modeReverse" },
+  { id: "input", labelKey: "modeInput" },
+  { id: "debug", labelKey: "modeDebug" }
 ];
 
 type Feedback = {
@@ -112,16 +125,22 @@ function HeaderControls({
 }) {
   const SoundIcon = soundEnabled ? Volume2 : VolumeX;
   const ThemeIcon = theme === "dark" ? Sun : Moon;
+  const t = useT();
+  const { lang, toggleLang } = useLanguage();
 
   return (
-    <div className="kana-controls" aria-label="Display controls">
-      <button type="button" aria-label="Toggle theme" onClick={onToggleTheme}>
+    <div className="kana-controls" aria-label={t("displayControls")}>
+      <button type="button" className="kana-lang-toggle" aria-label={t("toggleLanguage")} onClick={toggleLang}>
+        <Languages size={18} />
+        <span>{lang === "ko" ? "KO" : "EN"}</span>
+      </button>
+      <button type="button" aria-label={t("toggleTheme")} onClick={onToggleTheme}>
         <ThemeIcon size={20} />
       </button>
-      <button type="button" aria-label="Toggle sound" onClick={onToggleSound} aria-pressed={soundEnabled}>
+      <button type="button" aria-label={t("toggleSound")} onClick={onToggleSound} aria-pressed={soundEnabled}>
         <SoundIcon size={20} />
       </button>
-      <button type="button" aria-label="Open settings" onClick={onOpenSettings}>
+      <button type="button" aria-label={t("openSettings")} onClick={onOpenSettings}>
         <Settings size={20} />
       </button>
     </div>
@@ -181,6 +200,7 @@ function DojoCard({
   domain: LearningDomain;
   onSelect: (id: TrackId) => void;
 }) {
+  const t = useT();
   const track = getTrack(domain, card.id);
   const summary = getTrackSummary(card.id, emptyProgress, domain);
 
@@ -189,7 +209,7 @@ function DojoCard({
       <span className="kana-card-mark">{card.mark}</span>
       <span className="kana-card-label">{card.label}</span>
       <small>
-        {track.level} · {summary.total} drills
+        {track.level} · {summary.total} {t("drillsUnit")}
       </small>
       <em>{card.summary}</em>
     </button>
@@ -233,6 +253,7 @@ function HomeScreen({
   soundEnabled,
   theme,
   onDomainChange,
+  onHome,
   onPlay,
   onStart,
   onToggleSound,
@@ -244,12 +265,14 @@ function HomeScreen({
   soundEnabled: boolean;
   theme: ThemeMode;
   onDomainChange: (domainId: string) => void;
+  onHome: () => void;
   onPlay: (sound: DojoSound) => void;
   onStart: (id: TrackId) => void;
   onToggleSound: () => void;
   onToggleTheme: () => void;
   onOpenSettings: () => void;
 }) {
+  const t = useT();
   const activeCard = domain.home.cards.find((card) => card.id === activeId);
   const activeLabel = activeCard?.label ?? getTrack(domain, activeId).title;
 
@@ -261,7 +284,16 @@ function HomeScreen({
       </button>
       <section className="kana-home" aria-label={domain.home.ariaLabel}>
         <header className="kana-header">
-          <h1>
+          <h1
+            className="kana-brand-home"
+            role="button"
+            tabIndex={0}
+            aria-label={t("home")}
+            onClick={onHome}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") onHome();
+            }}
+          >
             <span>{domain.brand.primaryName}</span>
             <span>{domain.brand.secondaryName}</span>
           </h1>
@@ -275,7 +307,7 @@ function HomeScreen({
         </header>
         <DomainSwitcher domain={domain} onSelect={onDomainChange} />
         <WelcomePanel activeLabel={activeLabel} domain={domain} />
-        <section className="kana-dojo-grid" aria-label={`${domain.subject.adjective} training dojos`}>
+        <section className="kana-dojo-grid" aria-label={`${domain.subject.adjective} ${t("trainingDojos")}`}>
           {domain.home.cards.map((card) => (
             <DojoCard key={card.id} card={card} active={card.id === activeId} domain={domain} onSelect={onStart} />
           ))}
@@ -313,9 +345,20 @@ function Sidebar({
 }) {
   const SoundIcon = soundEnabled ? Volume2 : VolumeX;
 
+  const t = useT();
+
   return (
     <aside className="kana-sidebar" aria-label={domain.training.sidebarLabel}>
-      <h1>
+      <h1
+        className="kana-brand-home"
+        role="button"
+        tabIndex={0}
+        aria-label={t("home")}
+        onClick={onHome}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") onHome();
+        }}
+      >
         <span>{domain.brand.primaryName}</span>
         <span>{domain.brand.secondaryName}</span>
       </h1>
@@ -323,11 +366,11 @@ function Sidebar({
       <nav>
         <button type="button" onClick={onHome}>
           <Home size={24} />
-          <span>Home</span>
+          <span>{t("home")}</span>
         </button>
         <button type="button" className={progressActive ? "active" : ""} onClick={onOpenProgress}>
           <BarChart3 size={24} />
-          <span>Progress</span>
+          <span>{t("progress")}</span>
           <small>{progress.completedIds.length}</small>
         </button>
         {domain.tracks.map((track) => (
@@ -343,10 +386,10 @@ function Sidebar({
         ))}
         <button type="button" onClick={onToggleSound} aria-pressed={soundEnabled}>
           <SoundIcon size={24} />
-          <span>Sound</span>
+          <span>{t("sound")}</span>
         </button>
       </nav>
-      <button type="button" className="kana-sidebar-collapse" aria-label="Collapse sidebar" onClick={() => onPlay("tap")}>
+      <button type="button" className="kana-sidebar-collapse" aria-label={t("collapseSidebar")} onClick={() => onPlay("tap")}>
         <SlidersHorizontal size={20} />
       </button>
     </aside>
@@ -371,11 +414,12 @@ function ModeSelector({
   domain: LearningDomain;
   onModeChange: (mode: DrillMode) => void;
 }) {
+  const t = useT();
   return (
     <section className="kana-mode-row" aria-label={domain.training.modeLabel}>
       {modeOptions.map((mode) => (
         <button type="button" className={activeMode === mode.id ? "active" : ""} key={mode.id} onClick={() => onModeChange(mode.id)}>
-          {mode.label}
+          {t(mode.labelKey)}
         </button>
       ))}
     </section>
@@ -393,8 +437,9 @@ function ChoiceGrid({
   locked: boolean;
   onChoose: (choice: string) => void;
 }) {
+  const t = useT();
   return (
-    <div className="kana-choice-grid" aria-label="Answer choices">
+    <div className="kana-choice-grid" aria-label={t("answerChoices")}>
       {drill.choices.map((choice) => (
         <button
           type="button"
@@ -424,17 +469,20 @@ function DrillCard({
   onChoose: (value: string) => void;
 }) {
   const locked = feedback.state === "correct";
+  const t = useT();
 
   return (
     <section className="kana-drill-card" aria-labelledby="drill-title">
       <div className="kana-drill-topline">
-        <span>Level {drill.level}</span>
+        <span>
+          {t("level")} {drill.level}
+        </span>
         <span>{drill.concept}</span>
       </div>
       <h3 id="drill-title">{drill.prompt}</h3>
       {drill.code ? <pre>{drill.code}</pre> : <div className="kana-concept-chip">{drill.concept}</div>}
       {drill.mode === "input" ? (
-        <input value={answer} disabled={locked} onChange={(event) => onAnswer(event.target.value)} placeholder="type the answer" />
+        <input value={answer} disabled={locked} onChange={(event) => onAnswer(event.target.value)} placeholder={t("typeAnswer")} />
       ) : (
         <ChoiceGrid drill={drill} answer={answer} locked={locked} onChoose={onChoose} />
       )}
@@ -478,6 +526,7 @@ function TrainingView({
   onProgress: (progress: ProgressSnapshot) => void;
   play: (sound: DojoSound) => void;
 }) {
+  const t = useT();
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<Feedback>({ state: "idle", text: "" });
   const [currentDrillId, setCurrentDrillId] = useState<string | null>(null);
@@ -553,10 +602,10 @@ function TrainingView({
           </p>
         </section>
         <section className="kana-stat-grid" aria-label={domain.training.progressLabel}>
-          <Metric label="XP" value={progress.xp} />
-          <Metric label="Streak" value={progress.streak} />
-          <Metric label="Accuracy" value={`${getAccuracy(progress)}%`} />
-          <Metric label="Complete" value={`${summary.percent}%`} />
+          <Metric label={t("xp")} value={progress.xp} />
+          <Metric label={t("streak")} value={progress.streak} />
+          <Metric label={t("accuracy")} value={`${getAccuracy(progress)}%`} />
+          <Metric label={t("complete")} value={`${summary.percent}%`} />
         </section>
         <ModeSelector activeMode={mode} domain={domain} onModeChange={onModeChange} />
         <DrillCard drill={drill} answer={answer} feedback={feedback} onAnswer={setAnswer} onChoose={chooseAnswer} />
@@ -581,25 +630,26 @@ function TrainingView({
   );
 }
 
-const achievementDefs: Array<{ key: keyof LearningDomain["achievements"]; description: string }> = [
-  { key: "firstClear", description: "Clear your first drill." },
-  { key: "eightClears", description: "Clear eight drills." },
-  { key: "allTracksStarted", description: "Land at least one clear in every track." },
-  { key: "streakFive", description: "Reach a five-answer streak." },
-  { key: "highAccuracy", description: "Hold 85%+ accuracy across 10+ attempts." },
-  { key: "fullMastery", description: "Complete every drill in the domain." }
+const achievementDefs: Array<{ key: keyof LearningDomain["achievements"]; nameKey: UiStringKey; descKey: UiStringKey }> = [
+  { key: "firstClear", nameKey: "achFirstClear", descKey: "achFirstClearDesc" },
+  { key: "eightClears", nameKey: "achEightClears", descKey: "achEightClearsDesc" },
+  { key: "allTracksStarted", nameKey: "achAllTracksStarted", descKey: "achAllTracksStartedDesc" },
+  { key: "streakFive", nameKey: "achStreakFive", descKey: "achStreakFiveDesc" },
+  { key: "highAccuracy", nameKey: "achHighAccuracy", descKey: "achHighAccuracyDesc" },
+  { key: "fullMastery", nameKey: "achFullMastery", descKey: "achFullMasteryDesc" }
 ];
 
 function ProgressTabsBar({ tab, onSelect }: { tab: ProgressTab; onSelect: (next: ProgressTab) => void }) {
-  const tabs: Array<{ id: ProgressTab; label: string; Icon: typeof TrendingUp }> = [
-    { id: "statistics", label: "Stats", Icon: TrendingUp },
-    { id: "streak", label: "Streak", Icon: Flame },
-    { id: "achievements", label: "Achievements", Icon: Trophy }
+  const t = useT();
+  const tabs: Array<{ id: ProgressTab; labelKey: UiStringKey; Icon: typeof TrendingUp }> = [
+    { id: "statistics", labelKey: "tabStats", Icon: TrendingUp },
+    { id: "streak", labelKey: "tabStreak", Icon: Flame },
+    { id: "achievements", labelKey: "tabAchievements", Icon: Trophy }
   ];
 
   return (
-    <div className="kana-progress-tabs" role="tablist" aria-label="Progress views">
-      {tabs.map(({ id, label, Icon }) => (
+    <div className="kana-progress-tabs" role="tablist" aria-label={t("progressViews")}>
+      {tabs.map(({ id, labelKey, Icon }) => (
         <button
           type="button"
           role="tab"
@@ -609,7 +659,7 @@ function ProgressTabsBar({ tab, onSelect }: { tab: ProgressTab; onSelect: (next:
           onClick={() => onSelect(id)}
         >
           <Icon size={18} />
-          <span>{label}</span>
+          <span>{t(labelKey)}</span>
         </button>
       ))}
     </div>
@@ -617,22 +667,23 @@ function ProgressTabsBar({ tab, onSelect }: { tab: ProgressTab; onSelect: (next:
 }
 
 function StatisticsPanel({ domain, progress }: { domain: LearningDomain; progress: ProgressSnapshot }) {
+  const t = useT();
   const totalDrills = domain.drills.length;
   const completed = progress.completedIds.length;
   const overallPercent = totalDrills === 0 ? 0 : Math.round((completed / totalDrills) * 100);
 
   return (
     <div className="kana-progress-panel">
-      <section className="kana-stat-grid" aria-label="Overall statistics">
-        <Metric label="XP" value={progress.xp} />
-        <Metric label="Attempts" value={progress.attempts} />
-        <Metric label="Correct" value={progress.correct} />
-        <Metric label="Accuracy" value={`${getAccuracy(progress)}%`} />
-        <Metric label="Cleared" value={`${completed}/${totalDrills}`} />
-        <Metric label="Complete" value={`${overallPercent}%`} />
+      <section className="kana-stat-grid" aria-label={t("overallStatistics")}>
+        <Metric label={t("xp")} value={progress.xp} />
+        <Metric label={t("attempts")} value={progress.attempts} />
+        <Metric label={t("correct")} value={progress.correct} />
+        <Metric label={t("accuracy")} value={`${getAccuracy(progress)}%`} />
+        <Metric label={t("cleared")} value={`${completed}/${totalDrills}`} />
+        <Metric label={t("complete")} value={`${overallPercent}%`} />
       </section>
-      <section className="kana-progress-tracks" aria-label="Track completion">
-        <h3>Tracks</h3>
+      <section className="kana-progress-tracks" aria-label={t("trackCompletion")}>
+        <h3>{t("tracksHeading")}</h3>
         {domain.tracks.map((track) => {
           const summary = getTrackSummary(track.id, progress, domain);
           return (
@@ -656,38 +707,39 @@ function StatisticsPanel({ domain, progress }: { domain: LearningDomain; progres
 }
 
 function StreakPanel({ progress }: { progress: ProgressSnapshot }) {
+  const t = useT();
   return (
     <div className="kana-progress-panel">
-      <section className="kana-streak-hero" aria-label="Current streak">
+      <section className="kana-streak-hero" aria-label={t("currentStreakAria")}>
         <Flame size={44} />
         <strong>{progress.streak}</strong>
-        <span>current streak</span>
+        <span>{t("currentStreakLabel")}</span>
       </section>
-      <section className="kana-stat-grid" aria-label="Streak statistics">
-        <Metric label="Current" value={progress.streak} />
-        <Metric label="Best" value={progress.bestStreak} />
-        <Metric label="Attempts" value={progress.attempts} />
-        <Metric label="Correct" value={progress.correct} />
+      <section className="kana-stat-grid" aria-label={t("streakStatistics")}>
+        <Metric label={t("current")} value={progress.streak} />
+        <Metric label={t("best")} value={progress.bestStreak} />
+        <Metric label={t("attempts")} value={progress.attempts} />
+        <Metric label={t("correct")} value={progress.correct} />
       </section>
     </div>
   );
 }
 
 function AchievementsPanel({ domain, progress }: { domain: LearningDomain; progress: ProgressSnapshot }) {
+  const t = useT();
   const unlocked = new Set(getUnlockedAchievements(progress, domain));
 
   return (
     <div className="kana-progress-panel">
-      <section className="kana-achievement-grid" aria-label="Achievements">
-        {achievementDefs.map(({ key, description }) => {
-          const name = domain.achievements[key];
-          const isUnlocked = unlocked.has(name);
+      <section className="kana-achievement-grid" aria-label={t("achievementsAria")}>
+        {achievementDefs.map(({ key, nameKey, descKey }) => {
+          const isUnlocked = unlocked.has(domain.achievements[key]);
           return (
             <article className={isUnlocked ? "kana-achievement unlocked" : "kana-achievement"} key={key}>
               <Trophy size={20} />
-              <strong>{name}</strong>
-              <small>{description}</small>
-              <em>{isUnlocked ? "Unlocked" : "Locked"}</em>
+              <strong>{t(nameKey)}</strong>
+              <small>{t(descKey)}</small>
+              <em>{isUnlocked ? t("unlocked") : t("locked")}</em>
             </article>
           );
         })}
