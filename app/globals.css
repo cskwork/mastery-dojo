@@ -1,0 +1,887 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Zen+Maru+Gothic:wght@500;700;800&display=swap");
+
+:root {
+  --kd-bg: #161a2f;
+  --kd-bg-soft: rgba(23, 27, 48, 0.9);
+  --kd-panel: rgba(19, 23, 42, 0.88);
+  --kd-line: rgba(206, 187, 255, 0.22);
+  --kd-line-strong: rgba(206, 187, 255, 0.4);
+  --kd-accent: oklch(0.7909 0.1242 299.66);
+  --kd-mint: oklch(0.8939 0.1672 171.49);
+  --kd-text: #ece9ff;
+  --kd-muted: rgba(236, 233, 255, 0.7);
+  --kd-dim: rgba(236, 233, 255, 0.48);
+  --kd-shadow: 0 26px 90px rgba(5, 7, 18, 0.34);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--kd-bg);
+  color: var(--kd-text);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--kd-bg);
+  font-family: "Noto Sans JP", system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+button,
+input,
+a {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.kana-page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 32%, rgba(165, 138, 235, 0.1), transparent 34%),
+    linear-gradient(180deg, #171b31 0%, #12162a 100%);
+}
+
+.kana-token-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 52px);
+  grid-auto-rows: 40px;
+  gap: 6px 4px;
+  align-content: start;
+  justify-content: start;
+  padding: 8px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.kana-token-backdrop span {
+  display: grid;
+  place-items: center;
+  min-width: 52px;
+  height: 40px;
+  border: 1px solid rgba(206, 187, 255, 0.06);
+  border-radius: 10px;
+  background: rgba(206, 187, 255, 0.035);
+  color: rgba(206, 187, 255, 0.18);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.kana-token-backdrop span:nth-child(5n),
+.kana-token-backdrop span:nth-child(11n) {
+  color: rgba(157, 237, 211, 0.17);
+}
+
+.kana-floating-action {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 4;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 0;
+  border-radius: 16px;
+  background: var(--kd-accent);
+  color: #161a2f;
+  box-shadow: 0 14px 34px rgba(7, 9, 20, 0.28);
+}
+
+.kana-home {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: min(756px, calc(100vw - 32px));
+  min-height: 100vh;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 145px 0 22px;
+}
+
+.kana-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin: 0 16px 30px;
+}
+
+.kana-header h1 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  color: var(--kd-accent);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-shadow: 0 10px 38px rgba(206, 187, 255, 0.18);
+}
+
+.kana-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.kana-controls button {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: rgba(206, 187, 255, 0.06);
+  color: var(--kd-accent);
+}
+
+.kana-controls button:hover,
+.kana-floating-action:hover {
+  filter: brightness(1.08);
+}
+
+.kana-domain-switcher {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 16px 16px;
+}
+
+.kana-domain-switcher button {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  min-height: 58px;
+  gap: 2px 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--kd-line);
+  border-radius: 14px;
+  background: rgba(19, 23, 42, 0.58);
+  color: var(--kd-muted);
+  text-align: left;
+}
+
+.kana-domain-switcher button:hover,
+.kana-domain-switcher button.active {
+  background: rgba(206, 187, 255, 0.08);
+  color: var(--kd-accent);
+  box-shadow: inset 0 0 0 1px var(--kd-line-strong);
+}
+
+.kana-domain-switcher span {
+  grid-row: span 2;
+  display: grid;
+  min-width: 32px;
+  height: 32px;
+  place-items: center;
+  color: var(--kd-mint);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.kana-domain-switcher strong {
+  overflow: hidden;
+  color: var(--kd-text);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kana-domain-switcher small {
+  overflow: hidden;
+  color: var(--kd-dim);
+  font-size: 11px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kana-domain-switcher.compact {
+  grid-template-columns: 1fr;
+  margin: 12px 8px 10px;
+  gap: 6px;
+}
+
+.kana-domain-switcher.compact button {
+  min-height: 44px;
+  padding: 7px 10px;
+}
+
+.kana-domain-switcher.compact span {
+  min-width: 28px;
+  height: 28px;
+  font-size: 13px;
+}
+
+.kana-domain-switcher.compact strong {
+  font-size: 14px;
+}
+
+.kana-domain-switcher.compact small {
+  display: none;
+}
+
+.kana-welcome {
+  min-height: 201px;
+  margin: 0 16px;
+  padding: 28px 30px;
+  border: 1px solid var(--kd-line);
+  border-radius: 16px;
+  background: var(--kd-panel);
+  box-shadow: var(--kd-shadow);
+}
+
+.kana-welcome h2 {
+  margin: 0 0 20px;
+  color: var(--kd-text);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.kana-welcome p {
+  max-width: 640px;
+  margin: 0;
+  color: var(--kd-muted);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.kana-welcome p + p {
+  margin-top: 12px;
+}
+
+.kana-dojo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin: 20px 16px 0;
+}
+
+.kana-dojo-card {
+  display: grid;
+  min-height: 116px;
+  place-items: center;
+  padding: 15px 14px 13px;
+  border: 1px solid var(--kd-line);
+  background: rgba(19, 23, 42, 0.58);
+  color: var(--kd-accent);
+  text-align: center;
+}
+
+.kana-dojo-card + .kana-dojo-card {
+  border-left: 0;
+}
+
+.kana-dojo-card:first-child {
+  border-radius: 16px 0 0 16px;
+}
+
+.kana-dojo-card:last-child {
+  border-radius: 0 16px 16px 0;
+}
+
+.kana-dojo-card:hover,
+.kana-dojo-card.active {
+  background: rgba(206, 187, 255, 0.08);
+  box-shadow: inset 0 0 0 1px var(--kd-line-strong);
+}
+
+.kana-card-mark {
+  color: var(--kd-mint);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.kana-card-label {
+  margin-top: 4px;
+  color: var(--kd-accent);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.kana-dojo-card small,
+.kana-dojo-card em {
+  color: var(--kd-dim);
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.3;
+}
+
+.kana-footer {
+  margin-top: auto;
+  padding-top: 80px;
+}
+
+.kana-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  color: var(--kd-dim);
+  font-size: 13px;
+}
+
+.kana-footer a:hover {
+  color: var(--kd-accent);
+}
+
+.kana-footer-meta {
+  position: fixed;
+  right: 16px;
+  bottom: 12px;
+  left: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  color: var(--kd-dim);
+  font-size: 12px;
+}
+
+.kana-socials {
+  display: flex;
+  gap: 10px;
+}
+
+.kana-socials a {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 10px;
+  color: var(--kd-dim);
+}
+
+.kana-app-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  background: linear-gradient(180deg, #171b31 0%, #12162a 100%);
+  color: var(--kd-text);
+  padding-bottom: 88px;
+}
+
+.kana-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 320px;
+  padding: 24px 12px;
+  border-right: 1px solid var(--kd-line);
+  background: rgba(18, 22, 42, 0.96);
+  z-index: 3;
+}
+
+.kana-sidebar h1 {
+  display: grid;
+  gap: 6px;
+  margin: 0 16px 8px;
+  color: var(--kd-accent);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.kana-sidebar nav {
+  display: grid;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.kana-sidebar button,
+.kana-mode-row button,
+.kana-choice-grid button,
+.kana-action-bar button {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--kd-muted);
+}
+
+.kana-sidebar nav button {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  min-height: 52px;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 14px;
+  text-align: left;
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.kana-sidebar nav button:hover,
+.kana-sidebar nav button.active {
+  background: rgba(206, 187, 255, 0.08);
+  color: var(--kd-accent);
+}
+
+.kana-sidebar small {
+  color: var(--kd-mint);
+  font-size: 13px;
+}
+
+.kana-nav-mark {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: var(--kd-mint);
+  font-size: 17px;
+}
+
+.kana-sidebar-collapse {
+  position: absolute;
+  bottom: 32px;
+  left: 20px;
+  width: 44px;
+  height: 32px;
+  border-radius: 12px;
+  color: var(--kd-accent);
+}
+
+.kana-dojo-main {
+  grid-column: 2;
+  min-width: 0;
+  padding: 0 24px 24px 16px;
+}
+
+.kana-dojo-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72px;
+  gap: 16px;
+}
+
+.kana-dojo-title h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: var(--kd-accent);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.kana-dojo-title h2 span {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  color: var(--kd-mint);
+  font-size: 26px;
+}
+
+.kana-section-panel,
+.kana-drill-card {
+  border: 1px solid var(--kd-line);
+  border-radius: 16px;
+  background: var(--kd-panel);
+  box-shadow: var(--kd-shadow);
+}
+
+.kana-section-panel {
+  min-height: 92px;
+  padding: 14px 16px;
+}
+
+.kana-section-panel h3,
+.kana-drill-card h3 {
+  margin: 0 0 10px;
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 22px;
+}
+
+.kana-section-panel p {
+  max-width: 920px;
+  margin: 0;
+  color: var(--kd-muted);
+  line-height: 1.7;
+}
+
+.kana-stat-grid,
+.kana-mode-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.kana-metric {
+  min-height: 66px;
+  padding: 10px 14px;
+  border: 1px solid var(--kd-line);
+  border-radius: 16px;
+  background: rgba(19, 23, 42, 0.62);
+}
+
+.kana-metric span {
+  display: block;
+  color: var(--kd-dim);
+  font-size: 13px;
+}
+
+.kana-metric strong {
+  color: var(--kd-mint);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 26px;
+}
+
+.kana-mode-row button {
+  min-height: 54px;
+  border-color: var(--kd-line);
+  border-radius: 14px;
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.kana-mode-row button:hover,
+.kana-mode-row button.active {
+  color: var(--kd-accent);
+  background: rgba(206, 187, 255, 0.08);
+  box-shadow: inset 0 0 0 1px var(--kd-line-strong);
+}
+
+.kana-drill-card {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  height: clamp(426px, calc(100vh - 470px), 560px);
+  min-height: 0;
+  padding: 18px;
+  overflow: auto;
+}
+
+.kana-drill-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--kd-dim);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.kana-drill-card pre,
+.kana-concept-chip {
+  min-height: 118px;
+  margin: 0;
+  padding: 22px;
+  border: 1px solid rgba(157, 237, 211, 0.18);
+  border-radius: 16px;
+  background: rgba(6, 8, 18, 0.66);
+  color: #eef6ff;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 17px;
+  line-height: 1.7;
+  overflow: auto;
+}
+
+.kana-concept-chip {
+  display: grid;
+  place-items: center;
+  color: var(--kd-mint);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.kana-drill-card input {
+  min-height: 54px;
+  width: 100%;
+  border: 1px solid var(--kd-line);
+  border-radius: 14px;
+  background: rgba(6, 8, 18, 0.42);
+  color: var(--kd-text);
+  padding: 0 16px;
+  outline: none;
+}
+
+.kana-drill-card input:disabled,
+.kana-choice-grid button:disabled {
+  cursor: default;
+  opacity: 0.86;
+}
+
+.kana-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.kana-choice-grid button {
+  min-height: 58px;
+  border-color: var(--kd-line);
+  border-radius: 14px;
+  color: var(--kd-text);
+  font-weight: 700;
+}
+
+.kana-choice-grid button:hover,
+.kana-choice-grid button.active {
+  color: var(--kd-mint);
+  background: rgba(157, 237, 211, 0.08);
+}
+
+.kana-feedback {
+  min-height: 52px;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--kd-line);
+  border-radius: 14px;
+  color: var(--kd-muted);
+}
+
+.kana-feedback.correct {
+  border-color: rgba(157, 237, 211, 0.48);
+  color: var(--kd-mint);
+}
+
+.kana-feedback.miss {
+  border-color: rgba(255, 126, 160, 0.48);
+  color: #ff91b3;
+}
+
+.kana-action-bar {
+  position: fixed;
+  right: 24px;
+  bottom: 48px;
+  left: 344px;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 224px 224px minmax(260px, 384px);
+  justify-content: center;
+  gap: 32px;
+  padding: 12px;
+  background: rgba(18, 22, 42, 0.72);
+  backdrop-filter: blur(16px);
+}
+
+.kana-action-bar button {
+  min-height: 58px;
+  border-color: var(--kd-line);
+  border-radius: 16px;
+  color: var(--kd-accent);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.kana-action-bar button.primary {
+  background: var(--kd-accent);
+  color: #161a2f;
+}
+
+@media (max-width: 760px) {
+  .kana-home {
+    width: min(100% - 24px, 756px);
+    padding-top: 94px;
+  }
+
+  .kana-header {
+    align-items: flex-start;
+  }
+
+  .kana-domain-switcher {
+    grid-template-columns: 1fr;
+  }
+
+  .kana-header h1 {
+    font-size: 30px;
+  }
+
+  .kana-controls button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .kana-welcome {
+    min-height: 180px;
+    padding: 24px;
+  }
+
+  .kana-welcome h2 {
+    font-size: 28px;
+  }
+
+  .kana-welcome p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .kana-app-page {
+    display: block;
+    padding-bottom: 0;
+  }
+
+  .kana-sidebar {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--kd-line);
+  }
+
+  .kana-sidebar h1 {
+    font-size: 28px;
+  }
+
+  .kana-sidebar nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kana-domain-switcher.compact {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .kana-sidebar nav button {
+    min-height: 48px;
+    font-size: 18px;
+  }
+
+  .kana-sidebar-collapse {
+    display: none;
+  }
+
+  .kana-dojo-main {
+    padding: 0 12px 160px;
+  }
+
+  .kana-dojo-title {
+    align-items: flex-start;
+    padding-top: 14px;
+  }
+
+  .kana-stat-grid,
+  .kana-mode-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kana-action-bar {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 520px) {
+  .kana-page {
+    overflow-y: auto;
+  }
+
+  .kana-token-backdrop {
+    grid-template-columns: repeat(auto-fill, 48px);
+    grid-auto-rows: 36px;
+  }
+
+  .kana-token-backdrop span {
+    min-width: 48px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .kana-floating-action {
+    width: 44px;
+    height: 44px;
+  }
+
+  .kana-header {
+    display: grid;
+    gap: 14px;
+  }
+
+  .kana-dojo-card {
+    min-height: 104px;
+    padding: 12px 8px;
+  }
+
+  .kana-card-mark {
+    font-size: 23px;
+  }
+
+  .kana-card-label {
+    font-size: 18px;
+  }
+
+  .kana-dojo-card em {
+    display: none;
+  }
+
+  .kana-footer {
+    padding-top: 46px;
+    padding-bottom: 56px;
+  }
+
+  .kana-footer-meta {
+    position: static;
+    flex-direction: column;
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  .kana-dojo-title {
+    display: grid;
+  }
+
+  .kana-dojo-title h2 {
+    font-size: 28px;
+  }
+
+  .kana-section-panel,
+  .kana-drill-card {
+    padding: 16px;
+  }
+
+  .kana-drill-card {
+    height: auto;
+    min-height: 420px;
+    overflow: visible;
+  }
+
+  .kana-choice-grid,
+  .kana-stat-grid,
+  .kana-mode-row {
+    grid-template-columns: 1fr;
+  }
+
+  .kana-action-bar button {
+    min-height: 52px;
+    font-size: 16px;
+  }
+}

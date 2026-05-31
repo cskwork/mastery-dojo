@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PostgresDojo mark">
+  <rect width="64" height="64" rx="18" fill="#171b31"/>
+  <path d="M16 22c0-6 7-10 16-10s16 4 16 10v20c0 6-7 10-16 10s-16-4-16-10V22Z" fill="#ccb9ff" opacity=".18"/>
+  <path d="M16 22c0 6 7 10 16 10s16-4 16-10M16 32c0 6 7 10 16 10s16-4 16-10M16 42c0 6 7 10 16 10s16-4 16-10" fill="none" stroke="#9dedd3" stroke-width="3"/>
+  <text x="32" y="28" text-anchor="middle" font-family="monospace" font-size="13" font-weight="700" fill="#ccb9ff">SQL</text>
+</svg>
