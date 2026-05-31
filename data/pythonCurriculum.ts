@@ -1,4 +1,5 @@
 import type { DrillMode, LearningDrill, LearningTrack, TrackId } from "@/data/dojoTypes";
+import { buildCurriculumDrills, type CurriculumTopic } from "@/data/curriculumFactory";
 
 export type { DrillMode, TrackId };
 
@@ -36,7 +37,7 @@ export const tracks: PythonTrack[] = [
   }
 ];
 
-export const drills: PythonDrill[] = [
+const baseDrills: PythonDrill[] = [
   {
     id: "foundations-print",
     trackId: "foundations",
@@ -808,3 +809,562 @@ export const drills: PythonDrill[] = [
     explanation: "Structured logs with identifiers make failures searchable and connect errors to the job that caused them."
   }
 ];
+
+const curriculumTopics: CurriculumTopic[] = [
+  {
+    id: "interpreter-cli",
+    trackId: "foundations",
+    level: 1,
+    concept: "interpreter and CLI",
+    answer: "python -m module execution",
+    hint: "Run modules with the interpreter so imports resolve like a package.",
+    explanation: "Using python -m package.module keeps module execution aligned with Python's import system.",
+    code: "python -m my_app.cli"
+  },
+  {
+    id: "source-encoding",
+    trackId: "foundations",
+    level: 1,
+    concept: "source files and encoding",
+    answer: "UTF-8 source text",
+    hint: "Modern Python source files are text, commonly UTF-8.",
+    explanation: "Understanding source encoding prevents broken literals, comments, and cross-platform file issues."
+  },
+  {
+    id: "truthiness",
+    trackId: "foundations",
+    level: 1,
+    concept: "truthiness",
+    answer: "empty containers are false",
+    hint: "Python uses truth value testing in if and while.",
+    explanation: "False, None, zero, and empty containers are falsey; most other objects are truthy.",
+    code: "if items:\n    process(items)"
+  },
+  {
+    id: "comparison-identity",
+    trackId: "foundations",
+    level: 2,
+    concept: "equality vs identity",
+    answer: "use == for values and is for identity",
+    hint: "Two equal values do not have to be the same object.",
+    explanation: "== asks whether values compare equal; is asks whether two names point to the same object."
+  },
+  {
+    id: "numeric-model",
+    trackId: "foundations",
+    level: 2,
+    concept: "numeric types",
+    answer: "int float Decimal Fraction",
+    hint: "Choose the numeric model that matches the problem.",
+    explanation: "Python has arbitrary precision integers, binary floats, decimals for money-like precision, and fractions for rational math."
+  },
+  {
+    id: "string-formatting",
+    trackId: "foundations",
+    level: 2,
+    concept: "formatted strings",
+    answer: "f-string",
+    hint: "Use readable interpolation for values in output.",
+    explanation: "Formatted string literals keep simple runtime expressions close to the text they produce.",
+    code: "f\"Hello {name}\""
+  },
+  {
+    id: "branching-match",
+    trackId: "foundations",
+    level: 2,
+    concept: "structural pattern matching",
+    answer: "match statement",
+    hint: "Use pattern matching when shape matters more than one boolean.",
+    explanation: "match can dispatch on literals, classes, mappings, sequences, and guarded patterns."
+  },
+  {
+    id: "loop-control",
+    trackId: "foundations",
+    level: 3,
+    concept: "loop control",
+    answer: "break continue else",
+    hint: "Loops can exit early, skip an iteration, or run an else block when no break occurs.",
+    explanation: "break, continue, and loop else let simple loops express search and retry control precisely."
+  },
+  {
+    id: "function-parameters",
+    trackId: "foundations",
+    level: 3,
+    concept: "function parameters",
+    answer: "positional-only and keyword-only parameters",
+    hint: "Python can control how callers pass arguments.",
+    explanation: "The / and * markers make public APIs clearer by separating positional and keyword-only parameters."
+  },
+  {
+    id: "exceptions",
+    trackId: "foundations",
+    level: 3,
+    concept: "exception handling",
+    answer: "raise specific exceptions",
+    hint: "Catch what you can handle and let the rest fail loudly.",
+    explanation: "Specific exceptions preserve failure meaning and avoid hiding defects behind broad except blocks.",
+    code: "try:\n    load_config()\nexcept FileNotFoundError:\n    create_default_config()"
+  },
+  {
+    id: "context-manager",
+    trackId: "foundations",
+    level: 3,
+    concept: "context managers",
+    answer: "with statement",
+    hint: "Use deterministic setup and cleanup for files, locks, and transactions.",
+    explanation: "The with statement calls enter and exit hooks so resources are cleaned up even after exceptions."
+  },
+  {
+    id: "module-imports",
+    trackId: "foundations",
+    level: 4,
+    concept: "modules and imports",
+    answer: "absolute imports",
+    hint: "Package code should import names from stable module paths.",
+    explanation: "Absolute imports reduce ambiguity and make package boundaries easier to follow."
+  },
+  {
+    id: "virtualenv",
+    trackId: "foundations",
+    level: 4,
+    concept: "virtual environments",
+    answer: "python -m venv",
+    hint: "Keep project dependencies isolated from the system interpreter.",
+    explanation: "venv creates a per-project environment so installed packages do not collide across projects."
+  },
+  {
+    id: "pip-tools",
+    trackId: "foundations",
+    level: 4,
+    concept: "package installation",
+    answer: "pip install",
+    hint: "Install from an index or local wheel into the active environment.",
+    explanation: "pip is the standard installer used with virtual environments and lockfile workflows."
+  },
+  {
+    id: "debugger-basics",
+    trackId: "foundations",
+    level: 4,
+    concept: "debugging basics",
+    answer: "breakpoint()",
+    hint: "Pause execution and inspect state instead of guessing.",
+    explanation: "breakpoint() enters the configured debugger so a learner can inspect variables and call stack state.",
+    code: "def total(items):\n    breakpoint()\n    return sum(items)"
+  },
+  {
+    id: "sequence-operations",
+    trackId: "data",
+    level: 3,
+    concept: "sequence operations",
+    answer: "slicing and iteration",
+    hint: "Lists, tuples, strings, and ranges share common sequence behavior.",
+    explanation: "Slicing and iteration are core tools for transforming ordered data without manual index loops."
+  },
+  {
+    id: "dict-patterns",
+    trackId: "data",
+    level: 3,
+    concept: "dictionary patterns",
+    answer: "get setdefault defaultdict Counter",
+    hint: "Use the mapping helper that matches the data accumulation problem.",
+    explanation: "Python dictionaries support defaults, counting, grouping, and membership checks efficiently."
+  },
+  {
+    id: "set-algebra",
+    trackId: "data",
+    level: 3,
+    concept: "set algebra",
+    answer: "union intersection difference",
+    hint: "Model uniqueness and membership with sets.",
+    explanation: "Set operations express comparisons between collections more clearly than nested loops."
+  },
+  {
+    id: "sorting-key",
+    trackId: "data",
+    level: 4,
+    concept: "sorting with keys",
+    answer: "key function",
+    hint: "Sort complex objects by a derived value.",
+    explanation: "A key function extracts the comparison value once per element and keeps sorting logic explicit."
+  },
+  {
+    id: "comprehensions",
+    trackId: "data",
+    level: 4,
+    concept: "comprehensions",
+    answer: "list dict set comprehension",
+    hint: "Use a compact expression for map/filter style transformations.",
+    explanation: "Comprehensions produce new collections from iterables while keeping the data flow local."
+  },
+  {
+    id: "iterators",
+    trackId: "data",
+    level: 4,
+    concept: "iterator protocol",
+    answer: "__iter__ and __next__",
+    hint: "Iteration is protocol-based, not limited to lists.",
+    explanation: "Objects that return an iterator and produce values with __next__ can be used in for loops."
+  },
+  {
+    id: "generators",
+    trackId: "data",
+    level: 5,
+    concept: "generators",
+    answer: "yield",
+    hint: "Generate values lazily instead of building a full list.",
+    explanation: "yield turns a function into a generator that can stream values one at a time."
+  },
+  {
+    id: "pathlib",
+    trackId: "data",
+    level: 5,
+    concept: "filesystem paths",
+    answer: "pathlib.Path",
+    hint: "Use object-oriented paths instead of string concatenation.",
+    explanation: "pathlib.Path gives portable path joining, reading, writing, globbing, and metadata access."
+  },
+  {
+    id: "json-csv",
+    trackId: "data",
+    level: 5,
+    concept: "structured files",
+    answer: "json and csv modules",
+    hint: "Use standard parsers for data formats.",
+    explanation: "The json and csv modules avoid brittle string splitting when reading and writing structured data."
+  },
+  {
+    id: "datetime-zoneinfo",
+    trackId: "data",
+    level: 5,
+    concept: "dates and time zones",
+    answer: "datetime with zoneinfo",
+    hint: "Store and compare aware datetimes when zones matter.",
+    explanation: "datetime plus zoneinfo models time zones without external dependencies for common cases."
+  },
+  {
+    id: "dataclasses",
+    trackId: "data",
+    level: 6,
+    concept: "data classes",
+    answer: "@dataclass",
+    hint: "Use generated init, repr, and comparison for plain data objects.",
+    explanation: "dataclasses reduce boilerplate when the class mainly groups named fields."
+  },
+  {
+    id: "typing-containers",
+    trackId: "data",
+    level: 6,
+    concept: "typed containers",
+    answer: "list[str] and dict[str, int]",
+    hint: "Annotate collection element types.",
+    explanation: "Parameterized built-in collection types document expected values and help static checkers."
+  },
+  {
+    id: "sqlite",
+    trackId: "data",
+    level: 6,
+    concept: "local relational storage",
+    answer: "sqlite3",
+    hint: "Use the bundled database for local durable relational data.",
+    explanation: "sqlite3 is useful for prototypes, scripts, tests, and small local applications."
+  },
+  {
+    id: "regex",
+    trackId: "data",
+    level: 6,
+    concept: "regular expressions",
+    answer: "re module",
+    hint: "Use patterns for text validation and extraction.",
+    explanation: "The re module handles structured text matching when plain string methods are not enough."
+  },
+  {
+    id: "serialization-boundaries",
+    trackId: "data",
+    level: 6,
+    concept: "serialization boundaries",
+    answer: "validate external data",
+    hint: "Treat files, APIs, and environment variables as untrusted input.",
+    explanation: "Validation protects code from wrong types, missing fields, and unsafe assumptions at boundaries."
+  },
+  {
+    id: "numeric-precision",
+    trackId: "data",
+    level: 6,
+    concept: "numeric precision",
+    answer: "Decimal for exact decimal math",
+    hint: "Binary float is not ideal for money-like calculations.",
+    explanation: "Decimal represents base-10 values predictably when exact decimal rounding is required."
+  },
+  {
+    id: "pure-functions",
+    trackId: "design",
+    level: 5,
+    concept: "pure functions",
+    answer: "return values instead of mutating hidden state",
+    hint: "Separate calculation from side effects.",
+    explanation: "Pure functions are easier to test and compose because outputs depend on explicit inputs."
+  },
+  {
+    id: "module-boundaries",
+    trackId: "design",
+    level: 5,
+    concept: "module boundaries",
+    answer: "one module per cohesive responsibility",
+    hint: "Group code by domain purpose rather than dumping helpers together.",
+    explanation: "Cohesive modules make imports, tests, and ownership easier to reason about."
+  },
+  {
+    id: "custom-exceptions",
+    trackId: "design",
+    level: 5,
+    concept: "custom exceptions",
+    answer: "domain-specific exception types",
+    hint: "Use meaningful failure names at business boundaries.",
+    explanation: "Domain-specific exceptions let callers handle known failures without parsing messages."
+  },
+  {
+    id: "logging",
+    trackId: "design",
+    level: 5,
+    concept: "logging",
+    answer: "logging.getLogger(__name__)",
+    hint: "Libraries should not print operational messages directly.",
+    explanation: "Module loggers let applications configure handlers, levels, and formats centrally."
+  },
+  {
+    id: "testing-pyramid",
+    trackId: "design",
+    level: 6,
+    concept: "testing strategy",
+    answer: "unit integration end-to-end tests",
+    hint: "Use the cheapest test that proves the behavior.",
+    explanation: "A practical test suite mixes fast unit tests with focused integration and workflow checks."
+  },
+  {
+    id: "fixtures",
+    trackId: "design",
+    level: 6,
+    concept: "test fixtures",
+    answer: "repeatable setup and teardown",
+    hint: "Tests need stable inputs and isolated side effects.",
+    explanation: "Fixtures reduce duplication while keeping setup controlled and explicit."
+  },
+  {
+    id: "dependency-injection",
+    trackId: "design",
+    level: 6,
+    concept: "dependency injection",
+    answer: "pass collaborators explicitly",
+    hint: "Make external services replaceable in tests.",
+    explanation: "Passing dependencies makes code easier to test and avoids hidden global coupling."
+  },
+  {
+    id: "decorators",
+    trackId: "design",
+    level: 6,
+    concept: "decorators",
+    answer: "wrapper function preserving behavior",
+    hint: "Use decorators for cross-cutting behavior around callables.",
+    explanation: "Decorators can add caching, validation, retries, or instrumentation while preserving a function interface."
+  },
+  {
+    id: "classes-composition",
+    trackId: "design",
+    level: 7,
+    concept: "composition over inheritance",
+    answer: "compose small collaborators",
+    hint: "Prefer object relationships that stay easy to replace.",
+    explanation: "Composition often creates clearer extension points than deep inheritance trees."
+  },
+  {
+    id: "protocols",
+    trackId: "design",
+    level: 7,
+    concept: "protocol-oriented design",
+    answer: "typing.Protocol",
+    hint: "Describe behavior required from a collaborator.",
+    explanation: "Protocol types capture structural interfaces without forcing inheritance."
+  },
+  {
+    id: "configuration",
+    trackId: "design",
+    level: 7,
+    concept: "configuration",
+    answer: "environment plus typed settings",
+    hint: "Separate deploy-specific values from code.",
+    explanation: "Typed settings make configuration explicit, validated, and safe to vary by environment."
+  },
+  {
+    id: "api-clients",
+    trackId: "design",
+    level: 7,
+    concept: "API client design",
+    answer: "timeouts retries and typed responses",
+    hint: "Network calls fail and should not hang forever.",
+    explanation: "A robust client defines timeouts, bounded retries, and response parsing at the boundary."
+  },
+  {
+    id: "packaging-pyproject",
+    trackId: "design",
+    level: 7,
+    concept: "pyproject packaging",
+    answer: "pyproject.toml",
+    hint: "Modern Python packaging metadata belongs in one standard project file.",
+    explanation: "pyproject.toml declares build system, metadata, dependencies, and tool configuration."
+  },
+  {
+    id: "cli-argparse",
+    trackId: "design",
+    level: 7,
+    concept: "command-line interfaces",
+    answer: "argparse",
+    hint: "Parse options and subcommands with a standard library parser.",
+    explanation: "argparse gives help text, validation, defaults, and subcommands without hand-parsing argv."
+  },
+  {
+    id: "docstrings",
+    trackId: "design",
+    level: 7,
+    concept: "documentation strings",
+    answer: "docstring",
+    hint: "Document public modules, classes, functions, and tricky behavior where users read help().",
+    explanation: "Docstrings become runtime documentation and support generated API references."
+  },
+  {
+    id: "asyncio-tasks",
+    trackId: "mastery",
+    level: 8,
+    concept: "async tasks",
+    answer: "asyncio.create_task",
+    hint: "Schedule concurrent coroutine work under an event loop.",
+    explanation: "create_task schedules a coroutine and returns a Task that can be awaited or cancelled."
+  },
+  {
+    id: "task-groups",
+    trackId: "mastery",
+    level: 8,
+    concept: "structured concurrency",
+    answer: "asyncio.TaskGroup",
+    hint: "Group related async tasks so failures and cancellation are scoped.",
+    explanation: "TaskGroup coordinates child tasks and propagates exceptions in a structured way."
+  },
+  {
+    id: "threading",
+    trackId: "mastery",
+    level: 8,
+    concept: "threading",
+    answer: "use threads for blocking I/O",
+    hint: "Threads can overlap waiting on external resources.",
+    explanation: "Threads can help I/O-bound work, while CPU-bound work is limited by the GIL in CPython."
+  },
+  {
+    id: "multiprocessing",
+    trackId: "mastery",
+    level: 8,
+    concept: "multiprocessing",
+    answer: "separate processes for CPU-bound work",
+    hint: "Use multiple interpreters/processes when CPU parallelism matters.",
+    explanation: "multiprocessing bypasses the per-process interpreter lock by running work in separate processes."
+  },
+  {
+    id: "profiling-memory",
+    trackId: "mastery",
+    level: 8,
+    concept: "performance profiling",
+    answer: "measure before optimizing",
+    hint: "Guessing performance bottlenecks wastes time.",
+    explanation: "Profilers and benchmarks reveal hot paths so optimizations target real costs."
+  },
+  {
+    id: "advanced-typing",
+    trackId: "mastery",
+    level: 9,
+    concept: "advanced typing",
+    answer: "TypeVar ParamSpec Literal TypedDict",
+    hint: "Use richer typing tools when simple annotations cannot express API contracts.",
+    explanation: "Advanced typing helps model generic functions, callable signatures, literal choices, and structured dictionaries."
+  },
+  {
+    id: "descriptors",
+    trackId: "mastery",
+    level: 9,
+    concept: "descriptors",
+    answer: "__get__ __set__ __delete__",
+    hint: "Descriptors power properties, methods, and many ORMs.",
+    explanation: "Descriptor methods let objects customize attribute access on classes and instances."
+  },
+  {
+    id: "metaclasses",
+    trackId: "mastery",
+    level: 9,
+    concept: "metaclasses",
+    answer: "class creation customization",
+    hint: "Reach for metaclasses only when class definitions themselves need policy.",
+    explanation: "Metaclasses customize how classes are built, but simpler decorators or factories are often better."
+  },
+  {
+    id: "security",
+    trackId: "mastery",
+    level: 9,
+    concept: "Python security",
+    answer: "avoid eval and validate input",
+    hint: "Dynamic execution and untrusted deserialization create high-risk boundaries.",
+    explanation: "Secure Python code avoids arbitrary execution, validates input, and treats external data as hostile."
+  },
+  {
+    id: "observability",
+    trackId: "mastery",
+    level: 9,
+    concept: "observability",
+    answer: "logs metrics traces",
+    hint: "Production systems need signals that explain behavior after deployment.",
+    explanation: "Logs, metrics, and traces make failures diagnosable without attaching a debugger."
+  },
+  {
+    id: "deployment",
+    trackId: "mastery",
+    level: 10,
+    concept: "deployment",
+    answer: "repeatable builds and pinned dependencies",
+    hint: "Production should not depend on whatever happens to install today.",
+    explanation: "Pinned dependencies and repeatable build artifacts make deploys auditable and rollback-friendly."
+  },
+  {
+    id: "web-services",
+    trackId: "mastery",
+    level: 10,
+    concept: "web service boundaries",
+    answer: "request validation and response contracts",
+    hint: "APIs are external boundaries and need explicit contracts.",
+    explanation: "Validation and typed response shapes keep web services predictable for clients and maintainers."
+  },
+  {
+    id: "database-access",
+    trackId: "mastery",
+    level: 10,
+    concept: "database access",
+    answer: "transactions and parameterized queries",
+    hint: "Database boundaries need consistency and injection safety.",
+    explanation: "Transactions preserve invariants, and parameters keep query data separate from SQL code."
+  },
+  {
+    id: "architecture",
+    trackId: "mastery",
+    level: 10,
+    concept: "application architecture",
+    answer: "domain boundaries and explicit dependencies",
+    hint: "Large Python systems need clear ownership and dependency direction.",
+    explanation: "Good architecture keeps business rules isolated from frameworks, storage, and transport details."
+  },
+  {
+    id: "maintenance",
+    trackId: "mastery",
+    level: 10,
+    concept: "long-term maintenance",
+    answer: "tests types linting and changelogs",
+    hint: "Sustained projects need feedback loops and recorded decisions.",
+    explanation: "Tests, types, linting, and changelogs keep changes reviewable and reduce regression risk."
+  }
+];
+
+export const drills: PythonDrill[] = [...baseDrills, ...buildCurriculumDrills("python-full", curriculumTopics)];

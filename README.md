@@ -16,11 +16,13 @@ This is one lightweight repo with two clear layers:
 
 ## Curriculum Depth
 
-Python is the reference full-content conversion. It currently spans Foundations, Data Fluency, Program Design, and Mastery Lab with 56 drills across Pick, Reverse, Input, and Debug modes. The content moves from syntax, values, loops, and files through testing, packaging, concurrency, protocols, profiling, and production observability.
+Python is the reference full-content conversion. It currently spans Foundations, Data Fluency, Program Design, and Mastery Lab with 300 drills across Pick, Reverse, Input, and Debug modes. The content moves from syntax, values, loops, files, and virtual environments through testing, packaging, concurrency, advanced typing, descriptors, security, deployment, architecture, and production observability.
 
-PostgreSQL now follows the same full-content rule: SQL Foundations, Query Fluency, Schema Design, and Production Lab each carry 14 drills, moving from SELECT basics through joins, constraints, indexes, transactions, EXPLAIN, VACUUM, replication, backup recovery, and least-privilege roles.
+PostgreSQL follows the same full-content rule with 296 drills: SQL Foundations, Query Fluency, Schema Design, and Production Lab move from SELECT basics through joins, constraints, indexes, transactions, CTEs, windows, JSONB, partitioning, RLS, EXPLAIN, VACUUM, replication, backup recovery, HA, upgrades, incidents, and least-privilege roles.
 
-Redis Streams now follows the same full-content rule: Stream Basics, Producer Flow, Consumer Groups, and Reliability Lab each carry 14 drills, moving from XADD and IDs through trimming, consumer groups, pending entries, recovery, monitoring, replay, and at-least-once processing.
+Redis Streams follows the same full-content rule with 296 drills: Stream Basics, Producer Flow, Consumer Groups, and Reliability Lab move from XADD and IDs through trimming, event contracts, outbox patterns, consumer groups, pending entries, recovery, dead-letter streams, monitoring, Redis Cluster concerns, replay, capacity planning, and at-least-once processing.
+
+The full-curriculum floor is enforced in tests: every registered domain must keep at least 280 drills and every track must keep at least 70 drills.
 
 ## Run
 

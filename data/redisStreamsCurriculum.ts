@@ -1,4 +1,5 @@
 import type { LearningDrill, LearningTrack } from "@/data/dojoTypes";
+import { buildCurriculumDrills, type CurriculumTopic } from "@/data/curriculumFactory";
 
 export const tracks: LearningTrack[] = [
   {
@@ -31,7 +32,7 @@ export const tracks: LearningTrack[] = [
   }
 ];
 
-export const drills: LearningDrill[] = [
+const baseDrills: LearningDrill[] = [
   {
     id: "stream-foundations-xadd",
     trackId: "stream-foundations",
@@ -837,3 +838,549 @@ export const drills: LearningDrill[] = [
     explanation: "Acknowledge after durable successful processing, otherwise Redis will not redeliver failed work."
   }
 ];
+
+const curriculumTopics: CurriculumTopic[] = [
+  {
+    id: "stream-vs-other-types",
+    trackId: "stream-foundations",
+    level: 1,
+    concept: "streams vs lists and pubsub",
+    answer: "durable append-only event log",
+    hint: "Streams keep history and support replay, unlike pure Pub/Sub.",
+    explanation: "Redis Streams combine append-only history, IDs, range reads, blocking reads, and consumer groups."
+  },
+  {
+    id: "xadd-shape",
+    trackId: "stream-foundations",
+    level: 1,
+    concept: "XADD shape",
+    answer: "key id field value pairs",
+    hint: "Every entry has an ID and one or more field/value pairs.",
+    explanation: "XADD writes structured entries using a stream key, an ID such as *, then field value pairs.",
+    code: "XADD events * type signup user_id 42"
+  },
+  {
+    id: "id-semantics",
+    trackId: "stream-foundations",
+    level: 1,
+    concept: "stream ID semantics",
+    answer: "milliseconds and sequence",
+    hint: "IDs are ordered and normally generated from server time plus a sequence.",
+    explanation: "Redis stream IDs order entries and can be generated automatically or supplied explicitly."
+  },
+  {
+    id: "field-values",
+    trackId: "stream-foundations",
+    level: 2,
+    concept: "field/value entries",
+    answer: "flat field value pairs",
+    hint: "Streams do not require JSON, though JSON can be stored as a value.",
+    explanation: "Explicit fields make inspection, routing, and partial decoding easier for consumers."
+  },
+  {
+    id: "xrange",
+    trackId: "stream-foundations",
+    level: 2,
+    concept: "XRANGE",
+    answer: "inclusive ascending ID range",
+    hint: "Use - and + for the full stream range.",
+    explanation: "XRANGE reads stream history in ascending ID order between inclusive bounds."
+  },
+  {
+    id: "xrevrange",
+    trackId: "stream-foundations",
+    level: 2,
+    concept: "XREVRANGE",
+    answer: "descending ID range",
+    hint: "Use it to inspect newest events first.",
+    explanation: "XREVRANGE is useful for debugging recent stream activity without reading from the beginning."
+  },
+  {
+    id: "xread-direct",
+    trackId: "stream-foundations",
+    level: 2,
+    concept: "direct XREAD",
+    answer: "read without consumer group",
+    hint: "Use XREAD for simple readers or ad hoc replay.",
+    explanation: "XREAD can read one or more streams by last-seen ID and optionally block for new entries."
+  },
+  {
+    id: "block-option",
+    trackId: "stream-foundations",
+    level: 3,
+    concept: "BLOCK option",
+    answer: "wait for new entries",
+    hint: "Blocking reads avoid busy polling.",
+    explanation: "BLOCK lets a client wait for stream entries up to a timeout."
+  },
+  {
+    id: "count-option",
+    trackId: "stream-foundations",
+    level: 3,
+    concept: "COUNT option",
+    answer: "limit batch size",
+    hint: "Bound how many entries a reader receives at once.",
+    explanation: "COUNT keeps batches predictable for latency, memory, and retry behavior."
+  },
+  {
+    id: "multi-stream-xread",
+    trackId: "stream-foundations",
+    level: 3,
+    concept: "multi-stream reads",
+    answer: "keys first then IDs",
+    hint: "In XREAD STREAMS, list all stream keys before all offsets.",
+    explanation: "The number of IDs after STREAMS must match the number of stream keys."
+  },
+  {
+    id: "xlen",
+    trackId: "stream-foundations",
+    level: 3,
+    concept: "XLEN",
+    answer: "stream entry count",
+    hint: "Length is a quick backlog or retention signal.",
+    explanation: "XLEN reports how many entries are currently stored in a stream."
+  },
+  {
+    id: "xdel",
+    trackId: "stream-foundations",
+    level: 3,
+    concept: "XDEL",
+    answer: "delete entries by ID",
+    hint: "Deleting data is separate from acknowledging group delivery.",
+    explanation: "XDEL removes stored entries but does not by itself process consumer-group acknowledgements."
+  },
+  {
+    id: "stream-memory",
+    trackId: "stream-foundations",
+    level: 4,
+    concept: "stream memory",
+    answer: "retention must be planned",
+    hint: "An append-only structure grows unless you trim it.",
+    explanation: "Production streams need retention policy, monitoring, and data lifecycle decisions."
+  },
+  {
+    id: "read-offsets",
+    trackId: "stream-foundations",
+    level: 4,
+    concept: "read offsets",
+    answer: "last seen ID controls replay",
+    hint: "0-0, $, and explicit IDs mean different read positions.",
+    explanation: "Offset choice decides whether a reader replays history, starts at the tail, or continues from a checkpoint."
+  },
+  {
+    id: "exclusive-xread",
+    trackId: "stream-foundations",
+    level: 4,
+    concept: "XREAD exclusivity",
+    answer: "returns IDs greater than the offset",
+    hint: "The supplied ID is the last seen entry, not the first returned entry.",
+    explanation: "Direct XREAD returns entries after the provided ID, which matters for replay checkpoints."
+  },
+  {
+    id: "event-contract",
+    trackId: "stream-producers",
+    level: 4,
+    concept: "event contract",
+    answer: "stable fields and schema version",
+    hint: "Consumers need to parse events safely over time.",
+    explanation: "A stream event contract should name required fields, optional fields, versioning, and compatibility rules."
+  },
+  {
+    id: "idempotent-producer",
+    trackId: "stream-producers",
+    level: 4,
+    concept: "idempotent producer",
+    answer: "deduplicate retries with a business key",
+    hint: "A network retry may append the same business event twice.",
+    explanation: "Producer idempotency prevents duplicate downstream effects when appends are retried."
+  },
+  {
+    id: "pipeline-xadd",
+    trackId: "stream-producers",
+    level: 4,
+    concept: "pipelined XADD",
+    answer: "batch network round trips",
+    hint: "Throughput often improves by reducing request/response waits.",
+    explanation: "Pipelining multiple XADD commands can increase producer throughput while preserving command order."
+  },
+  {
+    id: "maxlen",
+    trackId: "stream-producers",
+    level: 4,
+    concept: "MAXLEN retention",
+    answer: "trim by approximate length",
+    hint: "Use MAXLEN ~ when exact trimming is unnecessary.",
+    explanation: "MAXLEN controls stream size, and approximate trimming improves performance for high-volume streams."
+  },
+  {
+    id: "minid",
+    trackId: "stream-producers",
+    level: 5,
+    concept: "MINID retention",
+    answer: "trim entries below an ID",
+    hint: "Retention can be age-like when IDs track time.",
+    explanation: "MINID removes entries older than an ID threshold, which can align with time-window retention."
+  },
+  {
+    id: "xtrim",
+    trackId: "stream-producers",
+    level: 5,
+    concept: "XTRIM",
+    answer: "standalone stream trimming",
+    hint: "Trim existing streams outside the append path.",
+    explanation: "XTRIM applies MAXLEN or MINID trimming to a stream that already exists."
+  },
+  {
+    id: "nomkstream",
+    trackId: "stream-producers",
+    level: 5,
+    concept: "NOMKSTREAM",
+    answer: "fail if stream is missing",
+    hint: "Use it when stream creation must be controlled elsewhere.",
+    explanation: "NOMKSTREAM stops XADD from implicitly creating a missing stream key."
+  },
+  {
+    id: "payload-design",
+    trackId: "stream-producers",
+    level: 5,
+    concept: "payload design",
+    answer: "explicit fields over opaque blobs when possible",
+    hint: "Field-level visibility helps debugging and routing.",
+    explanation: "JSON payloads are valid, but explicit fields improve stream inspection and simple consumers."
+  },
+  {
+    id: "partitioning",
+    trackId: "stream-producers",
+    level: 5,
+    concept: "producer partitioning",
+    answer: "partition by tenant or aggregate key",
+    hint: "A single stream has one ordered lane.",
+    explanation: "Partitioning hot event flows across stream keys increases parallelism while keeping order within a partition."
+  },
+  {
+    id: "clock-ids",
+    trackId: "stream-producers",
+    level: 6,
+    concept: "explicit IDs and clocks",
+    answer: "prefer generated IDs unless ordering requires control",
+    hint: "Bad explicit IDs can be rejected for not increasing.",
+    explanation: "Auto-generated IDs avoid many clock and monotonicity problems."
+  },
+  {
+    id: "producer-errors",
+    trackId: "stream-producers",
+    level: 6,
+    concept: "producer error handling",
+    answer: "bounded retries and durable outbox",
+    hint: "Do not lose business events when Redis is briefly unavailable.",
+    explanation: "A durable outbox and bounded retry policy protect event publication from transient failures."
+  },
+  {
+    id: "outbox-pattern",
+    trackId: "stream-producers",
+    level: 6,
+    concept: "outbox pattern",
+    answer: "commit state change and event record together",
+    hint: "Avoid publishing an event for a database change that did not commit.",
+    explanation: "The outbox pattern records events transactionally with application state before a relay publishes them."
+  },
+  {
+    id: "producer-observability",
+    trackId: "stream-producers",
+    level: 6,
+    concept: "producer observability",
+    answer: "append latency error rate and stream length",
+    hint: "Watch both write success and backlog growth.",
+    explanation: "Producer metrics show whether events are being written reliably and at expected volume."
+  },
+  {
+    id: "schema-evolution",
+    trackId: "stream-producers",
+    level: 6,
+    concept: "schema evolution",
+    answer: "backward-compatible fields",
+    hint: "Old consumers may read new events.",
+    explanation: "Additive changes and versioned fields let producers evolve without breaking deployed consumers."
+  },
+  {
+    id: "write-amplification",
+    trackId: "stream-producers",
+    level: 6,
+    concept: "write amplification",
+    answer: "avoid duplicate derived events",
+    hint: "Each event adds memory, replication, and consumer work.",
+    explanation: "Producer design should avoid unnecessary event copies and keep payloads focused."
+  },
+  {
+    id: "group-create",
+    trackId: "stream-consumers",
+    level: 5,
+    concept: "consumer group creation",
+    answer: "XGROUP CREATE key group id",
+    hint: "Create delivery state before workers consume.",
+    explanation: "A consumer group tracks last-delivered ID and pending entries per group."
+  },
+  {
+    id: "mkstream",
+    trackId: "stream-consumers",
+    level: 5,
+    concept: "MKSTREAM",
+    answer: "create empty stream during group setup",
+    hint: "Useful for provisioning groups before producers write.",
+    explanation: "MKSTREAM lets XGROUP CREATE initialize a group even when the stream key is missing."
+  },
+  {
+    id: "readgroup-new",
+    trackId: "stream-consumers",
+    level: 5,
+    concept: "new group messages",
+    answer: "> reads never-delivered entries",
+    hint: "Use > for normal consumer-group work sharing.",
+    explanation: "XREADGROUP with > delivers entries that have not yet been assigned inside the group."
+  },
+  {
+    id: "consumer-names",
+    trackId: "stream-consumers",
+    level: 5,
+    concept: "consumer names",
+    answer: "unique worker identity",
+    hint: "Redis tracks pending ownership by consumer name.",
+    explanation: "Distinct consumer names make monitoring, recovery, and pending ownership accurate."
+  },
+  {
+    id: "pel",
+    trackId: "stream-consumers",
+    level: 6,
+    concept: "pending entries list",
+    answer: "delivered but unacknowledged work",
+    hint: "Pending entries are not done until acknowledged.",
+    explanation: "The PEL is the core state that enables retry and recovery in consumer groups."
+  },
+  {
+    id: "xack",
+    trackId: "stream-consumers",
+    level: 6,
+    concept: "acknowledgement",
+    answer: "XACK after durable success",
+    hint: "Acknowledge only after the side effect is safe.",
+    explanation: "XACK removes an entry from the PEL so it is not redelivered for recovery."
+  },
+  {
+    id: "xpending",
+    trackId: "stream-consumers",
+    level: 6,
+    concept: "XPENDING",
+    answer: "inspect pending summary and details",
+    hint: "Use it to find stuck consumers and stale messages.",
+    explanation: "XPENDING reports pending counts, idle time, delivery counts, and ownership."
+  },
+  {
+    id: "pending-replay",
+    trackId: "stream-consumers",
+    level: 6,
+    concept: "pending replay",
+    answer: "read old IDs instead of >",
+    hint: "A consumer can re-read its own pending entries.",
+    explanation: "XREADGROUP with an ID such as 0 reads pending history rather than new work."
+  },
+  {
+    id: "noack",
+    trackId: "stream-consumers",
+    level: 7,
+    concept: "NOACK",
+    answer: "skip pending tracking",
+    hint: "Only use it when losing messages is acceptable.",
+    explanation: "NOACK trades reliability for lower bookkeeping overhead by not adding entries to the PEL."
+  },
+  {
+    id: "xclaim",
+    trackId: "stream-consumers",
+    level: 7,
+    concept: "XCLAIM",
+    answer: "manual stale message transfer",
+    hint: "Claim specific pending IDs for another consumer.",
+    explanation: "XCLAIM transfers ownership after a minimum idle time so a healthy worker can retry work."
+  },
+  {
+    id: "xautoclaim",
+    trackId: "stream-consumers",
+    level: 7,
+    concept: "XAUTOCLAIM",
+    answer: "scan and claim stale pending entries",
+    hint: "Use cursor-style recovery for many stale entries.",
+    explanation: "XAUTOCLAIM simplifies recovery by scanning the PEL and claiming eligible entries."
+  },
+  {
+    id: "xinfo-consumers",
+    trackId: "stream-consumers",
+    level: 7,
+    concept: "XINFO CONSUMERS",
+    answer: "inspect consumer idle and pending counts",
+    hint: "Use it to identify stuck or dead workers.",
+    explanation: "XINFO CONSUMERS exposes per-consumer operational state inside a group."
+  },
+  {
+    id: "group-fanout",
+    trackId: "stream-consumers",
+    level: 8,
+    concept: "group fanout",
+    answer: "one consumer group per independent subscriber",
+    hint: "Consumers in one group share work; groups each get their own cursor.",
+    explanation: "Separate groups let billing, analytics, and notifications each process every event independently."
+  },
+  {
+    id: "dead-letter",
+    trackId: "stream-consumers",
+    level: 8,
+    concept: "dead-letter stream",
+    answer: "move poison messages after retry limit",
+    hint: "Do not let one bad event block a shard forever.",
+    explanation: "A dead-letter stream preserves failed events for investigation while freeing the main flow."
+  },
+  {
+    id: "group-setid",
+    trackId: "stream-consumers",
+    level: 8,
+    concept: "XGROUP SETID",
+    answer: "move group delivery cursor",
+    hint: "Use carefully for replay or skip-ahead operations.",
+    explanation: "XGROUP SETID adjusts a group's last-delivered ID without rewriting stream entries."
+  },
+  {
+    id: "at-least-once",
+    trackId: "stream-operations",
+    level: 8,
+    concept: "at-least-once processing",
+    answer: "messages can be delivered again",
+    hint: "Crashes before acknowledgement create retries.",
+    explanation: "Consumer groups provide at-least-once delivery, so handlers must tolerate duplicates."
+  },
+  {
+    id: "idempotent-consumer",
+    trackId: "stream-operations",
+    level: 8,
+    concept: "idempotent consumer",
+    answer: "deduplicate side effects by event ID or business key",
+    hint: "A retry should not charge, email, or mutate twice.",
+    explanation: "Idempotency is required for safe retries under at-least-once delivery."
+  },
+  {
+    id: "backpressure",
+    trackId: "stream-operations",
+    level: 8,
+    concept: "backpressure",
+    answer: "bound batch size and scale consumers",
+    hint: "Consumers need a controlled way to fall behind and recover.",
+    explanation: "Backpressure combines COUNT, worker capacity, rate limits, and lag monitoring."
+  },
+  {
+    id: "lag-monitoring",
+    trackId: "stream-operations",
+    level: 8,
+    concept: "lag monitoring",
+    answer: "watch stream length group lag and pending",
+    hint: "Lag tells you how far processing is behind production.",
+    explanation: "Lag and pending metrics distinguish ordinary backlog from stuck work."
+  },
+  {
+    id: "xinfo-stream",
+    trackId: "stream-operations",
+    level: 9,
+    concept: "XINFO STREAM",
+    answer: "inspect stream metadata",
+    hint: "Use it for length, first/last entry, and group-related state.",
+    explanation: "XINFO STREAM exposes operational metadata without scanning all entries."
+  },
+  {
+    id: "retention-vs-recovery",
+    trackId: "stream-operations",
+    level: 9,
+    concept: "retention vs recovery",
+    answer: "do not trim before consumers can recover",
+    hint: "Deleting entries can conflict with pending recovery expectations.",
+    explanation: "Retention policy must consider consumer lag, PEL state, audit needs, and replay windows."
+  },
+  {
+    id: "ordering",
+    trackId: "stream-operations",
+    level: 9,
+    concept: "ordering model",
+    answer: "ordered by ID per stream",
+    hint: "Completion order can differ from delivery order when workers run concurrently.",
+    explanation: "Redis Streams preserve ID order within a stream, but parallel consumers can finish work out of order."
+  },
+  {
+    id: "sharding",
+    trackId: "stream-operations",
+    level: 9,
+    concept: "stream sharding",
+    answer: "multiple stream keys for parallel lanes",
+    hint: "Use partition keys when one stream becomes too hot.",
+    explanation: "Sharding streams increases throughput while preserving order inside each shard."
+  },
+  {
+    id: "redis-cluster",
+    trackId: "stream-operations",
+    level: 9,
+    concept: "Redis Cluster streams",
+    answer: "hash tags for related keys",
+    hint: "Multi-key stream operations need keys in the same hash slot.",
+    explanation: "Cluster deployments require key-slot planning, especially when reading multiple streams."
+  },
+  {
+    id: "persistence",
+    trackId: "stream-operations",
+    level: 9,
+    concept: "persistence",
+    answer: "AOF or RDB durability choices",
+    hint: "Streams are only as durable as the Redis persistence and replication setup.",
+    explanation: "AOF, RDB, replication, and managed service policies define data loss windows."
+  },
+  {
+    id: "failover",
+    trackId: "stream-operations",
+    level: 10,
+    concept: "failover recovery",
+    answer: "reconnect resume claim and acknowledge",
+    hint: "Workers need startup logic after Redis or process failure.",
+    explanation: "Reliable consumers recover by reconnecting, replaying or claiming pending work, then acknowledging only after success."
+  },
+  {
+    id: "memory-policy",
+    trackId: "stream-operations",
+    level: 10,
+    concept: "memory policy",
+    answer: "avoid eviction of critical stream data",
+    hint: "Eviction can silently destroy reliability assumptions.",
+    explanation: "Critical streams need memory sizing, retention, and eviction policies that protect required history."
+  },
+  {
+    id: "alerting",
+    trackId: "stream-operations",
+    level: 10,
+    concept: "alerting",
+    answer: "alerts on lag pending idle and errors",
+    hint: "Alert on symptoms that threaten recovery objectives.",
+    explanation: "Operational alerts should cover growing lag, stale pending entries, consumer failures, and append errors."
+  },
+  {
+    id: "disaster-recovery",
+    trackId: "stream-operations",
+    level: 10,
+    concept: "disaster recovery",
+    answer: "backup replay and rebuild plans",
+    hint: "Know how to restore Redis state or rebuild from source systems.",
+    explanation: "A full Streams design includes recovery runbooks, source-of-truth decisions, and replay procedures."
+  },
+  {
+    id: "capacity-planning",
+    trackId: "stream-operations",
+    level: 10,
+    concept: "capacity planning",
+    answer: "model write rate retention and consumer throughput",
+    hint: "Reliability depends on capacity matching the event flow.",
+    explanation: "Capacity planning estimates memory, network, CPU, retention window, and consumer processing rate."
+  }
+];
+
+export const drills: LearningDrill[] = [...baseDrills, ...buildCurriculumDrills("redis-full", curriculumTopics)];

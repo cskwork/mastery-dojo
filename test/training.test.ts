@@ -95,11 +95,11 @@ describe("training logic", () => {
       const domain = learningDomains.find((item) => item.id === domainId);
 
       expect(domain).toBeDefined();
-      expect(domain!.drills.length).toBeGreaterThanOrEqual(56);
+      expect(domain!.drills.length).toBeGreaterThanOrEqual(280);
       expect(domain!.tracks.at(-1)?.level).toBe("Expertise");
 
       for (const track of domain!.tracks) {
-        expect(domain!.drills.filter((drill) => drill.trackId === track.id).length).toBeGreaterThanOrEqual(14);
+        expect(domain!.drills.filter((drill) => drill.trackId === track.id).length).toBeGreaterThanOrEqual(70);
       }
     }
   });

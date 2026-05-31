@@ -1,4 +1,5 @@
 import type { LearningDrill, LearningTrack } from "@/data/dojoTypes";
+import { buildCurriculumDrills, type CurriculumTopic } from "@/data/curriculumFactory";
 
 export const tracks: LearningTrack[] = [
   {
@@ -31,7 +32,7 @@ export const tracks: LearningTrack[] = [
   }
 ];
 
-export const drills: LearningDrill[] = [
+const baseDrills: LearningDrill[] = [
   {
     id: "pg-foundations-select",
     trackId: "pg-foundations",
@@ -842,3 +843,549 @@ export const drills: LearningDrill[] = [
     explanation: "Least privilege reduces blast radius. App roles should receive targeted permissions, not superuser."
   }
 ];
+
+const curriculumTopics: CurriculumTopic[] = [
+  {
+    id: "relational-model",
+    trackId: "pg-foundations",
+    level: 1,
+    concept: "relational model",
+    answer: "tables rows columns relations",
+    hint: "Model facts as rows in tables with defined columns.",
+    explanation: "The relational model gives PostgreSQL its core structure: relations with rows, columns, keys, and constraints."
+  },
+  {
+    id: "psql-basics",
+    trackId: "pg-foundations",
+    level: 1,
+    concept: "psql basics",
+    answer: "\\d and \\? meta commands",
+    hint: "Use psql meta commands to inspect schema and help.",
+    explanation: "psql commands such as \\d, \\dt, \\x, and \\? make exploration fast before writing application code."
+  },
+  {
+    id: "select-list",
+    trackId: "pg-foundations",
+    level: 1,
+    concept: "SELECT list",
+    answer: "choose only needed columns",
+    hint: "Avoid SELECT * when callers need stable output.",
+    explanation: "Explicit column lists reduce bandwidth and protect clients from accidental schema-change coupling."
+  },
+  {
+    id: "where-predicates",
+    trackId: "pg-foundations",
+    level: 2,
+    concept: "WHERE predicates",
+    answer: "boolean filters before grouping",
+    hint: "WHERE reduces candidate rows before GROUP BY and SELECT output.",
+    explanation: "WHERE predicates define which rows are considered for later relational operations."
+  },
+  {
+    id: "null-three-valued-logic",
+    trackId: "pg-foundations",
+    level: 2,
+    concept: "NULL logic",
+    answer: "true false unknown",
+    hint: "NULL comparisons can become unknown rather than true or false.",
+    explanation: "PostgreSQL uses three-valued SQL logic, so IS NULL and IS NOT NULL are essential."
+  },
+  {
+    id: "order-limit",
+    trackId: "pg-foundations",
+    level: 2,
+    concept: "ORDER BY and LIMIT",
+    answer: "deterministic order before limiting",
+    hint: "LIMIT without ORDER BY can return unstable subsets.",
+    explanation: "ORDER BY defines result order, and LIMIT then selects from that ordered result."
+  },
+  {
+    id: "dml-returning",
+    trackId: "pg-foundations",
+    level: 3,
+    concept: "DML RETURNING",
+    answer: "RETURNING modified rows",
+    hint: "INSERT, UPDATE, and DELETE can send changed row values back.",
+    explanation: "RETURNING avoids a second SELECT for generated IDs, changed timestamps, and affected values."
+  },
+  {
+    id: "transactions-basics",
+    trackId: "pg-foundations",
+    level: 3,
+    concept: "transaction basics",
+    answer: "BEGIN COMMIT ROLLBACK",
+    hint: "Group related writes so they succeed or fail together.",
+    explanation: "Transactions protect consistency by making a set of statements atomic."
+  },
+  {
+    id: "data-types",
+    trackId: "pg-foundations",
+    level: 3,
+    concept: "data types",
+    answer: "choose semantic column types",
+    hint: "Types are part of the data contract.",
+    explanation: "Using numeric, text, boolean, timestamp, uuid, jsonb, array, and domain types well improves correctness."
+  },
+  {
+    id: "time-types",
+    trackId: "pg-foundations",
+    level: 3,
+    concept: "time handling",
+    answer: "timestamptz for instants",
+    hint: "Store global points in time independently from display time zones.",
+    explanation: "timestamptz is usually the right choice for event timestamps and audit fields."
+  },
+  {
+    id: "expressions-functions",
+    trackId: "pg-foundations",
+    level: 4,
+    concept: "expressions and functions",
+    answer: "computed values in SELECT and WHERE",
+    hint: "SQL expressions can derive, transform, and compare values.",
+    explanation: "PostgreSQL expressions and functions support calculations without moving all work to application code."
+  },
+  {
+    id: "case-coalesce",
+    trackId: "pg-foundations",
+    level: 4,
+    concept: "CASE and COALESCE",
+    answer: "conditional values and fallbacks",
+    hint: "Use SQL expressions for labels, fallback fields, and derived status.",
+    explanation: "CASE handles branching and COALESCE returns the first non-null expression."
+  },
+  {
+    id: "views",
+    trackId: "pg-foundations",
+    level: 4,
+    concept: "views",
+    answer: "saved query interface",
+    hint: "Expose a stable query shape without duplicating SQL everywhere.",
+    explanation: "Views package a SELECT as a reusable relation for reporting, permissions, and compatibility."
+  },
+  {
+    id: "parameters",
+    trackId: "pg-foundations",
+    level: 4,
+    concept: "query parameters",
+    answer: "bind values instead of string interpolation",
+    hint: "User input should never be concatenated into SQL text.",
+    explanation: "Parameterized queries protect against SQL injection and keep query planning clearer.",
+    code: "WHERE email = $1"
+  },
+  {
+    id: "schema-search-path",
+    trackId: "pg-foundations",
+    level: 4,
+    concept: "schemas and search_path",
+    answer: "namespace database objects",
+    hint: "Schemas organize tables, functions, and permissions inside one database.",
+    explanation: "Schemas let teams separate app, extension, tenant, and administrative objects."
+  },
+  {
+    id: "inner-outer-joins",
+    trackId: "pg-querying",
+    level: 4,
+    concept: "inner and outer joins",
+    answer: "match rows with ON conditions",
+    hint: "Choose INNER when both sides must match; choose OUTER when one side must be preserved.",
+    explanation: "Join type controls whether unmatched rows disappear or remain with nulls."
+  },
+  {
+    id: "join-cardinality",
+    trackId: "pg-querying",
+    level: 4,
+    concept: "join cardinality",
+    answer: "understand one-to-one one-to-many many-to-many",
+    hint: "Unexpected duplicates often come from misunderstood relationships.",
+    explanation: "Cardinality explains why joins multiply rows and how bridge tables model many-to-many data."
+  },
+  {
+    id: "aggregation",
+    trackId: "pg-querying",
+    level: 4,
+    concept: "aggregation",
+    answer: "GROUP BY with aggregate functions",
+    hint: "Group rows before applying count, sum, avg, min, or max.",
+    explanation: "Aggregation summarizes sets of rows while preserving grouping columns."
+  },
+  {
+    id: "having",
+    trackId: "pg-querying",
+    level: 5,
+    concept: "HAVING",
+    answer: "filter grouped results",
+    hint: "Use HAVING after aggregate values exist.",
+    explanation: "HAVING applies predicates to grouped rows, unlike WHERE which filters source rows."
+  },
+  {
+    id: "distinct-on",
+    trackId: "pg-querying",
+    level: 5,
+    concept: "DISTINCT ON",
+    answer: "first row per group by ordering",
+    hint: "PostgreSQL can keep one ordered representative per key.",
+    explanation: "DISTINCT ON with ORDER BY is a concise PostgreSQL pattern for newest-row-per-group queries."
+  },
+  {
+    id: "subqueries",
+    trackId: "pg-querying",
+    level: 5,
+    concept: "subqueries",
+    answer: "nested SELECT expressions",
+    hint: "Use a query result as a filter, scalar value, or derived relation.",
+    explanation: "Subqueries express dependencies between result sets without temporary application state."
+  },
+  {
+    id: "exists",
+    trackId: "pg-querying",
+    level: 5,
+    concept: "EXISTS",
+    answer: "semi-join existence test",
+    hint: "Ask whether at least one related row exists.",
+    explanation: "EXISTS stops caring about row contents once a matching row is found."
+  },
+  {
+    id: "ctes",
+    trackId: "pg-querying",
+    level: 5,
+    concept: "common table expressions",
+    answer: "WITH named subqueries",
+    hint: "Name intermediate query steps for readability or recursion.",
+    explanation: "CTEs can structure complex SQL and support recursive traversal."
+  },
+  {
+    id: "window-functions",
+    trackId: "pg-querying",
+    level: 6,
+    concept: "window functions",
+    answer: "OVER PARTITION BY ORDER BY",
+    hint: "Compute rankings or running totals without collapsing rows.",
+    explanation: "Window functions compute values across related rows while retaining each original row."
+  },
+  {
+    id: "lateral",
+    trackId: "pg-querying",
+    level: 6,
+    concept: "LATERAL joins",
+    answer: "per-row subquery access",
+    hint: "Let a subquery refer to columns from earlier FROM items.",
+    explanation: "LATERAL enables top-N-per-row and dependent expansion patterns in a single SQL query."
+  },
+  {
+    id: "recursive-cte",
+    trackId: "pg-querying",
+    level: 6,
+    concept: "recursive CTE",
+    answer: "WITH RECURSIVE",
+    hint: "Traverse trees, graphs, and hierarchies in SQL.",
+    explanation: "Recursive CTEs combine a seed query and recursive step until no new rows appear."
+  },
+  {
+    id: "set-operations",
+    trackId: "pg-querying",
+    level: 6,
+    concept: "set operations",
+    answer: "UNION INTERSECT EXCEPT",
+    hint: "Combine compatible SELECT results as sets.",
+    explanation: "Set operations merge, intersect, or subtract result sets with duplicate handling rules."
+  },
+  {
+    id: "jsonb-querying",
+    trackId: "pg-querying",
+    level: 6,
+    concept: "JSONB querying",
+    answer: "operators and GIN indexes",
+    hint: "Use jsonb operators for containment and key extraction.",
+    explanation: "PostgreSQL can query semi-structured jsonb data, especially when paired with appropriate indexes."
+  },
+  {
+    id: "full-text-search",
+    trackId: "pg-querying",
+    level: 6,
+    concept: "full-text search",
+    answer: "tsvector and tsquery",
+    hint: "Search normalized terms rather than raw LIKE scans.",
+    explanation: "PostgreSQL full-text search ranks and matches tokenized documents with language-aware processing."
+  },
+  {
+    id: "explain-basics",
+    trackId: "pg-querying",
+    level: 6,
+    concept: "EXPLAIN basics",
+    answer: "read scans joins costs rows",
+    hint: "A query plan explains how PostgreSQL intends to execute SQL.",
+    explanation: "EXPLAIN reveals scan types, join strategies, estimated rows, and relative cost."
+  },
+  {
+    id: "primary-foreign-keys",
+    trackId: "pg-schema",
+    level: 5,
+    concept: "primary and foreign keys",
+    answer: "identity and referential integrity",
+    hint: "Keys define stable row identity and valid relationships.",
+    explanation: "Primary keys identify rows; foreign keys enforce parent-child references."
+  },
+  {
+    id: "unique-check-not-null",
+    trackId: "pg-schema",
+    level: 5,
+    concept: "core constraints",
+    answer: "UNIQUE CHECK NOT NULL",
+    hint: "Let the database reject invalid facts.",
+    explanation: "Constraints centralize invariants so every application path follows the same rules."
+  },
+  {
+    id: "identity-sequences",
+    trackId: "pg-schema",
+    level: 5,
+    concept: "identity and sequences",
+    answer: "GENERATED AS IDENTITY",
+    hint: "Use standard generated values instead of hand-managing numeric IDs.",
+    explanation: "Identity columns and sequences provide safe generated values under concurrency."
+  },
+  {
+    id: "btree-indexes",
+    trackId: "pg-schema",
+    level: 6,
+    concept: "B-tree indexes",
+    answer: "equality range and ordering access",
+    hint: "B-tree is the default index for many common predicates.",
+    explanation: "B-tree indexes support equality, range scans, ordering, uniqueness, and many join predicates."
+  },
+  {
+    id: "composite-indexes",
+    trackId: "pg-schema",
+    level: 6,
+    concept: "composite indexes",
+    answer: "leftmost prefix and sort order",
+    hint: "Column order should match predicates and ordering.",
+    explanation: "Composite indexes work best when equality filters lead and ordered/range columns follow."
+  },
+  {
+    id: "partial-expression-indexes",
+    trackId: "pg-schema",
+    level: 6,
+    concept: "partial and expression indexes",
+    answer: "index a subset or computed value",
+    hint: "Index only the rows or expression your workload actually searches.",
+    explanation: "Partial and expression indexes reduce size and support targeted predicates such as lower(email)."
+  },
+  {
+    id: "gin-brin",
+    trackId: "pg-schema",
+    level: 6,
+    concept: "GIN and BRIN indexes",
+    answer: "inverted and block range indexes",
+    hint: "Use specialized indexes for jsonb/search/arrays or naturally ordered large tables.",
+    explanation: "GIN supports containment-style lookups; BRIN summarizes block ranges for huge ordered data."
+  },
+  {
+    id: "migrations",
+    trackId: "pg-schema",
+    level: 7,
+    concept: "schema migrations",
+    answer: "small reversible transactional changes",
+    hint: "Change production schema in controlled steps.",
+    explanation: "Good migrations minimize locks, preserve compatibility, and record every structural change."
+  },
+  {
+    id: "locking-ddl",
+    trackId: "pg-schema",
+    level: 7,
+    concept: "DDL lock impact",
+    answer: "avoid long blocking schema changes",
+    hint: "Some ALTER operations can block writes or reads.",
+    explanation: "Production schema design includes knowing which DDL operations rewrite tables or take strong locks."
+  },
+  {
+    id: "partitioning",
+    trackId: "pg-schema",
+    level: 7,
+    concept: "table partitioning",
+    answer: "range list hash partitions",
+    hint: "Partition large tables by access and retention patterns.",
+    explanation: "Partitioning can improve maintenance and pruning when partition keys match workload patterns."
+  },
+  {
+    id: "rls",
+    trackId: "pg-schema",
+    level: 7,
+    concept: "row-level security",
+    answer: "policies per row access",
+    hint: "Restrict visible or writable rows inside the database.",
+    explanation: "RLS policies let PostgreSQL enforce tenant or user boundaries at query time."
+  },
+  {
+    id: "triggers",
+    trackId: "pg-schema",
+    level: 7,
+    concept: "triggers",
+    answer: "database-side reaction to row changes",
+    hint: "Use triggers sparingly for invariants or audit behavior that must live near the data.",
+    explanation: "Triggers can enforce or record behavior on INSERT, UPDATE, DELETE, or TRUNCATE."
+  },
+  {
+    id: "materialized-views",
+    trackId: "pg-schema",
+    level: 8,
+    concept: "materialized views",
+    answer: "stored query results needing refresh",
+    hint: "Use when expensive derived data can be refreshed on a schedule.",
+    explanation: "Materialized views trade freshness for faster reads of precomputed query output."
+  },
+  {
+    id: "extension-strategy",
+    trackId: "pg-schema",
+    level: 8,
+    concept: "extensions",
+    answer: "CREATE EXTENSION with governance",
+    hint: "Extensions add capabilities but should be enabled intentionally.",
+    explanation: "PostgreSQL extensions such as pgcrypto, pg_trgm, and uuid-ossp expand database features."
+  },
+  {
+    id: "domains-enums-lookups",
+    trackId: "pg-schema",
+    level: 8,
+    concept: "domain modeling choices",
+    answer: "domains enums lookup tables",
+    hint: "Pick the constraint shape that matches how values evolve.",
+    explanation: "Domains, enums, and lookup tables each encode valid values with different operational tradeoffs."
+  },
+  {
+    id: "isolation-levels",
+    trackId: "pg-production",
+    level: 8,
+    concept: "isolation levels",
+    answer: "Read Committed Repeatable Read Serializable",
+    hint: "Choose visibility guarantees for concurrent transactions.",
+    explanation: "Isolation levels define which concurrent changes a transaction can observe and when retries may be needed."
+  },
+  {
+    id: "locks-deadlocks",
+    trackId: "pg-production",
+    level: 8,
+    concept: "locks and deadlocks",
+    answer: "short transactions and consistent lock order",
+    hint: "Concurrency bugs often come from long transactions or reversed update order.",
+    explanation: "Short transactions and consistent lock ordering reduce contention and deadlock probability."
+  },
+  {
+    id: "vacuum-autovacuum",
+    trackId: "pg-production",
+    level: 8,
+    concept: "VACUUM and autovacuum",
+    answer: "clean dead tuples and update statistics",
+    hint: "MVCC leaves old row versions that must be maintained.",
+    explanation: "VACUUM and autovacuum keep bloat controlled and planner statistics current."
+  },
+  {
+    id: "statistics-analyze",
+    trackId: "pg-production",
+    level: 8,
+    concept: "planner statistics",
+    answer: "ANALYZE and extended statistics",
+    hint: "The planner depends on row count and distribution estimates.",
+    explanation: "Fresh statistics help PostgreSQL choose joins, indexes, and scan strategies accurately."
+  },
+  {
+    id: "explain-analyze-buffers",
+    trackId: "pg-production",
+    level: 9,
+    concept: "EXPLAIN ANALYZE BUFFERS",
+    answer: "actual runtime plus I/O evidence",
+    hint: "Look at real rows, time, loops, and buffer reads.",
+    explanation: "EXPLAIN ANALYZE BUFFERS shows actual work, making tuning evidence-based."
+  },
+  {
+    id: "connection-pooling",
+    trackId: "pg-production",
+    level: 9,
+    concept: "connection pooling",
+    answer: "bounded reusable connections",
+    hint: "PostgreSQL connections are not free.",
+    explanation: "A pool protects the database from connection storms and amortizes startup cost."
+  },
+  {
+    id: "backup-pitr",
+    trackId: "pg-production",
+    level: 9,
+    concept: "backup and PITR",
+    answer: "base backups plus archived WAL",
+    hint: "A dump alone is not a complete point-in-time recovery plan.",
+    explanation: "PITR requires base backups and WAL archiving so recovery can replay changes to a target time."
+  },
+  {
+    id: "replication",
+    trackId: "pg-production",
+    level: 9,
+    concept: "replication",
+    answer: "physical and logical replication",
+    hint: "Use the replication type that matches HA or data distribution needs.",
+    explanation: "Physical replication copies storage-level changes; logical replication publishes row-level changes."
+  },
+  {
+    id: "roles-privileges",
+    trackId: "pg-production",
+    level: 9,
+    concept: "roles and privileges",
+    answer: "least privilege grants",
+    hint: "Application roles should have only required access.",
+    explanation: "Least privilege reduces blast radius if credentials leak or application code is exploited."
+  },
+  {
+    id: "timeouts",
+    trackId: "pg-production",
+    level: 9,
+    concept: "timeouts",
+    answer: "statement_timeout lock_timeout idle timeout",
+    hint: "Bound waiting and runaway work.",
+    explanation: "Timeouts prevent stuck sessions, lock waits, and expensive queries from degrading the system indefinitely."
+  },
+  {
+    id: "monitoring",
+    trackId: "pg-production",
+    level: 10,
+    concept: "monitoring",
+    answer: "pg_stat views logs and query metrics",
+    hint: "Watch throughput, latency, locks, replication, bloat, and slow queries.",
+    explanation: "PostgreSQL exposes operational state through logs, pg_stat views, extensions, and metrics exporters."
+  },
+  {
+    id: "high-availability",
+    trackId: "pg-production",
+    level: 10,
+    concept: "high availability",
+    answer: "replicas failover and tested recovery",
+    hint: "HA is an operational system, not just a replica.",
+    explanation: "Reliable PostgreSQL deployments test failover, backups, monitoring, and application reconnect behavior."
+  },
+  {
+    id: "upgrades",
+    trackId: "pg-production",
+    level: 10,
+    concept: "version upgrades",
+    answer: "planned upgrade path with rollback",
+    hint: "Major upgrades require compatibility, extension, and performance checks.",
+    explanation: "Upgrade planning reduces downtime and catches query or extension behavior changes before production."
+  },
+  {
+    id: "multi-tenancy",
+    trackId: "pg-production",
+    level: 10,
+    concept: "multi-tenancy",
+    answer: "tenant keys schemas or databases",
+    hint: "Isolation strategy affects queries, security, migrations, and operations.",
+    explanation: "Tenant modeling must balance isolation, cost, operational complexity, and query performance."
+  },
+  {
+    id: "incident-response",
+    trackId: "pg-production",
+    level: 10,
+    concept: "database incidents",
+    answer: "observe contain recover and document",
+    hint: "Production failures need a practiced response loop.",
+    explanation: "A good incident process protects data, restores service, captures evidence, and improves runbooks."
+  }
+];
+
+export const drills: LearningDrill[] = [...baseDrills, ...buildCurriculumDrills("postgres-full", curriculumTopics)];

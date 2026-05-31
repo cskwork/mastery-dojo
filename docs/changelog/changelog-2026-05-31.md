@@ -38,3 +38,6 @@
 - Raised the PostgreSQL Production Lab track to Expertise and extended curriculum-depth tests so Python and PostgreSQL both keep at least 14 drills per track.
 - Expanded the Redis Streams curriculum to 56 drills across Stream Basics, Producer Flow, Consumer Groups, and Reliability Lab, using current Redis command documentation for XADD, XREAD, XREADGROUP, XACK, XPENDING, XAUTOCLAIM, XINFO, and XTRIM.
 - Raised the Redis Streams Reliability Lab track to Expertise and extended curriculum-depth tests so all registered domains keep at least 14 drills per track.
+- Checked the upstream `lingdojo/kana-dojo` repository directly and confirmed its content is data-heavy: kana groups, JLPT kanji JSON, JLPT vocabulary JSON, and community content live in repo/public data files rather than only on the deployed site.
+- Added a reusable curriculum factory and full topic banks so Python expands to 300 drills, while PostgreSQL and Redis Streams expand to 296 drills each, preserving Pick, Reverse, Input, and Debug modes.
+- Raised the full-curriculum test floor to at least 280 drills per registered domain and at least 70 drills per track so future edits cannot silently return to a thin sample set.
