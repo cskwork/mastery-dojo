@@ -2,6 +2,15 @@
 
 MasteryDojo is a KanaDojo-style learning app family for Python, PostgreSQL, Redis Streams, Spring Boot, Java, SQLD, Information Processing Practical, Linux, Apache Kafka, Apache Spark, Apache Flink, and Data Structures and Algorithms. It keeps the same dojo shell, short drills, typing practice, progress tracking, and click-sound feedback while swapping the learning material by domain.
 
+The UI ships in Korean and English (Korean is the default); toggle the language from the header or settings. English data stays canonical and Korean is merged in as an overlay at render time (`lib/localize.ts`, `data/i18n/`).
+
+## Live demo
+
+- GitHub Pages: https://cskwork.github.io/mastery-dojo/
+- Vercel: https://python-tutorial-pi.vercel.app/
+
+Both are built from the same static export (`output: "export"`). `NEXT_PUBLIC_BASE_PATH` sets the sub-directory base path for the GitHub Pages project site; it is empty for root hosts.
+
 ## Repo Shape
 
 This is one lightweight repo with two clear layers:
