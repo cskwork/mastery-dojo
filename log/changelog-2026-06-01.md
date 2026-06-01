@@ -52,3 +52,28 @@ curriculum topic, so per-drill hand translation is wasteful and error-prone
 - Korean keeps proper nouns/code tokens as-is (PostgreSQL, Kafka, XADD, JVM,
   BFS, f-string, SQL keywords). subjectName for product-named domains stays in
   the product's canonical form.
+
+## Fix broken interactive features
+
+- Hint button was a no-op (only played a sound) and the hint text was always
+  shown, making the button pointless. Now the hint is hidden by default and the
+  button reveals it (`hintVisible` state, reset on drill change/advance).
+- Sidebar collapse button was a no-op. Now toggles an icon-only collapsed state
+  via a `:has()` grid rule.
+- Verified all on-screen features on the live deploy with a Playwright E2E pass
+  (21/21): hint, choices, input mode, mode switch, track select, progress
+  tabs, home nav, theme toggle, domain switch, language toggle, settings.
+
+## Static export + GitHub Pages hosting
+
+- `next.config.ts`: `output: "export"` + `trailingSlash` + `images.unoptimized`.
+  `basePath`/`assetPrefix` come from `NEXT_PUBLIC_BASE_PATH` so root hosts
+  (Vercel) and sub-directory hosts (GitHub Pages project site `/mastery-dojo/`)
+  both build from the same source.
+- `lib/basePath.ts` `withBasePath()` prefixes raw asset URLs Next does not
+  auto-prefix (audio in `useDojoAudio`, favicon in `layout`).
+- `.github/workflows/deploy-pages.yml` builds with `NEXT_PUBLIC_BASE_PATH=/mastery-dojo`
+  and deploys via the official Pages actions; `public/.nojekyll` keeps `_next`.
+- Repo made public (Pages on the free plan requires a public repo) and the
+  `github-pages` environment branch policy extended to the feature branch.
+- Live + verified (7/7 Playwright E2E) at https://cskwork.github.io/mastery-dojo/.
