@@ -839,7 +839,7 @@ const baseDrills: LearningDrill[] = [
   }
 ];
 
-const curriculumTopics: CurriculumTopic[] = [
+export const curriculumTopics: CurriculumTopic[] = [
   {
     id: "stream-vs-other-types",
     trackId: "stream-foundations",

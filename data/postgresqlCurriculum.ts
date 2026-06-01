@@ -844,7 +844,7 @@ const baseDrills: LearningDrill[] = [
   }
 ];
 
-const curriculumTopics: CurriculumTopic[] = [
+export const curriculumTopics: CurriculumTopic[] = [
   {
     id: "relational-model",
     trackId: "pg-foundations",

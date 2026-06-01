@@ -810,7 +810,7 @@ const baseDrills: PythonDrill[] = [
   }
 ];
 
-const curriculumTopics: CurriculumTopic[] = [
+export const curriculumTopics: CurriculumTopic[] = [
   {
     id: "interpreter-cli",
     trackId: "foundations",

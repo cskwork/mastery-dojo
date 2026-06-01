@@ -156,8 +156,9 @@ function DomainSwitcher({
   compact?: boolean;
   onSelect: (domainId: string) => void;
 }) {
+  const t = useT();
   return (
-    <section className={compact ? "kana-domain-switcher compact" : "kana-domain-switcher"} aria-label="Learning domains">
+    <section className={compact ? "kana-domain-switcher compact" : "kana-domain-switcher"} aria-label={t("learningDomains")}>
       {learningDomains.map((item) => {
         const mark = item.home.cards[0]?.mark ?? item.subject.name.slice(0, 3);
 
@@ -217,9 +218,10 @@ function DojoCard({
 }
 
 function BottomMeta({ domain }: { domain: LearningDomain }) {
+  const t = useT();
   return (
     <div className="kana-footer-meta">
-      <div className="kana-socials" aria-label="Community links">
+      <div className="kana-socials" aria-label={t("communityLinks")}>
         <a href="#community" aria-label={domain.footer.communityAria}>
           <Radio size={17} />
         </a>
@@ -233,9 +235,10 @@ function BottomMeta({ domain }: { domain: LearningDomain }) {
 }
 
 function FooterLinks({ domain }: { domain: LearningDomain }) {
+  const t = useT();
   return (
     <footer className="kana-footer">
-      <nav aria-label="Site links">
+      <nav aria-label={t("siteLinks")}>
         {domain.footer.links.map((link) => (
           <a href={link.href} key={link.href}>
             {link.label}
@@ -779,6 +782,7 @@ function ProgressView({
   onOpenSettings: () => void;
   play: (sound: DojoSound) => void;
 }) {
+  const t = useT();
   return (
     <main className="kana-app-page">
       <Sidebar
@@ -794,7 +798,7 @@ function ProgressView({
         onToggleSound={onToggleSound}
         onOpenProgress={() => play("tap")}
       />
-      <section className="kana-dojo-main" aria-label="Progress">
+      <section className="kana-dojo-main" aria-label={t("progressViews")}>
         <header className="kana-dojo-title">
           <h2>
             <span>
@@ -837,40 +841,51 @@ function SettingsOverlay({
   onToggleSound: () => void;
   onResetProgress: () => void;
 }) {
+  const t = useT();
+  const { toggleLang } = useLanguage();
   return (
-    <div className="kana-overlay" role="dialog" aria-modal="true" aria-label="Settings" onClick={onClose}>
+    <div className="kana-overlay" role="dialog" aria-modal="true" aria-label={t("settings")} onClick={onClose}>
       <div className="kana-modal" onClick={(event) => event.stopPropagation()}>
         <header className="kana-modal-head">
-          <h2>Settings</h2>
-          <button type="button" aria-label="Close settings" onClick={onClose}>
+          <h2>{t("settings")}</h2>
+          <button type="button" aria-label={t("closeSettings")} onClick={onClose}>
             <X size={20} />
           </button>
         </header>
         <div className="kana-setting-row">
           <div>
-            <strong>Theme</strong>
-            <small>Light or dark appearance</small>
+            <strong>{t("themeTitle")}</strong>
+            <small>{t("themeDesc")}</small>
           </div>
           <button type="button" onClick={onToggleTheme}>
-            {theme === "dark" ? "Dark" : "Light"}
+            {theme === "dark" ? t("dark") : t("light")}
           </button>
         </div>
         <div className="kana-setting-row">
           <div>
-            <strong>Sound</strong>
-            <small>Drill feedback audio</small>
+            <strong>{t("soundTitle")}</strong>
+            <small>{t("soundDesc")}</small>
           </div>
           <button type="button" aria-pressed={soundEnabled} onClick={onToggleSound}>
-            {soundEnabled ? "On" : "Off"}
+            {soundEnabled ? t("on") : t("off")}
           </button>
         </div>
         <div className="kana-setting-row">
           <div>
-            <strong>Reset progress</strong>
-            <small>Clear {domain.brand.primaryName} XP, streak, and clears</small>
+            <strong>{t("languageTitle")}</strong>
+            <small>{t("languageDesc")}</small>
+          </div>
+          <button type="button" aria-label={t("toggleLanguage")} onClick={toggleLang}>
+            {t("languageName")}
+          </button>
+        </div>
+        <div className="kana-setting-row">
+          <div>
+            <strong>{t("resetProgressTitle")}</strong>
+            <small>{t("resetProgressDesc").replace("{brand}", domain.brand.primaryName)}</small>
           </div>
           <button type="button" className="danger" onClick={onResetProgress}>
-            Reset
+            {t("reset")}
           </button>
         </div>
       </div>
@@ -881,7 +896,8 @@ function SettingsOverlay({
 export function PythonDojoApp() {
   const [view, setView] = useState<"home" | "dojo" | "progress">("home");
   const [domainId, setDomainId] = useState(defaultDomain.id);
-  const domain = useMemo(() => getDomainById(domainId), [domainId]);
+  const [lang, setLang] = useState<Language>(DEFAULT_LANGUAGE);
+  const domain = useMemo(() => localizeDomain(getDomainById(domainId), lang), [domainId, lang]);
   const defaultTrackId = useMemo(() => getDefaultTrackId(domain), [domain]);
   const [mode, setMode] = useState<DrillMode>("pick");
   const [activeId, setActiveId] = useState<TrackId>(getDefaultTrackId(defaultDomain));
@@ -916,6 +932,21 @@ export function PythonDojoApp() {
     document.documentElement.dataset.theme = theme;
     window.localStorage.setItem("dojo-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (isLanguage(stored)) setLang(stored);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
+  }, [lang]);
+
+  const language = useMemo(
+    () => ({ lang, setLang, toggleLang: () => setLang((current) => otherLanguage(current)) }),
+    [lang]
+  );
 
   function changeDomain(nextDomainId: string) {
     audio.play(nextDomainId === domain.id ? "tap" : "confirm");
@@ -970,6 +1001,7 @@ export function PythonDojoApp() {
         soundEnabled={audio.enabled}
         theme={theme}
         onDomainChange={changeDomain}
+        onHome={goHome}
         onPlay={audio.play}
         onStart={startDojo}
         onToggleSound={audio.toggleSound}
@@ -1015,7 +1047,7 @@ export function PythonDojoApp() {
     );
 
   return (
-    <>
+    <LanguageContext.Provider value={language}>
       {screen}
       {settingsOpen ? (
         <SettingsOverlay
@@ -1028,6 +1060,6 @@ export function PythonDojoApp() {
           onResetProgress={resetProgress}
         />
       ) : null}
-    </>
+    </LanguageContext.Provider>
   );
 }
