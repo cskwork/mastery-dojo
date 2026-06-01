@@ -1,7 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { defaultDomain, learningDomains } from "@/data/dojoDomain";
 import { withBasePath } from "@/lib/basePath";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#161a2f" },
+    { media: "(prefers-color-scheme: light)", color: "#f1eefb" }
+  ]
+};
 
 const subjectList = learningDomains.map((domain) => domain.subject.name).join(", ");
 
