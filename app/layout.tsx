@@ -14,12 +14,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ko" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var t=localStorage.getItem('dojo-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}"
+              "try{var t=localStorage.getItem('dojo-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;var l=localStorage.getItem('dojo-language');if(l==='ko'||l==='en')document.documentElement.lang=l;}catch(e){}"
           }}
         />
       </head>
