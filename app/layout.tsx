@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { defaultDomain, learningDomains } from "@/data/dojoDomain";
+import { withBasePath } from "@/lib/basePath";
 import "./globals.css";
 
 const subjectList = learningDomains.map((domain) => domain.subject.name).join(", ");
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   title: `MasteryDojo - Learn ${learningDomains.length} technical domains`,
   description: `KanaDojo-inspired training for ${subjectList}, with reusable domains for more topics later.`,
   icons: {
-    icon: [{ url: defaultDomain.metadata.iconPath, type: "image/svg+xml" }]
+    icon: [{ url: withBasePath(defaultDomain.metadata.iconPath), type: "image/svg+xml" }]
   }
 };
 

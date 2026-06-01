@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { withBasePath } from "@/lib/basePath";
 
 export type DojoSound = "tap" | "confirm" | "success" | "miss";
 
@@ -12,7 +13,7 @@ const soundSources: Record<DojoSound, string> = {
 };
 
 function createAudio(src: string): HTMLAudioElement {
-  const audio = new Audio(src);
+  const audio = new Audio(withBasePath(src));
   audio.preload = "auto";
   audio.volume = 0.55;
   return audio;
