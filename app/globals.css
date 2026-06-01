@@ -482,6 +482,27 @@ a {
   color: var(--kd-accent);
 }
 
+.kana-app-page:has(.kana-sidebar.collapsed) {
+  grid-template-columns: 84px minmax(0, 1fr);
+}
+
+.kana-sidebar.collapsed {
+  align-items: center;
+}
+
+.kana-sidebar.collapsed > h1,
+.kana-sidebar.collapsed .kana-domain-switcher,
+.kana-sidebar.collapsed nav button span:not(.kana-nav-mark),
+.kana-sidebar.collapsed nav button small {
+  display: none;
+}
+
+.kana-sidebar.collapsed nav button {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .kana-dojo-main {
   grid-column: 2;
   min-width: 0;

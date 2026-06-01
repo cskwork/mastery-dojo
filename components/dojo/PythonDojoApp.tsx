@@ -347,11 +347,12 @@ function Sidebar({
   onOpenProgress: () => void;
 }) {
   const SoundIcon = soundEnabled ? Volume2 : VolumeX;
+  const [collapsed, setCollapsed] = useState(false);
 
   const t = useT();
 
   return (
-    <aside className="kana-sidebar" aria-label={domain.training.sidebarLabel}>
+    <aside className={collapsed ? "kana-sidebar collapsed" : "kana-sidebar"} aria-label={domain.training.sidebarLabel}>
       <h1
         className="kana-brand-home"
         role="button"
@@ -392,7 +393,16 @@ function Sidebar({
           <span>{t("sound")}</span>
         </button>
       </nav>
-      <button type="button" className="kana-sidebar-collapse" aria-label={t("collapseSidebar")} onClick={() => onPlay("tap")}>
+      <button
+        type="button"
+        className="kana-sidebar-collapse"
+        aria-label={t("collapseSidebar")}
+        aria-expanded={!collapsed}
+        onClick={() => {
+          onPlay("tap");
+          setCollapsed((current) => !current);
+        }}
+      >
         <SlidersHorizontal size={20} />
       </button>
     </aside>
@@ -462,12 +472,14 @@ function DrillCard({
   drill,
   answer,
   feedback,
+  hintVisible,
   onAnswer,
   onChoose
 }: {
   drill: LearningDrill;
   answer: string;
   feedback: Feedback;
+  hintVisible: boolean;
   onAnswer: (value: string) => void;
   onChoose: (value: string) => void;
 }) {
@@ -489,7 +501,7 @@ function DrillCard({
       ) : (
         <ChoiceGrid drill={drill} answer={answer} locked={locked} onChoose={onChoose} />
       )}
-      <p className={`kana-feedback ${feedback.state}`}>{feedback.text || drill.hint}</p>
+      <p className={`kana-feedback ${feedback.state}`}>{feedback.text || (hintVisible ? drill.hint : "")}</p>
     </section>
   );
 }
@@ -533,6 +545,7 @@ function TrainingView({
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<Feedback>({ state: "idle", text: "" });
   const [currentDrillId, setCurrentDrillId] = useState<string | null>(null);
+  const [hintVisible, setHintVisible] = useState(false);
   const nextDrill = useMemo(() => getNextDrill(activeId, mode, progress, domain), [activeId, domain, mode, progress]);
   const drill = useMemo(() => {
     return getTrackDrills(activeId, mode, domain).find((item) => item.id === currentDrillId) ?? nextDrill;
@@ -544,6 +557,7 @@ function TrainingView({
     setCurrentDrillId(null);
     setAnswer("");
     setFeedback({ state: "idle", text: "" });
+    setHintVisible(false);
   }, [activeId, domain.id, mode]);
 
   function submitAnswer(value: string) {
@@ -559,6 +573,7 @@ function TrainingView({
     setCurrentDrillId(null);
     setAnswer("");
     setFeedback({ state: "idle", text: "" });
+    setHintVisible(false);
   }
 
   function chooseAnswer(value: string) {
@@ -611,12 +626,27 @@ function TrainingView({
           <Metric label={t("complete")} value={`${summary.percent}%`} />
         </section>
         <ModeSelector activeMode={mode} domain={domain} onModeChange={onModeChange} />
-        <DrillCard drill={drill} answer={answer} feedback={feedback} onAnswer={setAnswer} onChoose={chooseAnswer} />
+        <DrillCard
+          drill={drill}
+          answer={answer}
+          feedback={feedback}
+          hintVisible={hintVisible}
+          onAnswer={setAnswer}
+          onChoose={chooseAnswer}
+        />
         <div className="kana-action-bar">
           <button type="button" onClick={onHome}>
             {domain.training.actions.home}
           </button>
-          <button type="button" onClick={() => play("tap")}>
+          <button
+            type="button"
+            className={hintVisible ? "active" : ""}
+            aria-pressed={hintVisible}
+            onClick={() => {
+              play("tap");
+              setHintVisible(true);
+            }}
+          >
             {domain.training.actions.hint}
           </button>
           <button
