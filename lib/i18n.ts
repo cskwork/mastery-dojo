@@ -42,12 +42,15 @@ export function useT(): (key: UiStringKey) => string {
 // Closed set of track difficulty labels shared across domains.
 const LEVEL_LABELS_KO: Record<string, string> = {
   Beginner: "입문",
+  Builder: "구축",
   Intermediate: "중급",
   Advanced: "고급",
   Expert: "전문가",
+  Expertise: "전문가",
   Foundations: "기초",
   Core: "핵심",
-  Practitioner: "실무"
+  Practitioner: "실무",
+  Mastery: "숙련"
 };
 
 export function localizeLevel(level: string, lang: Language): string {

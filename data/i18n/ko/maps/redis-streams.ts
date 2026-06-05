@@ -87,64 +87,64 @@ export const redisStreamsBaseDrills: Record<string, DrillTextKo> = {
 
 // curriculumTopics — English placeholders, translate [conceptKo, answerKo].
 export const redisStreamsTopicsKo: Record<string, TopicKo> = {
-  "streams vs lists and pubsub": ["스트림 vs 리스트 및 Pub/Sub", "내구성 있는 추가 전용 이벤트 로그"], // hint: Streams keep history and support replay, unlike pure Pub/Sub.
-  "XADD shape": ["XADD 형태", "키 ID 필드-값 쌍"], // hint: Every entry has an ID and one or more field/value pairs.
-  "stream ID semantics": ["스트림 ID 의미", "밀리초와 시퀀스 번호"], // hint: IDs are ordered and normally generated from server time plus a sequence.
-  "field/value entries": ["필드/값 엔트리", "평면적인 필드-값 쌍"], // hint: Streams do not require JSON, though JSON can be stored as a value.
-  "XRANGE": ["XRANGE", "포함적 오름차순 ID 범위 조회"], // hint: Use - and + for the full stream range.
-  "XREVRANGE": ["XREVRANGE", "내림차순 ID 범위 조회"], // hint: Use it to inspect newest events first.
-  "direct XREAD": ["직접 XREAD", "컨슈머 그룹 없이 읽기"], // hint: Use XREAD for simple readers or ad hoc replay.
-  "BLOCK option": ["BLOCK 옵션", "새 엔트리 대기"], // hint: Blocking reads avoid busy polling.
-  "COUNT option": ["COUNT 옵션", "배치 크기 제한"], // hint: Bound how many entries a reader receives at once.
-  "multi-stream reads": ["다중 스트림 읽기", "키 먼저, 그 다음 ID"], // hint: In XREAD STREAMS, list all stream keys before all offsets.
-  "XLEN": ["XLEN", "스트림 엔트리 수"], // hint: Length is a quick backlog or retention signal.
-  "XDEL": ["XDEL", "ID로 엔트리 삭제"], // hint: Deleting data is separate from acknowledging group delivery.
-  "stream memory": ["스트림 메모리", "보존 정책 계획 필요"], // hint: An append-only structure grows unless you trim it.
-  "read offsets": ["읽기 오프셋", "마지막으로 읽은 ID가 리플레이를 제어"], // hint: 0-0, $, and explicit IDs mean different read positions.
-  "XREAD exclusivity": ["XREAD 배타성", "오프셋보다 큰 ID를 반환"], // hint: The supplied ID is the last seen entry, not the first returned entry.
-  "event contract": ["이벤트 계약", "안정적인 필드와 스키마 버전"], // hint: Consumers need to parse events safely over time.
-  "idempotent producer": ["멱등 프로듀서", "비즈니스 키로 재시도 중복 제거"], // hint: A network retry may append the same business event twice.
-  "pipelined XADD": ["파이프라인 XADD", "네트워크 왕복 일괄 처리"], // hint: Throughput often improves by reducing request/response waits.
-  "MAXLEN retention": ["MAXLEN 보존", "근사 길이로 트리밍"], // hint: Use MAXLEN ~ when exact trimming is unnecessary.
-  "MINID retention": ["MINID 보존", "ID 미만 엔트리 트리밍"], // hint: Retention can be age-like when IDs track time.
-  "XTRIM": ["XTRIM", "독립적인 스트림 트리밍"], // hint: Trim existing streams outside the append path.
-  "NOMKSTREAM": ["NOMKSTREAM", "스트림 없으면 실패"], // hint: Use it when stream creation must be controlled elsewhere.
-  "payload design": ["페이로드 설계", "가능하면 불투명한 블롭보다 명시적 필드 사용"], // hint: Field-level visibility helps debugging and routing.
-  "producer partitioning": ["프로듀서 파티셔닝", "테넌트 또는 집계 키로 파티셔닝"], // hint: A single stream has one ordered lane.
-  "explicit IDs and clocks": ["명시적 ID와 클럭", "순서 제어가 필요한 경우 외에는 자동 생성 ID 사용 권장"], // hint: Bad explicit IDs can be rejected for not increasing.
-  "producer error handling": ["프로듀서 오류 처리", "제한된 재시도와 내구성 있는 아웃박스"], // hint: Do not lose business events when Redis is briefly unavailable.
-  "outbox pattern": ["아웃박스 패턴", "상태 변경과 이벤트 레코드를 함께 커밋"], // hint: Avoid publishing an event for a database change that did not commit.
-  "producer observability": ["프로듀서 관찰 가능성", "추가 지연, 오류율, 스트림 길이"], // hint: Watch both write success and backlog growth.
-  "schema evolution": ["스키마 진화", "하위 호환 필드 유지"], // hint: Old consumers may read new events.
-  "write amplification": ["쓰기 증폭", "중복 파생 이벤트 방지"], // hint: Each event adds memory, replication, and consumer work.
-  "consumer group creation": ["컨슈머 그룹 생성", "XGROUP CREATE key group id"], // hint: Create delivery state before workers consume.
-  "MKSTREAM": ["MKSTREAM", "그룹 설정 시 빈 스트림 생성"], // hint: Useful for provisioning groups before producers write.
-  "new group messages": ["그룹 신규 메시지", "`>`는 아직 전달되지 않은 엔트리를 읽음"], // hint: Use > for normal consumer-group work sharing.
-  "consumer names": ["컨슈머 이름", "고유한 워커 신원"], // hint: Redis tracks pending ownership by consumer name.
-  "pending entries list": ["펜딩 엔트리 목록", "전달되었지만 확인 응답되지 않은 작업"], // hint: Pending entries are not done until acknowledged.
-  "acknowledgement": ["확인 응답", "내구성 있는 성공 후 XACK"], // hint: Acknowledge only after the side effect is safe.
-  "XPENDING": ["XPENDING", "펜딩 요약 및 상세 조회"], // hint: Use it to find stuck consumers and stale messages.
-  "pending replay": ["펜딩 리플레이", "`>` 대신 이전 ID로 읽기"], // hint: A consumer can re-read its own pending entries.
-  "NOACK": ["NOACK", "펜딩 추적 생략"], // hint: Only use it when losing messages is acceptable.
-  "XCLAIM": ["XCLAIM", "수동 오래된 메시지 이전"], // hint: Claim specific pending IDs for another consumer.
-  "XAUTOCLAIM": ["XAUTOCLAIM", "오래된 펜딩 엔트리 스캔 및 클레임"], // hint: Use cursor-style recovery for many stale entries.
-  "XINFO CONSUMERS": ["XINFO CONSUMERS", "컨슈머 유휴 시간 및 펜딩 수 조회"], // hint: Use it to identify stuck or dead workers.
-  "group fanout": ["그룹 팬아웃", "독립 구독자당 하나의 컨슈머 그룹"], // hint: Consumers in one group share work; groups each get their own cursor.
-  "dead-letter stream": ["데드레터 스트림", "재시도 한도 초과 후 독성 메시지 이동"], // hint: Do not let one bad event block a shard forever.
-  "XGROUP SETID": ["XGROUP SETID", "그룹 전달 커서 이동"], // hint: Use carefully for replay or skip-ahead operations.
-  "at-least-once processing": ["최소 한 번 처리", "메시지가 다시 전달될 수 있음"], // hint: Crashes before acknowledgement create retries.
-  "idempotent consumer": ["멱등 컨슈머", "이벤트 ID 또는 비즈니스 키로 부작용 중복 제거"], // hint: A retry should not charge, email, or mutate twice.
-  "backpressure": ["백프레셔", "배치 크기 제한 및 컨슈머 확장"], // hint: Consumers need a controlled way to fall behind and recover.
-  "lag monitoring": ["지연 모니터링", "스트림 길이, 그룹 지연, 펜딩 수 관찰"], // hint: Lag tells you how far processing is behind production.
-  "XINFO STREAM": ["XINFO STREAM", "스트림 메타데이터 조회"], // hint: Use it for length, first/last entry, and group-related state.
-  "retention vs recovery": ["보존 vs 복구", "컨슈머 복구 전에 트리밍 금지"], // hint: Deleting entries can conflict with pending recovery expectations.
-  "ordering model": ["순서 모델", "스트림당 ID 기준 정렬"], // hint: Completion order can differ from delivery order when workers run concurrently.
-  "stream sharding": ["스트림 샤딩", "병렬 레인을 위한 다중 스트림 키"], // hint: Use partition keys when one stream becomes too hot.
-  "Redis Cluster streams": ["Redis 클러스터 스트림", "연관 키를 위한 해시 태그"], // hint: Multi-key stream operations need keys in the same hash slot.
-  "persistence": ["영속성", "AOF 또는 RDB 내구성 선택"], // hint: Streams are only as durable as the Redis persistence and replication setup.
-  "failover recovery": ["장애 복구", "재연결, 재개, 클레임, 확인 응답"], // hint: Workers need startup logic after Redis or process failure.
-  "memory policy": ["메모리 정책", "중요 스트림 데이터 축출 방지"], // hint: Eviction can silently destroy reliability assumptions.
-  "alerting": ["알림", "지연, 펜딩, 유휴, 오류에 대한 알림 설정"], // hint: Alert on symptoms that threaten recovery objectives.
-  "disaster recovery": ["재해 복구", "백업, 리플레이, 재구성 계획"], // hint: Know how to restore Redis state or rebuild from source systems.
-  "capacity planning": ["용량 계획", "쓰기 속도, 보존, 컨슈머 처리량 모델링"], // hint: Reliability depends on capacity matching the event flow.
+  "streams vs lists and pubsub": ["스트림 vs 리스트 및 Pub/Sub","내구성 있는 추가 전용 이벤트 로그","Streams는 순수 Pub/Sub과 달리 이력을 보존하고 리플레이를 지원한다."], // hint: Streams keep history and support replay, unlike pure Pub/Sub.
+  "XADD shape": ["XADD 형태","키 ID 필드-값 쌍","모든 엔트리는 ID와 하나 이상의 필드/값 쌍으로 구성된다."], // hint: Every entry has an ID and one or more field/value pairs.
+  "stream ID semantics": ["스트림 ID 의미","밀리초와 시퀀스 번호","ID는 순서가 보장되며 일반적으로 서버 시간과 시퀀스 번호로 자동 생성된다."], // hint: IDs are ordered and normally generated from server time plus a sequence.
+  "field/value entries": ["필드/값 엔트리","평면적인 필드-값 쌍","Streams는 JSON을 요구하지 않으며, JSON은 값으로 저장할 수 있다."], // hint: Streams do not require JSON, though JSON can be stored as a value.
+  "XRANGE": ["XRANGE","포함적 오름차순 ID 범위 조회","전체 스트림 범위를 조회하려면 -와 +를 사용한다."], // hint: Use - and + for the full stream range.
+  "XREVRANGE": ["XREVRANGE","내림차순 ID 범위 조회","최신 이벤트를 먼저 확인할 때 사용한다."], // hint: Use it to inspect newest events first.
+  "direct XREAD": ["직접 XREAD","컨슈머 그룹 없이 읽기","단순 독자나 임시 리플레이에는 XREAD를 사용한다."], // hint: Use XREAD for simple readers or ad hoc replay.
+  "BLOCK option": ["BLOCK 옵션","새 엔트리 대기","블로킹 읽기는 바쁜 폴링을 방지한다."], // hint: Blocking reads avoid busy polling.
+  "COUNT option": ["COUNT 옵션","배치 크기 제한","독자가 한 번에 받는 엔트리 수를 제한한다."], // hint: Bound how many entries a reader receives at once.
+  "multi-stream reads": ["다중 스트림 읽기","키 먼저, 그 다음 ID","XREAD STREAMS에서는 모든 오프셋 앞에 스트림 키를 먼저 나열한다."], // hint: In XREAD STREAMS, list all stream keys before all offsets.
+  "XLEN": ["XLEN","스트림 엔트리 수","길이는 백로그나 보존 상태를 빠르게 파악하는 신호로 사용된다."], // hint: Length is a quick backlog or retention signal.
+  "XDEL": ["XDEL","ID로 엔트리 삭제","데이터 삭제는 그룹 전달 확인 응답과 별개의 작업이다."], // hint: Deleting data is separate from acknowledging group delivery.
+  "stream memory": ["스트림 메모리","보존 정책 계획 필요","추가 전용 구조는 트리밍하지 않으면 무한정 증가한다."], // hint: An append-only structure grows unless you trim it.
+  "read offsets": ["읽기 오프셋","마지막으로 읽은 ID가 리플레이를 제어","0-0, $, 그리고 명시적 ID는 각기 다른 읽기 위치를 의미한다."], // hint: 0-0, $, and explicit IDs mean different read positions.
+  "XREAD exclusivity": ["XREAD 배타성","오프셋보다 큰 ID를 반환","지정한 ID는 마지막으로 조회한 엔트리이며, 첫 번째로 반환되는 엔트리가 아니다."], // hint: The supplied ID is the last seen entry, not the first returned entry.
+  "event contract": ["이벤트 계약","안정적인 필드와 스키마 버전","컨슈머는 시간이 지나도 이벤트를 안전하게 파싱할 수 있어야 한다."], // hint: Consumers need to parse events safely over time.
+  "idempotent producer": ["멱등 프로듀서","비즈니스 키로 재시도 중복 제거","네트워크 재시도는 동일한 비즈니스 이벤트를 두 번 추가할 수 있다."], // hint: A network retry may append the same business event twice.
+  "pipelined XADD": ["파이프라인 XADD","네트워크 왕복 일괄 처리","요청/응답 대기를 줄이면 처리량이 향상되는 경우가 많다."], // hint: Throughput often improves by reducing request/response waits.
+  "MAXLEN retention": ["MAXLEN 보존","근사 길이로 트리밍","정확한 트리밍이 불필요한 경우 MAXLEN ~를 사용한다."], // hint: Use MAXLEN ~ when exact trimming is unnecessary.
+  "MINID retention": ["MINID 보존","ID 미만 엔트리 트리밍","ID가 시간을 추적할 때 보존 정책을 시간 기반으로 적용할 수 있다."], // hint: Retention can be age-like when IDs track time.
+  "XTRIM": ["XTRIM","독립적인 스트림 트리밍","추가 경로 외부에서 기존 스트림을 트리밍한다."], // hint: Trim existing streams outside the append path.
+  "NOMKSTREAM": ["NOMKSTREAM","스트림 없으면 실패","스트림 생성을 다른 곳에서 관리해야 할 때 사용한다."], // hint: Use it when stream creation must be controlled elsewhere.
+  "payload design": ["페이로드 설계","가능하면 불투명한 블롭보다 명시적 필드 사용","필드 단위 가시성은 디버깅과 라우팅에 도움이 된다."], // hint: Field-level visibility helps debugging and routing.
+  "producer partitioning": ["프로듀서 파티셔닝","테넌트 또는 집계 키로 파티셔닝","단일 스트림은 하나의 순서 있는 레인만 제공한다."], // hint: A single stream has one ordered lane.
+  "explicit IDs and clocks": ["명시적 ID와 클럭","순서 제어가 필요한 경우 외에는 자동 생성 ID 사용 권장","잘못된 명시적 ID는 단조 증가하지 않아 거부될 수 있다."], // hint: Bad explicit IDs can be rejected for not increasing.
+  "producer error handling": ["프로듀서 오류 처리","제한된 재시도와 내구성 있는 아웃박스","Redis가 일시적으로 사용 불가할 때 비즈니스 이벤트를 손실해서는 안 된다."], // hint: Do not lose business events when Redis is briefly unavailable.
+  "outbox pattern": ["아웃박스 패턴","상태 변경과 이벤트 레코드를 함께 커밋","커밋되지 않은 데이터베이스 변경에 대한 이벤트 발행을 방지한다."], // hint: Avoid publishing an event for a database change that did not commit.
+  "producer observability": ["프로듀서 관찰 가능성","추가 지연, 오류율, 스트림 길이","쓰기 성공과 백로그 증가 모두를 관찰한다."], // hint: Watch both write success and backlog growth.
+  "schema evolution": ["스키마 진화","하위 호환 필드 유지","이전 컨슈머가 새로운 이벤트를 읽을 수 있어야 한다."], // hint: Old consumers may read new events.
+  "write amplification": ["쓰기 증폭","중복 파생 이벤트 방지","각 이벤트는 메모리, 복제, 컨슈머 작업을 추가로 발생시킨다."], // hint: Each event adds memory, replication, and consumer work.
+  "consumer group creation": ["컨슈머 그룹 생성","XGROUP CREATE key group id","워커가 소비하기 전에 전달 상태를 먼저 생성한다."], // hint: Create delivery state before workers consume.
+  "MKSTREAM": ["MKSTREAM","그룹 설정 시 빈 스트림 생성","프로듀서가 쓰기 전에 그룹을 프로비저닝할 때 유용하다."], // hint: Useful for provisioning groups before producers write.
+  "new group messages": ["그룹 신규 메시지","`>`는 아직 전달되지 않은 엔트리를 읽음","일반적인 컨슈머 그룹 작업 분담에는 >를 사용한다."], // hint: Use > for normal consumer-group work sharing.
+  "consumer names": ["컨슈머 이름","고유한 워커 신원","Redis는 컨슈머 이름으로 펜딩 소유권을 추적한다."], // hint: Redis tracks pending ownership by consumer name.
+  "pending entries list": ["펜딩 엔트리 목록","전달되었지만 확인 응답되지 않은 작업","펜딩 엔트리는 확인 응답이 완료될 때까지 처리된 것으로 간주하지 않는다."], // hint: Pending entries are not done until acknowledged.
+  "acknowledgement": ["확인 응답","내구성 있는 성공 후 XACK","부작용이 안전하게 완료된 이후에만 확인 응답한다."], // hint: Acknowledge only after the side effect is safe.
+  "XPENDING": ["XPENDING","펜딩 요약 및 상세 조회","멈춘 컨슈머와 오래된 메시지를 찾는 데 사용한다."], // hint: Use it to find stuck consumers and stale messages.
+  "pending replay": ["펜딩 리플레이","`>` 대신 이전 ID로 읽기","컨슈머는 자신의 펜딩 엔트리를 다시 읽을 수 있다."], // hint: A consumer can re-read its own pending entries.
+  "NOACK": ["NOACK","펜딩 추적 생략","메시지 손실이 허용되는 경우에만 사용한다."], // hint: Only use it when losing messages is acceptable.
+  "XCLAIM": ["XCLAIM","수동 오래된 메시지 이전","특정 펜딩 ID를 다른 컨슈머에게 이전할 때 사용한다."], // hint: Claim specific pending IDs for another consumer.
+  "XAUTOCLAIM": ["XAUTOCLAIM","오래된 펜딩 엔트리 스캔 및 클레임","오래된 엔트리가 많을 때 커서 방식의 복구를 사용한다."], // hint: Use cursor-style recovery for many stale entries.
+  "XINFO CONSUMERS": ["XINFO CONSUMERS","컨슈머 유휴 시간 및 펜딩 수 조회","멈춰 있거나 죽은 워커를 식별하는 데 사용한다."], // hint: Use it to identify stuck or dead workers.
+  "group fanout": ["그룹 팬아웃","독립 구독자당 하나의 컨슈머 그룹","한 그룹 내 컨슈머는 작업을 공유하고, 그룹마다 각자의 커서를 가진다."], // hint: Consumers in one group share work; groups each get their own cursor.
+  "dead-letter stream": ["데드레터 스트림","재시도 한도 초과 후 독성 메시지 이동","하나의 불량 이벤트가 샤드를 영원히 차단하지 않도록 한다."], // hint: Do not let one bad event block a shard forever.
+  "XGROUP SETID": ["XGROUP SETID","그룹 전달 커서 이동","리플레이 또는 앞으로 건너뛰기 작업에 신중하게 사용한다."], // hint: Use carefully for replay or skip-ahead operations.
+  "at-least-once processing": ["최소 한 번 처리","메시지가 다시 전달될 수 있음","확인 응답 전 크래시가 발생하면 재시도가 발생한다."], // hint: Crashes before acknowledgement create retries.
+  "idempotent consumer": ["멱등 컨슈머","이벤트 ID 또는 비즈니스 키로 부작용 중복 제거","재시도 시 요금 청구, 이메일 발송, 상태 변경이 중복으로 발생해서는 안 된다."], // hint: A retry should not charge, email, or mutate twice.
+  "backpressure": ["백프레셔","배치 크기 제한 및 컨슈머 확장","컨슈머는 뒤처짐과 복구를 제어된 방식으로 처리할 수 있어야 한다."], // hint: Consumers need a controlled way to fall behind and recover.
+  "lag monitoring": ["지연 모니터링","스트림 길이, 그룹 지연, 펜딩 수 관찰","지연은 처리가 프로덕션보다 얼마나 뒤처졌는지를 나타낸다."], // hint: Lag tells you how far processing is behind production.
+  "XINFO STREAM": ["XINFO STREAM","스트림 메타데이터 조회","길이, 첫/마지막 엔트리, 그룹 관련 상태 확인에 사용한다."], // hint: Use it for length, first/last entry, and group-related state.
+  "retention vs recovery": ["보존 vs 복구","컨슈머 복구 전에 트리밍 금지","엔트리 삭제는 펜딩 복구 기대와 충돌할 수 있다."], // hint: Deleting entries can conflict with pending recovery expectations.
+  "ordering model": ["순서 모델","스트림당 ID 기준 정렬","워커가 동시에 실행될 때 완료 순서는 전달 순서와 다를 수 있다."], // hint: Completion order can differ from delivery order when workers run concurrently.
+  "stream sharding": ["스트림 샤딩","병렬 레인을 위한 다중 스트림 키","하나의 스트림이 너무 핫할 때 파티션 키를 사용한다."], // hint: Use partition keys when one stream becomes too hot.
+  "Redis Cluster streams": ["Redis 클러스터 스트림","연관 키를 위한 해시 태그","멀티 키 스트림 작업은 키가 동일한 해시 슬롯에 있어야 한다."], // hint: Multi-key stream operations need keys in the same hash slot.
+  "persistence": ["영속성","AOF 또는 RDB 내구성 선택","Streams의 내구성은 Redis의 영속성 및 복제 설정에 따라 결정된다."], // hint: Streams are only as durable as the Redis persistence and replication setup.
+  "failover recovery": ["장애 복구","재연결, 재개, 클레임, 확인 응답","워커는 Redis 또는 프로세스 장애 후 시작 로직이 필요하다."], // hint: Workers need startup logic after Redis or process failure.
+  "memory policy": ["메모리 정책","중요 스트림 데이터 축출 방지","축출은 안정성 가정을 조용히 파괴할 수 있다."], // hint: Eviction can silently destroy reliability assumptions.
+  "alerting": ["알림","지연, 펜딩, 유휴, 오류에 대한 알림 설정","복구 목표를 위협하는 증상에 대해 알림을 설정한다."], // hint: Alert on symptoms that threaten recovery objectives.
+  "disaster recovery": ["재해 복구","백업, 리플레이, 재구성 계획","Redis 상태를 복원하거나 소스 시스템에서 재구성하는 방법을 알아야 한다."], // hint: Know how to restore Redis state or rebuild from source systems.
+  "capacity planning": ["용량 계획","쓰기 속도, 보존, 컨슈머 처리량 모델링","안정성은 이벤트 흐름에 용량이 부합하는지에 달려 있다."], // hint: Reliability depends on capacity matching the event flow.
 };

@@ -584,6 +584,7 @@ function TrainingView({
 
   return (
     <main className="kana-app-page">
+      <TokenBackdrop domain={domain} />
       <Sidebar
         activeId={activeId}
         domain={domain}
@@ -596,7 +597,7 @@ function TrainingView({
         onToggleSound={onToggleSound}
         onOpenProgress={onOpenProgress}
       />
-      <section className="kana-dojo-main" aria-label={`${track.title} dojo`}>
+      <section className="kana-dojo-main" aria-label={`${track.title} ${t("dojoLabel")}`}>
         <header className="kana-dojo-title">
           <h2>
             <span>{getTrackMark(domain, track.id)}</span>
@@ -834,7 +835,7 @@ function ProgressView({
             <span>
               <BarChart3 size={18} />
             </span>
-            Progress
+            {t("progress")}
           </h2>
           <HeaderControls
             soundEnabled={soundEnabled}

@@ -33,6 +33,7 @@ export const uiStrings = {
   communityLinks: { ko: "커뮤니티 링크", en: "Community links" },
   siteLinks: { ko: "사이트 링크", en: "Site links" },
   trainingDojos: { ko: "훈련 도장", en: "training dojos" },
+  dojoLabel: { ko: "도장", en: "dojo" },
   progressViews: { ko: "진행 화면", en: "Progress views" },
   overallStatistics: { ko: "전체 통계", en: "Overall statistics" },
   trackCompletion: { ko: "트랙 완료율", en: "Track completion" },

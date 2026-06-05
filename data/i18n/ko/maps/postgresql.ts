@@ -87,64 +87,64 @@ export const postgresqlBaseDrills: Record<string, DrillTextKo> = {
 
 // curriculumTopics — English placeholders, translate [conceptKo, answerKo].
 export const postgresqlTopicsKo: Record<string, TopicKo> = {
-  "relational model": ["관계형 모델", "테이블, 행, 열, 릴레이션"], // hint: Model facts as rows in tables with defined columns.
-  "psql basics": ["psql 기초", "\\d 및 \\? 메타 명령어"], // hint: Use psql meta commands to inspect schema and help.
-  "SELECT list": ["SELECT 목록", "필요한 열만 선택"], // hint: Avoid SELECT * when callers need stable output.
-  "WHERE predicates": ["WHERE 조건", "그룹화 전 불리언 필터"], // hint: WHERE reduces candidate rows before GROUP BY and SELECT output.
-  "NULL logic": ["NULL 논리", "참, 거짓, 알 수 없음"], // hint: NULL comparisons can become unknown rather than true or false.
-  "ORDER BY and LIMIT": ["ORDER BY와 LIMIT", "제한 전 결정적 정렬"], // hint: LIMIT without ORDER BY can return unstable subsets.
-  "DML RETURNING": ["DML RETURNING", "수정된 행 반환"], // hint: INSERT, UPDATE, and DELETE can send changed row values back.
-  "transaction basics": ["트랜잭션 기초", "BEGIN, COMMIT, ROLLBACK"], // hint: Group related writes so they succeed or fail together.
-  "data types": ["데이터 타입", "의미 있는 열 타입 선택"], // hint: Types are part of the data contract.
-  "time handling": ["시간 처리", "순간 저장에는 timestamptz"], // hint: Store global points in time independently from display time zones.
-  "expressions and functions": ["표현식과 함수", "SELECT와 WHERE의 계산 값"], // hint: SQL expressions can derive, transform, and compare values.
-  "CASE and COALESCE": ["CASE와 COALESCE", "조건 값과 대체값"], // hint: Use SQL expressions for labels, fallback fields, and derived status.
-  "views": ["뷰", "저장된 쿼리 인터페이스"], // hint: Expose a stable query shape without duplicating SQL everywhere.
-  "query parameters": ["쿼리 파라미터", "문자열 연결 대신 바인드 값"], // hint: User input should never be concatenated into SQL text.
-  "schemas and search_path": ["스키마와 search_path", "데이터베이스 객체 네임스페이스"], // hint: Schemas organize tables, functions, and permissions inside one database.
-  "inner and outer joins": ["내부 조인과 외부 조인", "ON 조건으로 행 매칭"], // hint: Choose INNER when both sides must match; choose OUTER when one side must be preserved.
-  "join cardinality": ["조인 카디널리티", "일대일, 일대다, 다대다 이해"], // hint: Unexpected duplicates often come from misunderstood relationships.
-  "aggregation": ["집계", "집계 함수를 사용한 GROUP BY"], // hint: Group rows before applying count, sum, avg, min, or max.
-  "HAVING": ["HAVING", "그룹화된 결과 필터링"], // hint: Use HAVING after aggregate values exist.
-  "DISTINCT ON": ["DISTINCT ON", "정렬로 그룹당 첫 번째 행 유지"], // hint: PostgreSQL can keep one ordered representative per key.
-  "subqueries": ["서브쿼리", "중첩 SELECT 표현식"], // hint: Use a query result as a filter, scalar value, or derived relation.
-  "EXISTS": ["EXISTS", "세미조인 존재 검사"], // hint: Ask whether at least one related row exists.
-  "common table expressions": ["공통 테이블 표현식", "WITH로 명명된 서브쿼리"], // hint: Name intermediate query steps for readability or recursion.
-  "window functions": ["윈도우 함수", "OVER, PARTITION BY, ORDER BY"], // hint: Compute rankings or running totals without collapsing rows.
-  "LATERAL joins": ["LATERAL 조인", "행별 서브쿼리 접근"], // hint: Let a subquery refer to columns from earlier FROM items.
-  "recursive CTE": ["재귀 CTE", "WITH RECURSIVE"], // hint: Traverse trees, graphs, and hierarchies in SQL.
-  "set operations": ["집합 연산", "UNION, INTERSECT, EXCEPT"], // hint: Combine compatible SELECT results as sets.
-  "JSONB querying": ["JSONB 쿼리", "연산자와 GIN 인덱스"], // hint: Use jsonb operators for containment and key extraction.
-  "full-text search": ["전문 검색", "tsvector와 tsquery"], // hint: Search normalized terms rather than raw LIKE scans.
-  "EXPLAIN basics": ["EXPLAIN 기초", "스캔, 조인, 비용, 행 읽기"], // hint: A query plan explains how PostgreSQL intends to execute SQL.
-  "primary and foreign keys": ["기본 키와 외래 키", "식별자와 참조 무결성"], // hint: Keys define stable row identity and valid relationships.
-  "core constraints": ["핵심 제약", "UNIQUE, CHECK, NOT NULL"], // hint: Let the database reject invalid facts.
-  "identity and sequences": ["ID와 시퀀스", "GENERATED AS IDENTITY"], // hint: Use standard generated values instead of hand-managing numeric IDs.
-  "B-tree indexes": ["B-트리 인덱스", "등호, 범위, 정렬 접근"], // hint: B-tree is the default index for many common predicates.
-  "composite indexes": ["복합 인덱스", "최좌측 접두사와 정렬 순서"], // hint: Column order should match predicates and ordering.
-  "partial and expression indexes": ["부분 인덱스와 표현식 인덱스", "부분집합 또는 계산 값 인덱싱"], // hint: Index only the rows or expression your workload actually searches.
-  "GIN and BRIN indexes": ["GIN 인덱스와 BRIN 인덱스", "역인덱스와 블록 범위 인덱스"], // hint: Use specialized indexes for jsonb/search/arrays or naturally ordered large tables.
-  "schema migrations": ["스키마 마이그레이션", "소규모 가역적 트랜잭션 변경"], // hint: Change production schema in controlled steps.
-  "DDL lock impact": ["DDL 잠금 영향", "장기 블로킹 스키마 변경 방지"], // hint: Some ALTER operations can block writes or reads.
-  "table partitioning": ["테이블 파티셔닝", "범위, 목록, 해시 파티션"], // hint: Partition large tables by access and retention patterns.
-  "row-level security": ["행 수준 보안", "행 접근당 정책"], // hint: Restrict visible or writable rows inside the database.
-  "triggers": ["트리거", "행 변경에 대한 데이터베이스 측 반응"], // hint: Use triggers sparingly for invariants or audit behavior that must live near the data.
-  "materialized views": ["구체화된 뷰", "갱신이 필요한 저장된 쿼리 결과"], // hint: Use when expensive derived data can be refreshed on a schedule.
-  "extensions": ["익스텐션", "거버넌스를 갖춘 CREATE EXTENSION"], // hint: Extensions add capabilities but should be enabled intentionally.
-  "domain modeling choices": ["도메인 모델링 선택", "도메인, 열거형, 룩업 테이블"], // hint: Pick the constraint shape that matches how values evolve.
-  "isolation levels": ["격리 수준", "Read Committed, Repeatable Read, Serializable"], // hint: Choose visibility guarantees for concurrent transactions.
-  "locks and deadlocks": ["잠금과 데드락", "짧은 트랜잭션과 일관된 잠금 순서"], // hint: Concurrency bugs often come from long transactions or reversed update order.
-  "VACUUM and autovacuum": ["VACUUM과 autovacuum", "데드 튜플 제거 및 통계 갱신"], // hint: MVCC leaves old row versions that must be maintained.
-  "planner statistics": ["플래너 통계", "ANALYZE와 확장 통계"], // hint: The planner depends on row count and distribution estimates.
-  "EXPLAIN ANALYZE BUFFERS": ["EXPLAIN ANALYZE BUFFERS", "실제 런타임과 I/O 증거"], // hint: Look at real rows, time, loops, and buffer reads.
-  "connection pooling": ["커넥션 풀링", "제한된 재사용 가능 연결"], // hint: PostgreSQL connections are not free.
-  "backup and PITR": ["백업과 PITR", "베이스 백업과 아카이브된 WAL"], // hint: A dump alone is not a complete point-in-time recovery plan.
-  "replication": ["복제", "물리 복제와 논리 복제"], // hint: Use the replication type that matches HA or data distribution needs.
-  "roles and privileges": ["롤과 권한", "최소 권한 부여"], // hint: Application roles should have only required access.
-  "timeouts": ["타임아웃", "statement_timeout, lock_timeout, 유휴 타임아웃"], // hint: Bound waiting and runaway work.
-  "monitoring": ["모니터링", "pg_stat 뷰, 로그, 쿼리 메트릭"], // hint: Watch throughput, latency, locks, replication, bloat, and slow queries.
-  "high availability": ["고가용성", "레플리카, 페일오버, 검증된 복구"], // hint: HA is an operational system, not just a replica.
-  "version upgrades": ["버전 업그레이드", "롤백 경로를 갖춘 계획된 업그레이드"], // hint: Major upgrades require compatibility, extension, and performance checks.
-  "multi-tenancy": ["멀티 테넌시", "테넌트 키, 스키마, 또는 데이터베이스"], // hint: Isolation strategy affects queries, security, migrations, and operations.
-  "database incidents": ["데이터베이스 인시던트", "관찰, 격리, 복구, 기록"], // hint: Production failures need a practiced response loop.
+  "relational model": ["관계형 모델","테이블, 행, 열, 릴레이션","사실(fact)을 정의된 열을 가진 테이블의 행으로 모델링한다."], // hint: Model facts as rows in tables with defined columns.
+  "psql basics": ["psql 기초","\\d 및 \\? 메타 명령어","psql 메타 명령어로 스키마를 조회하고 도움말을 확인한다."], // hint: Use psql meta commands to inspect schema and help.
+  "SELECT list": ["SELECT 목록","필요한 열만 선택","호출자가 안정적인 출력을 필요로 할 때는 SELECT *를 피한다."], // hint: Avoid SELECT * when callers need stable output.
+  "WHERE predicates": ["WHERE 조건","그룹화 전 불리언 필터","WHERE는 GROUP BY와 SELECT 출력 전에 후보 행을 줄인다."], // hint: WHERE reduces candidate rows before GROUP BY and SELECT output.
+  "NULL logic": ["NULL 논리","참, 거짓, 알 수 없음","NULL 비교는 참 또는 거짓이 아닌 알 수 없음(unknown)이 될 수 있다."], // hint: NULL comparisons can become unknown rather than true or false.
+  "ORDER BY and LIMIT": ["ORDER BY와 LIMIT","제한 전 결정적 정렬","ORDER BY 없는 LIMIT은 불안정한 부분집합을 반환할 수 있다."], // hint: LIMIT without ORDER BY can return unstable subsets.
+  "DML RETURNING": ["DML RETURNING","수정된 행 반환","INSERT, UPDATE, DELETE는 변경된 행의 값을 돌려보낼 수 있다."], // hint: INSERT, UPDATE, and DELETE can send changed row values back.
+  "transaction basics": ["트랜잭션 기초","BEGIN, COMMIT, ROLLBACK","연관된 쓰기 작업을 묶어 함께 성공하거나 함께 실패하도록 한다."], // hint: Group related writes so they succeed or fail together.
+  "data types": ["데이터 타입","의미 있는 열 타입 선택","타입은 데이터 계약의 일부다."], // hint: Types are part of the data contract.
+  "time handling": ["시간 처리","순간 저장에는 timestamptz","전 세계적인 시점(point in time)은 표시 시간대와 독립적으로 저장한다."], // hint: Store global points in time independently from display time zones.
+  "expressions and functions": ["표현식과 함수","SELECT와 WHERE의 계산 값","SQL 표현식은 값을 도출, 변환, 비교할 수 있다."], // hint: SQL expressions can derive, transform, and compare values.
+  "CASE and COALESCE": ["CASE와 COALESCE","조건 값과 대체값","레이블, 대체 필드, 파생 상태에는 SQL 표현식을 사용한다."], // hint: Use SQL expressions for labels, fallback fields, and derived status.
+  "views": ["뷰","저장된 쿼리 인터페이스","SQL을 곳곳에 중복하지 않고 안정적인 쿼리 인터페이스를 노출한다."], // hint: Expose a stable query shape without duplicating SQL everywhere.
+  "query parameters": ["쿼리 파라미터","문자열 연결 대신 바인드 값","사용자 입력을 SQL 텍스트에 직접 연결(concatenate)해서는 안 된다."], // hint: User input should never be concatenated into SQL text.
+  "schemas and search_path": ["스키마와 search_path","데이터베이스 객체 네임스페이스","스키마는 하나의 데이터베이스 안에서 테이블, 함수, 권한을 구조화한다."], // hint: Schemas organize tables, functions, and permissions inside one database.
+  "inner and outer joins": ["내부 조인과 외부 조인","ON 조건으로 행 매칭","양쪽이 모두 일치해야 할 때는 INNER를, 한쪽을 반드시 유지해야 할 때는 OUTER를 선택한다."], // hint: Choose INNER when both sides must match; choose OUTER when one side must be preserved.
+  "join cardinality": ["조인 카디널리티","일대일, 일대다, 다대다 이해","예상치 못한 중복 행은 잘못 파악된 관계(relationship)에서 비롯되는 경우가 많다."], // hint: Unexpected duplicates often come from misunderstood relationships.
+  "aggregation": ["집계","집계 함수를 사용한 GROUP BY","count, sum, avg, min, max를 적용하기 전에 먼저 행을 그룹화한다."], // hint: Group rows before applying count, sum, avg, min, or max.
+  "HAVING": ["HAVING","그룹화된 결과 필터링","집계 값이 산출된 후에 그룹을 필터링할 때 HAVING을 사용한다."], // hint: Use HAVING after aggregate values exist.
+  "DISTINCT ON": ["DISTINCT ON","정렬로 그룹당 첫 번째 행 유지","PostgreSQL은 키별로 정렬된 대표 행 하나를 유지할 수 있다."], // hint: PostgreSQL can keep one ordered representative per key.
+  "subqueries": ["서브쿼리","중첩 SELECT 표현식","쿼리 결과를 필터, 스칼라 값, 또는 파생 릴레이션으로 사용한다."], // hint: Use a query result as a filter, scalar value, or derived relation.
+  "EXISTS": ["EXISTS","세미조인 존재 검사","연관된 행이 적어도 하나 존재하는지 확인할 때 사용한다."], // hint: Ask whether at least one related row exists.
+  "common table expressions": ["공통 테이블 표현식","WITH로 명명된 서브쿼리","가독성이나 재귀(recursion)를 위해 중간 쿼리 단계에 이름을 붙인다."], // hint: Name intermediate query steps for readability or recursion.
+  "window functions": ["윈도우 함수","OVER, PARTITION BY, ORDER BY","행을 집계하지 않고 순위나 누적 합계를 계산한다."], // hint: Compute rankings or running totals without collapsing rows.
+  "LATERAL joins": ["LATERAL 조인","행별 서브쿼리 접근","서브쿼리가 FROM 절의 앞쪽 항목 열을 참조할 수 있도록 한다."], // hint: Let a subquery refer to columns from earlier FROM items.
+  "recursive CTE": ["재귀 CTE","WITH RECURSIVE","WITH RECURSIVE로 SQL에서 트리, 그래프, 계층 구조를 순회한다."], // hint: Traverse trees, graphs, and hierarchies in SQL.
+  "set operations": ["집합 연산","UNION, INTERSECT, EXCEPT","호환되는 SELECT 결과를 집합으로 결합한다."], // hint: Combine compatible SELECT results as sets.
+  "JSONB querying": ["JSONB 쿼리","연산자와 GIN 인덱스","포함(containment) 검사와 키 추출에는 jsonb 연산자를 사용한다."], // hint: Use jsonb operators for containment and key extraction.
+  "full-text search": ["전문 검색","tsvector와 tsquery","원시 LIKE 스캔 대신 정규화된 tsvector 항목으로 검색한다."], // hint: Search normalized terms rather than raw LIKE scans.
+  "EXPLAIN basics": ["EXPLAIN 기초","스캔, 조인, 비용, 행 읽기","쿼리 실행계획은 PostgreSQL이 SQL을 어떻게 실행할지 설명한다."], // hint: A query plan explains how PostgreSQL intends to execute SQL.
+  "primary and foreign keys": ["기본 키와 외래 키","식별자와 참조 무결성","키는 안정적인 행 식별자와 유효한 관계를 정의한다."], // hint: Keys define stable row identity and valid relationships.
+  "core constraints": ["핵심 제약","UNIQUE, CHECK, NOT NULL","데이터베이스가 유효하지 않은 사실(fact)을 스스로 거부하도록 한다."], // hint: Let the database reject invalid facts.
+  "identity and sequences": ["ID와 시퀀스","GENERATED AS IDENTITY","숫자 ID를 직접 관리하는 대신 GENERATED AS IDENTITY 표준 생성 값을 사용한다."], // hint: Use standard generated values instead of hand-managing numeric IDs.
+  "B-tree indexes": ["B-트리 인덱스","등호, 범위, 정렬 접근","B-tree는 일반적인 많은 조건 술어에 대한 기본 인덱스다."], // hint: B-tree is the default index for many common predicates.
+  "composite indexes": ["복합 인덱스","최좌측 접두사와 정렬 순서","열 순서는 조건 술어와 정렬 순서에 맞춰야 한다."], // hint: Column order should match predicates and ordering.
+  "partial and expression indexes": ["부분 인덱스와 표현식 인덱스","부분집합 또는 계산 값 인덱싱","워크로드가 실제로 검색하는 행이나 표현식만 인덱싱한다."], // hint: Index only the rows or expression your workload actually searches.
+  "GIN and BRIN indexes": ["GIN 인덱스와 BRIN 인덱스","역인덱스와 블록 범위 인덱스","jsonb, 전문 검색, 배열에는 GIN을, 자연 정렬된 대형 테이블에는 BRIN 같은 전문 인덱스를 사용한다."], // hint: Use specialized indexes for jsonb/search/arrays or naturally ordered large tables.
+  "schema migrations": ["스키마 마이그레이션","소규모 가역적 트랜잭션 변경","프로덕션 스키마는 통제된 단계로 변경한다."], // hint: Change production schema in controlled steps.
+  "DDL lock impact": ["DDL 잠금 영향","장기 블로킹 스키마 변경 방지","일부 ALTER 작업은 쓰기 또는 읽기를 차단할 수 있다."], // hint: Some ALTER operations can block writes or reads.
+  "table partitioning": ["테이블 파티셔닝","범위, 목록, 해시 파티션","대형 테이블은 접근 및 보존 패턴에 따라 파티셔닝한다."], // hint: Partition large tables by access and retention patterns.
+  "row-level security": ["행 수준 보안","행 접근당 정책","데이터베이스 내부에서 조회하거나 수정할 수 있는 행을 정책으로 제한한다."], // hint: Restrict visible or writable rows inside the database.
+  "triggers": ["트리거","행 변경에 대한 데이터베이스 측 반응","데이터에 가까이 있어야 하는 불변 조건이나 감사(audit) 동작에만 트리거를 절제하여 사용한다."], // hint: Use triggers sparingly for invariants or audit behavior that must live near the data.
+  "materialized views": ["구체화된 뷰","갱신이 필요한 저장된 쿼리 결과","비용이 많이 드는 파생 데이터를 일정에 따라 갱신할 수 있을 때 사용한다."], // hint: Use when expensive derived data can be refreshed on a schedule.
+  "extensions": ["익스텐션","거버넌스를 갖춘 CREATE EXTENSION","CREATE EXTENSION은 기능을 추가하지만 의도적으로 활성화해야 한다."], // hint: Extensions add capabilities but should be enabled intentionally.
+  "domain modeling choices": ["도메인 모델링 선택","도메인, 열거형, 룩업 테이블","값이 변화하는 방식에 맞는 제약 형태를 선택한다."], // hint: Pick the constraint shape that matches how values evolve.
+  "isolation levels": ["격리 수준","Read Committed, Repeatable Read, Serializable","동시 트랜잭션에 대한 가시성 보장 수준을 선택한다."], // hint: Choose visibility guarantees for concurrent transactions.
+  "locks and deadlocks": ["잠금과 데드락","짧은 트랜잭션과 일관된 잠금 순서","동시성 버그는 긴 트랜잭션이나 역순 갱신에서 비롯되는 경우가 많다."], // hint: Concurrency bugs often come from long transactions or reversed update order.
+  "VACUUM and autovacuum": ["VACUUM과 autovacuum","데드 튜플 제거 및 통계 갱신","MVCC는 반드시 유지 관리해야 하는 구 행 버전을 남긴다."], // hint: MVCC leaves old row versions that must be maintained.
+  "planner statistics": ["플래너 통계","ANALYZE와 확장 통계","플래너는 행 수와 분포 추정치에 의존한다."], // hint: The planner depends on row count and distribution estimates.
+  "EXPLAIN ANALYZE BUFFERS": ["EXPLAIN ANALYZE BUFFERS","실제 런타임과 I/O 증거","실제 행 수, 소요 시간, 루프 횟수, 버퍼 읽기를 확인한다."], // hint: Look at real rows, time, loops, and buffer reads.
+  "connection pooling": ["커넥션 풀링","제한된 재사용 가능 연결","PostgreSQL 연결은 비용이 없는 것이 아니다."], // hint: PostgreSQL connections are not free.
+  "backup and PITR": ["백업과 PITR","베이스 백업과 아카이브된 WAL","덤프(dump)만으로는 완전한 특정 시점 복구(point-in-time recovery) 계획이 되지 않는다."], // hint: A dump alone is not a complete point-in-time recovery plan.
+  "replication": ["복제","물리 복제와 논리 복제","고가용성(HA) 또는 데이터 배포 요건에 맞는 복제 방식을 선택한다."], // hint: Use the replication type that matches HA or data distribution needs.
+  "roles and privileges": ["롤과 권한","최소 권한 부여","애플리케이션 롤은 필요한 접근 권한만 가져야 한다."], // hint: Application roles should have only required access.
+  "timeouts": ["타임아웃","statement_timeout, lock_timeout, 유휴 타임아웃","statement_timeout, lock_timeout으로 대기 시간과 과부하 작업에 상한을 설정한다."], // hint: Bound waiting and runaway work.
+  "monitoring": ["모니터링","pg_stat 뷰, 로그, 쿼리 메트릭","처리량, 지연 시간, 잠금, 복제, 테이블 비대화(bloat), 느린 쿼리를 모니터링한다."], // hint: Watch throughput, latency, locks, replication, bloat, and slow queries.
+  "high availability": ["고가용성","레플리카, 페일오버, 검증된 복구","고가용성(HA)은 단순히 레플리카를 두는 것이 아닌 운영 체계 전체다."], // hint: HA is an operational system, not just a replica.
+  "version upgrades": ["버전 업그레이드","롤백 경로를 갖춘 계획된 업그레이드","메이저 업그레이드는 호환성, 익스텐션, 성능 검토가 필요하다."], // hint: Major upgrades require compatibility, extension, and performance checks.
+  "multi-tenancy": ["멀티 테넌시","테넌트 키, 스키마, 또는 데이터베이스","격리 전략은 쿼리, 보안, 마이그레이션, 운영 전반에 영향을 미친다."], // hint: Isolation strategy affects queries, security, migrations, and operations.
+  "database incidents": ["데이터베이스 인시던트","관찰, 격리, 복구, 기록","프로덕션 장애에는 관찰, 격리, 복구, 기록으로 이어지는 실전 대응 루프가 필요하다."], // hint: Production failures need a practiced response loop.
 };

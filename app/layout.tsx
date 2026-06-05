@@ -16,8 +16,9 @@ export const viewport: Viewport = {
 const subjectList = learningDomains.map((domain) => domain.subject.name).join(", ");
 
 export const metadata: Metadata = {
-  title: `MasteryDojo - Learn ${learningDomains.length} technical domains`,
-  description: `KanaDojo-inspired training for ${subjectList}, with reusable domains for more topics later.`,
+  // Korean is the default language, so the static document title/description ship in Korean.
+  title: `MasteryDojo - 기술 도메인 ${learningDomains.length}종 학습 도장`,
+  description: `KanaDojo에서 영감을 받은 ${subjectList} 훈련 도장. 짧은 드릴과 타이핑 연습으로 초급부터 숙련까지.`,
   icons: {
     icon: [{ url: withBasePath(defaultDomain.metadata.iconPath), type: "image/svg+xml" }]
   }

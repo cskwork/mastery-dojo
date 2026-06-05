@@ -86,65 +86,65 @@ export const pythonBaseDrills: Record<string, DrillTextKo> = {
 
 // curriculumTopics — English placeholders, translate [conceptKo, answerKo].
 export const pythonTopicsKo: Record<string, TopicKo> = {
-  "interpreter and CLI": ["인터프리터와 CLI", "python -m 모듈 실행"], // hint: Run modules with the interpreter so imports resolve like a package.
-  "source files and encoding": ["소스 파일과 인코딩", "UTF-8 소스 텍스트"], // hint: Modern Python source files are text, commonly UTF-8.
-  "truthiness": ["참 거짓 평가", "빈 컨테이너는 거짓"], // hint: Python uses truth value testing in if and while.
-  "equality vs identity": ["동등성과 동일성", "값 비교는 ==, 객체 동일성은 is"], // hint: Two equal values do not have to be the same object.
-  "numeric types": ["숫자 타입", "int float Decimal Fraction"], // hint: Choose the numeric model that matches the problem.
-  "formatted strings": ["포맷 문자열", "f-string"], // hint: Use readable interpolation for values in output.
-  "structural pattern matching": ["구조적 패턴 매칭", "match 문"], // hint: Use pattern matching when shape matters more than one boolean.
-  "loop control": ["반복문 제어", "break continue else"], // hint: Loops can exit early, skip an iteration, or run an else block when no break occurs.
-  "function parameters": ["함수 매개변수", "위치 전용 및 키워드 전용 매개변수"], // hint: Python can control how callers pass arguments.
-  "exception handling": ["예외 처리", "구체적인 예외 발생"], // hint: Catch what you can handle and let the rest fail loudly.
-  "context managers": ["컨텍스트 매니저", "with 문"], // hint: Use deterministic setup and cleanup for files, locks, and transactions.
-  "modules and imports": ["모듈과 임포트", "절대 임포트"], // hint: Package code should import names from stable module paths.
-  "virtual environments": ["가상 환경", "python -m venv"], // hint: Keep project dependencies isolated from the system interpreter.
-  "package installation": ["패키지 설치", "pip install"], // hint: Install from an index or local wheel into the active environment.
-  "debugging basics": ["디버깅 기초", "breakpoint()"], // hint: Pause execution and inspect state instead of guessing.
-  "sequence operations": ["시퀀스 연산", "슬라이싱과 이터레이션"], // hint: Lists, tuples, strings, and ranges share common sequence behavior.
-  "dictionary patterns": ["딕셔너리 패턴", "get setdefault defaultdict Counter"], // hint: Use the mapping helper that matches the data accumulation problem.
-  "set algebra": ["집합 연산", "합집합 교집합 차집합"], // hint: Model uniqueness and membership with sets.
-  "sorting with keys": ["키 기반 정렬", "키 함수"], // hint: Sort complex objects by a derived value.
-  "comprehensions": ["컴프리헨션", "리스트 dict 집합 컴프리헨션"], // hint: Use a compact expression for map/filter style transformations.
-  "iterator protocol": ["이터레이터 프로토콜", "__iter__와 __next__"], // hint: Iteration is protocol-based, not limited to lists.
-  "generators": ["제너레이터", "yield"], // hint: Generate values lazily instead of building a full list.
-  "filesystem paths": ["파일시스템 경로", "pathlib.Path"], // hint: Use object-oriented paths instead of string concatenation.
-  "structured files": ["구조화 파일", "json과 csv 모듈"], // hint: Use standard parsers for data formats.
-  "dates and time zones": ["날짜와 시간대", "zoneinfo를 활용한 datetime"], // hint: Store and compare aware datetimes when zones matter.
-  "data classes": ["데이터클래스", "@dataclass"], // hint: Use generated init, repr, and comparison for plain data objects.
-  "typed containers": ["타입 지정 컨테이너", "list[str]과 dict[str, int]"], // hint: Annotate collection element types.
-  "local relational storage": ["로컬 관계형 저장소", "sqlite3"], // hint: Use the bundled database for local durable relational data.
-  "regular expressions": ["정규 표현식", "re 모듈"], // hint: Use patterns for text validation and extraction.
-  "serialization boundaries": ["직렬화 경계", "외부 데이터 유효성 검사"], // hint: Treat files, APIs, and environment variables as untrusted input.
-  "numeric precision": ["수치 정밀도", "정확한 소수 계산에는 Decimal"], // hint: Binary float is not ideal for money-like calculations.
-  "pure functions": ["순수 함수", "숨겨진 상태를 변경하는 대신 값을 반환"], // hint: Separate calculation from side effects.
-  "module boundaries": ["모듈 경계", "응집된 책임 하나당 모듈 하나"], // hint: Group code by domain purpose rather than dumping helpers together.
-  "custom exceptions": ["커스텀 예외", "도메인 특화 예외 타입"], // hint: Use meaningful failure names at business boundaries.
-  "logging": ["로깅", "logging.getLogger(__name__)"], // hint: Libraries should not print operational messages directly.
-  "testing strategy": ["테스트 전략", "단위 통합 엔드투엔드 테스트"], // hint: Use the cheapest test that proves the behavior.
-  "test fixtures": ["테스트 픽스처", "반복 가능한 설정과 정리"], // hint: Tests need stable inputs and isolated side effects.
-  "dependency injection": ["의존성 주입", "협력 객체를 명시적으로 전달"], // hint: Make external services replaceable in tests.
-  "decorators": ["데코레이터", "동작을 유지하는 래퍼 함수"], // hint: Use decorators for cross-cutting behavior around callables.
-  "composition over inheritance": ["상속보다 컴포지션", "작은 협력 객체를 합성"], // hint: Prefer object relationships that stay easy to replace.
-  "protocol-oriented design": ["프로토콜 기반 설계", "typing.Protocol"], // hint: Describe behavior required from a collaborator.
-  "configuration": ["설정 관리", "환경 변수와 타입 지정 설정"], // hint: Separate deploy-specific values from code.
-  "API client design": ["API 클라이언트 설계", "타임아웃, 재시도, 타입 지정 응답"], // hint: Network calls fail and should not hang forever.
-  "pyproject packaging": ["pyproject 패키징", "pyproject.toml"], // hint: Modern Python packaging metadata belongs in one standard project file.
-  "command-line interfaces": ["커맨드라인 인터페이스", "argparse"], // hint: Parse options and subcommands with a standard library parser.
-  "documentation strings": ["문서화 문자열", "docstring"], // hint: Document public modules, classes, functions, and tricky behavior where users read help().
-  "async tasks": ["async 태스크", "asyncio.create_task"], // hint: Schedule concurrent coroutine work under an event loop.
-  "structured concurrency": ["구조적 동시성", "asyncio.TaskGroup"], // hint: Group related async tasks so failures and cancellation are scoped.
-  "threading": ["스레딩", "블로킹 I/O에는 스레드 사용"], // hint: Threads can overlap waiting on external resources.
-  "multiprocessing": ["멀티프로세싱", "CPU 바운드 작업에는 별도 프로세스"], // hint: Use multiple interpreters/processes when CPU parallelism matters.
-  "performance profiling": ["성능 프로파일링", "최적화 전에 먼저 측정"], // hint: Guessing performance bottlenecks wastes time.
-  "advanced typing": ["고급 타입 힌트", "TypeVar ParamSpec Literal TypedDict"], // hint: Use richer typing tools when simple annotations cannot express API contracts.
-  "descriptors": ["디스크립터", "__get__ __set__ __delete__"], // hint: Descriptors power properties, methods, and many ORMs.
-  "metaclasses": ["메타클래스", "클래스 생성 커스터마이즈"], // hint: Reach for metaclasses only when class definitions themselves need policy.
-  "Python security": ["파이썬 보안", "eval 사용 금지 및 입력 유효성 검사"], // hint: Dynamic execution and untrusted deserialization create high-risk boundaries.
-  "observability": ["관측 가능성", "로그 메트릭 트레이스"], // hint: Production systems need signals that explain behavior after deployment.
-  "deployment": ["배포", "반복 가능한 빌드와 고정된 의존성"], // hint: Production should not depend on whatever happens to install today.
-  "web service boundaries": ["웹 서비스 경계", "요청 유효성 검사와 응답 계약"], // hint: APIs are external boundaries and need explicit contracts.
-  "database access": ["데이터베이스 접근", "트랜잭션과 파라미터화된 쿼리"], // hint: Database boundaries need consistency and injection safety.
-  "application architecture": ["애플리케이션 아키텍처", "도메인 경계와 명시적 의존성"], // hint: Large Python systems need clear ownership and dependency direction.
-  "long-term maintenance": ["장기 유지보수", "테스트 타입 린팅 및 변경 이력"], // hint: Sustained projects need feedback loops and recorded decisions.
+  "interpreter and CLI": ["인터프리터와 CLI","python -m 모듈 실행","패키지처럼 임포트가 해석되도록 `python -m`으로 모듈을 실행한다."], // hint: Run modules with the interpreter so imports resolve like a package.
+  "source files and encoding": ["소스 파일과 인코딩","UTF-8 소스 텍스트","모던 파이썬 소스 파일은 텍스트이며 일반적으로 UTF-8을 사용한다."], // hint: Modern Python source files are text, commonly UTF-8.
+  "truthiness": ["참 거짓 평가","빈 컨테이너는 거짓","파이썬은 `if`와 `while`에서 참 거짓 값 평가를 사용한다."], // hint: Python uses truth value testing in if and while.
+  "equality vs identity": ["동등성과 동일성","값 비교는 ==, 객체 동일성은 is","값이 동등한 두 객체가 반드시 동일한 객체일 필요는 없다."], // hint: Two equal values do not have to be the same object.
+  "numeric types": ["숫자 타입","int float Decimal Fraction","문제에 맞는 수치 모델을 선택한다."], // hint: Choose the numeric model that matches the problem.
+  "formatted strings": ["포맷 문자열","f-string","출력 값에는 가독성 높은 보간 방식을 사용한다."], // hint: Use readable interpolation for values in output.
+  "structural pattern matching": ["구조적 패턴 매칭","match 문","하나의 불리언보다 구조(shape)가 중요할 때 패턴 매칭을 사용한다."], // hint: Use pattern matching when shape matters more than one boolean.
+  "loop control": ["반복문 제어","break continue else","반복문은 조기 종료, 반복 건너뜀, 또는 `break` 없이 종료될 때 `else` 블록 실행이 가능하다."], // hint: Loops can exit early, skip an iteration, or run an else block when no break occurs.
+  "function parameters": ["함수 매개변수","위치 전용 및 키워드 전용 매개변수","파이썬은 호출자가 인수를 전달하는 방식을 제어할 수 있다."], // hint: Python can control how callers pass arguments.
+  "exception handling": ["예외 처리","구체적인 예외 발생","처리할 수 있는 예외만 잡고 나머지는 크게 실패하도록 둔다."], // hint: Catch what you can handle and let the rest fail loudly.
+  "context managers": ["컨텍스트 매니저","with 문","파일, 락, 트랜잭션에는 결정적인 설정과 정리를 위해 `with` 문을 사용한다."], // hint: Use deterministic setup and cleanup for files, locks, and transactions.
+  "modules and imports": ["모듈과 임포트","절대 임포트","패키지 코드는 안정적인 모듈 경로에서 이름을 임포트해야 한다."], // hint: Package code should import names from stable module paths.
+  "virtual environments": ["가상 환경","python -m venv","프로젝트 의존성을 시스템 인터프리터와 격리된 상태로 유지한다."], // hint: Keep project dependencies isolated from the system interpreter.
+  "package installation": ["패키지 설치","pip install","인덱스 또는 로컬 wheel에서 활성 환경에 패키지를 설치한다."], // hint: Install from an index or local wheel into the active environment.
+  "debugging basics": ["디버깅 기초","breakpoint()","추측 대신 실행을 일시 중단하고 상태를 직접 검사한다."], // hint: Pause execution and inspect state instead of guessing.
+  "sequence operations": ["시퀀스 연산","슬라이싱과 이터레이션","리스트, 튜플, 문자열, range는 공통적인 시퀀스 동작을 공유한다."], // hint: Lists, tuples, strings, and ranges share common sequence behavior.
+  "dictionary patterns": ["딕셔너리 패턴","get setdefault defaultdict Counter","데이터 누적 문제에 맞는 매핑 헬퍼를 사용한다."], // hint: Use the mapping helper that matches the data accumulation problem.
+  "set algebra": ["집합 연산","합집합 교집합 차집합","고유성과 멤버십은 집합으로 모델링한다."], // hint: Model uniqueness and membership with sets.
+  "sorting with keys": ["키 기반 정렬","키 함수","파생된 값을 기준으로 복잡한 객체를 정렬한다."], // hint: Sort complex objects by a derived value.
+  "comprehensions": ["컴프리헨션","리스트 dict 집합 컴프리헨션","map/filter 스타일의 변환에는 간결한 표현식을 사용한다."], // hint: Use a compact expression for map/filter style transformations.
+  "iterator protocol": ["이터레이터 프로토콜","__iter__와 __next__","이터레이션은 리스트에 국한되지 않고 프로토콜 기반으로 동작한다."], // hint: Iteration is protocol-based, not limited to lists.
+  "generators": ["제너레이터","yield","전체 리스트를 빌드하는 대신 값을 지연 생성한다."], // hint: Generate values lazily instead of building a full list.
+  "filesystem paths": ["파일시스템 경로","pathlib.Path","문자열 연결 대신 객체 지향 경로인 `pathlib.Path`를 사용한다."], // hint: Use object-oriented paths instead of string concatenation.
+  "structured files": ["구조화 파일","json과 csv 모듈","데이터 형식에는 표준 파서를 사용한다."], // hint: Use standard parsers for data formats.
+  "dates and time zones": ["날짜와 시간대","zoneinfo를 활용한 datetime","시간대가 중요한 경우 타임존 인식 datetime을 저장하고 비교한다."], // hint: Store and compare aware datetimes when zones matter.
+  "data classes": ["데이터클래스","@dataclass","단순 데이터 객체에는 `__init__`, `__repr__`, 비교 메서드를 자동 생성하는 기능을 활용한다."], // hint: Use generated init, repr, and comparison for plain data objects.
+  "typed containers": ["타입 지정 컨테이너", "list[str]과 dict[str, int]", "컬렉션 요소의 타입을 애너테이션으로 명시한다."], // hint: Annotate collection element types.
+  "local relational storage": ["로컬 관계형 저장소","sqlite3","로컬의 영속적인 관계형 데이터에는 기본 내장된 `sqlite3` 데이터베이스를 사용한다."], // hint: Use the bundled database for local durable relational data.
+  "regular expressions": ["정규 표현식","re 모듈","텍스트 유효성 검사와 추출에는 패턴을 사용한다."], // hint: Use patterns for text validation and extraction.
+  "serialization boundaries": ["직렬화 경계","외부 데이터 유효성 검사","파일, API, 환경 변수는 신뢰할 수 없는 입력으로 처리한다."], // hint: Treat files, APIs, and environment variables as untrusted input.
+  "numeric precision": ["수치 정밀도","정확한 소수 계산에는 Decimal","이진 부동소수점은 금액과 같은 계산에 적합하지 않다."], // hint: Binary float is not ideal for money-like calculations.
+  "pure functions": ["순수 함수","숨겨진 상태를 변경하는 대신 값을 반환","계산과 부작용을 분리한다."], // hint: Separate calculation from side effects.
+  "module boundaries": ["모듈 경계","응집된 책임 하나당 모듈 하나","헬퍼를 한곳에 모아 두지 않고 도메인 목적에 따라 코드를 그룹화한다."], // hint: Group code by domain purpose rather than dumping helpers together.
+  "custom exceptions": ["커스텀 예외","도메인 특화 예외 타입","비즈니스 경계에서는 의미 있는 실패 이름을 사용한다."], // hint: Use meaningful failure names at business boundaries.
+  "logging": ["로깅","logging.getLogger(__name__)","라이브러리는 운영 메시지를 직접 출력해서는 안 된다."], // hint: Libraries should not print operational messages directly.
+  "testing strategy": ["테스트 전략","단위 통합 엔드투엔드 테스트","동작을 증명하는 가장 저렴한 테스트를 사용한다."], // hint: Use the cheapest test that proves the behavior.
+  "test fixtures": ["테스트 픽스처","반복 가능한 설정과 정리","테스트에는 안정적인 입력과 격리된 부작용이 필요하다."], // hint: Tests need stable inputs and isolated side effects.
+  "dependency injection": ["의존성 주입","협력 객체를 명시적으로 전달","테스트에서 외부 서비스를 교체 가능하게 만든다."], // hint: Make external services replaceable in tests.
+  "decorators": ["데코레이터","동작을 유지하는 래퍼 함수","콜러블에 횡단 관심사 동작을 추가할 때 데코레이터를 사용한다."], // hint: Use decorators for cross-cutting behavior around callables.
+  "composition over inheritance": ["상속보다 컴포지션","작은 협력 객체를 합성","교체하기 쉬운 객체 관계를 선호한다."], // hint: Prefer object relationships that stay easy to replace.
+  "protocol-oriented design": ["프로토콜 기반 설계","typing.Protocol","협력 객체에게 요구되는 동작을 기술한다."], // hint: Describe behavior required from a collaborator.
+  "configuration": ["설정 관리","환경 변수와 타입 지정 설정","배포별 값을 코드와 분리한다."], // hint: Separate deploy-specific values from code.
+  "API client design": ["API 클라이언트 설계","타임아웃, 재시도, 타입 지정 응답","네트워크 호출은 실패할 수 있으며 영원히 대기해서는 안 된다."], // hint: Network calls fail and should not hang forever.
+  "pyproject packaging": ["pyproject 패키징","pyproject.toml","모던 파이썬 패키징 메타데이터는 `pyproject.toml`이라는 하나의 표준 파일에 위치해야 한다."], // hint: Modern Python packaging metadata belongs in one standard project file.
+  "command-line interfaces": ["커맨드라인 인터페이스","argparse","표준 라이브러리 파서인 `argparse`로 옵션과 서브커맨드를 파싱한다."], // hint: Parse options and subcommands with a standard library parser.
+  "documentation strings": ["문서화 문자열","docstring","사용자가 `help()`로 읽는 공개 모듈, 클래스, 함수, 복잡한 동작에 docstring을 작성한다."], // hint: Document public modules, classes, functions, and tricky behavior where users read help().
+  "async tasks": ["async 태스크","asyncio.create_task","이벤트 루프에서 동시 코루틴 작업을 `asyncio.create_task`로 예약한다."], // hint: Schedule concurrent coroutine work under an event loop.
+  "structured concurrency": ["구조적 동시성","asyncio.TaskGroup","`asyncio.TaskGroup`으로 관련 async 태스크를 묶어 실패와 취소의 범위를 지정한다."], // hint: Group related async tasks so failures and cancellation are scoped.
+  "threading": ["스레딩","블로킹 I/O에는 스레드 사용","스레드는 외부 리소스를 기다리는 작업을 겹쳐서 실행할 수 있다."], // hint: Threads can overlap waiting on external resources.
+  "multiprocessing": ["멀티프로세싱","CPU 바운드 작업에는 별도 프로세스","CPU 병렬 처리가 필요할 때는 여러 인터프리터 프로세스를 사용한다."], // hint: Use multiple interpreters/processes when CPU parallelism matters.
+  "performance profiling": ["성능 프로파일링","최적화 전에 먼저 측정","성능 병목을 추측하는 것은 시간 낭비이므로 먼저 측정한다."], // hint: Guessing performance bottlenecks wastes time.
+  "advanced typing": ["고급 타입 힌트","TypeVar ParamSpec Literal TypedDict","단순한 애너테이션으로 API 계약을 표현할 수 없을 때 `TypeVar`, `ParamSpec`, `Literal`, `TypedDict` 같은 풍부한 타입 도구를 사용한다."], // hint: Use richer typing tools when simple annotations cannot express API contracts.
+  "descriptors": ["디스크립터","__get__ __set__ __delete__","디스크립터는 프로퍼티, 메서드, 많은 ORM을 구동한다."], // hint: Descriptors power properties, methods, and many ORMs.
+  "metaclasses": ["메타클래스","클래스 생성 커스터마이즈","클래스 정의 자체에 정책이 필요한 경우에만 메타클래스를 사용한다."], // hint: Reach for metaclasses only when class definitions themselves need policy.
+  "Python security": ["파이썬 보안","eval 사용 금지 및 입력 유효성 검사","동적 실행과 신뢰할 수 없는 역직렬화는 고위험 경계를 만든다."], // hint: Dynamic execution and untrusted deserialization create high-risk boundaries.
+  "observability": ["관측 가능성","로그 메트릭 트레이스","프로덕션 시스템은 배포 후 동작을 설명하는 신호가 필요하다."], // hint: Production systems need signals that explain behavior after deployment.
+  "deployment": ["배포","반복 가능한 빌드와 고정된 의존성","프로덕션은 그 날 우연히 설치되는 것에 의존해서는 안 된다."], // hint: Production should not depend on whatever happens to install today.
+  "web service boundaries": ["웹 서비스 경계","요청 유효성 검사와 응답 계약","API는 외부 경계이므로 명시적인 계약이 필요하다."], // hint: APIs are external boundaries and need explicit contracts.
+  "database access": ["데이터베이스 접근","트랜잭션과 파라미터화된 쿼리","데이터베이스 경계에는 일관성과 SQL 인젝션 안전성이 필요하다."], // hint: Database boundaries need consistency and injection safety.
+  "application architecture": ["애플리케이션 아키텍처","도메인 경계와 명시적 의존성","대규모 파이썬 시스템에는 명확한 소유권과 의존성 방향이 필요하다."], // hint: Large Python systems need clear ownership and dependency direction.
+  "long-term maintenance": ["장기 유지보수","테스트 타입 린팅 및 변경 이력","지속되는 프로젝트에는 피드백 루프와 기록된 결정이 필요하다."], // hint: Sustained projects need feedback loops and recorded decisions.
 };

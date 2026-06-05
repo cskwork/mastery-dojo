@@ -108,6 +108,53 @@ a {
   color: rgba(157, 237, 211, 0.17);
 }
 
+/* Subtle living backdrop: faint tokens breathe slowly, staggered for an organic
+   feel. Opacity-only so it stays compositor-cheap; disabled under reduced-motion. */
+@keyframes kana-token-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.kana-token-backdrop span {
+  animation: kana-token-pulse 9s ease-in-out infinite;
+}
+
+.kana-token-backdrop span:nth-child(3n) {
+  animation-duration: 12s;
+  animation-delay: -2s;
+}
+
+.kana-token-backdrop span:nth-child(3n + 1) {
+  animation-duration: 8s;
+  animation-delay: -5s;
+}
+
+.kana-token-backdrop span:nth-child(7n) {
+  animation-duration: 14s;
+  animation-delay: -1s;
+}
+
+/* App (training / progress) screens share the home's faded token grid; pin it to
+   the viewport so it reads as a calm backdrop behind the fixed sidebar and panels. */
+.kana-app-page {
+  position: relative;
+}
+
+.kana-app-page > .kana-token-backdrop {
+  position: fixed;
+  z-index: 0;
+}
+
+.kana-app-page > .kana-dojo-main {
+  position: relative;
+  z-index: 1;
+}
+
 .kana-floating-action {
   position: fixed;
   top: calc(14px + env(safe-area-inset-top));
