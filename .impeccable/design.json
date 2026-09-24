@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-24T00:00:00Z",
+  "title": "Design System: MasteryDojo",
+  "extensions": {
+    "colorMeta": {
+      "terminal-paper": { "role": "neutral", "displayName": "Terminal Paper", "canonical": "#0f1114" },
+      "terminal-ink": { "role": "neutral", "displayName": "Terminal Ink", "canonical": "#e7e8e4" },
+      "terminal-literal": { "role": "primary", "displayName": "Terminal Literal Blue", "canonical": "#9aa9ff" },
+      "printed-paper": { "role": "neutral", "displayName": "Printed Paper", "canonical": "#f2f3f0" },
+      "printed-ink": { "role": "neutral", "displayName": "Printed Ink", "canonical": "#15171b" },
+      "printed-literal": { "role": "primary", "displayName": "Printed Literal Blue", "canonical": "#2336c9" },
+      "status-action": { "role": "primary", "displayName": "Status Action Blue", "canonical": "#2336c9" },
+      "terminal-ok": { "role": "state", "displayName": "Correct", "canonical": "#5fd197" },
+      "terminal-bad": { "role": "state", "displayName": "Miss", "canonical": "#ff8375" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Domain brand on the home page only." },
+      "headline": { "displayName": "Headline", "purpose": "Track and page titles." },
+      "title": { "displayName": "Prompt", "purpose": "The drill question." },
+      "label": { "displayName": "Section head", "purpose": "Man-page section heads (DESCRIPTION, TRACKS, MANUALS)." },
+      "literal": { "displayName": "Literal", "purpose": "Code, answers, counts, page names, flags." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "All state transitions (160-220ms)." },
+      { "name": "reverse-sweep", "value": "background-position 100% -> 0, 180ms", "purpose": "Ink or green fill sweeping across a chosen answer; snaps under reduced motion." }
+    ],
+    "breakpoints": [
+      { "name": "phone-narrow", "value": "480px" },
+      { "name": "phone", "value": "640px" },
+      { "name": "compact", "value": "720px" },
+      { "name": "tablet", "value": "768px" },
+      { "name": "desktop", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Continue Bar",
+      "kind": "button",
+      "refersTo": "button-reverse",
+      "description": "Reverse-video primary entry into the next drill session.",
+      "html": "<button class=\"ds-continue\"><b>Continue</b><span>1. Foundations · Pick mode</span><code>12/74</code></button>",
+      "css": ".ds-continue{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;width:100%;min-height:64px;padding:12px 20px;border:0;border-radius:0;background:var(--ink,#e7e8e4);color:var(--paper,#0f1114);font:inherit;cursor:pointer;transition:background-color 180ms cubic-bezier(.16,1,.3,1)}.ds-continue b{font-weight:800;font-size:1.125rem}.ds-continue code{font-family:'Nanum Gothic Coding',monospace}.ds-continue:hover{background:#2336c9;color:#fff}.ds-continue:focus-visible{outline:2px solid #9aa9ff;outline-offset:3px}"
+    },
+    {
+      "name": "Mode Flags",
+      "kind": "nav",
+      "refersTo": "button-outline",
+      "description": "Ruled row of drill modes with command flags; active is reverse video.",
+      "html": "<div class=\"ds-flags\"><button class=\"on\">Pick <code>-p</code></button><button>Reverse <code>-r</code></button><button>Input <code>-i</code></button><button>Debug <code>-d</code></button></div>",
+      "css": ".ds-flags{display:flex;border:1px solid #474d57}.ds-flags button{flex:1;min-height:46px;border:0;border-left:1px solid #474d57;background:none;color:#e7e8e4;font-weight:700;cursor:pointer}.ds-flags button:first-child{border-left:0}.ds-flags button code{font-size:.75rem;color:#858b95}.ds-flags button:hover{background:#171a1f}.ds-flags button.on{background:#e7e8e4;color:#0f1114}.ds-flags button:focus-visible{outline:2px solid #9aa9ff;outline-offset:2px}"
+    },
+    {
+      "name": "Answer Option",
+      "kind": "custom",
+      "refersTo": "choice-option",
+      "description": "Numbered monospaced answer row; chosen fills with an ink sweep, correct with green.",
+      "html": "<button class=\"ds-option\"><kbd>1</kbd><span>[n * 4 for n in range(3)]</span></button>",
+      "css": ".ds-option{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;width:100%;min-height:58px;padding:10px 16px;border:1px solid #474d57;border-radius:0;background:none;color:#e7e8e4;font-family:'Nanum Gothic Coding',monospace;cursor:pointer}.ds-option kbd{display:inline-grid;place-items:center;width:1.75rem;height:1.75rem;border:1px solid #474d57;font-size:.8125rem}.ds-option:hover{background:#171a1f}.ds-option:focus-visible{outline:2px solid #9aa9ff;outline-offset:2px}"
+    },
+    {
+      "name": "Answer Field",
+      "kind": "input",
+      "refersTo": "answer-field",
+      "description": "Shell prompt line for typed drills.",
+      "html": "<label class=\"ds-prompt\"><span>$</span><input placeholder=\"type the answer\"></label>",
+      "css": ".ds-prompt{display:flex;align-items:center;gap:12px;padding:0 16px;border:1px solid #474d57;background:#171a1f}.ds-prompt span{font-family:'Nanum Gothic Coding',monospace;font-weight:700;color:#9aa9ff}.ds-prompt input{flex:1;min-height:58px;border:0;background:transparent;color:#e7e8e4;font-family:'Nanum Gothic Coding',monospace;font-size:1.125rem}.ds-prompt input:focus{outline:none}.ds-prompt:focus-within{outline:2px solid #9aa9ff;outline-offset:2px}"
+    },
+    {
+      "name": "Status Bar",
+      "kind": "custom",
+      "refersTo": "button-status-primary",
+      "description": "less-style reverse-video status line with stats and the drill actions.",
+      "html": "<div class=\"ds-status\"><span>XP <b>120</b> · Streak <b>3</b> · Accuracy <b>80%</b></span><button>Hint</button><button class=\"go\">Check answer</button></div>",
+      "css": ".ds-status{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#e7e8e4;color:#0f1114}.ds-status span{flex:1;font-size:.75rem}.ds-status b{font-family:'Nanum Gothic Coding',monospace}.ds-status button{min-height:44px;padding:0 18px;border:1px solid rgba(15,17,20,.45);border-radius:0;background:none;color:inherit;font-weight:700;cursor:pointer}.ds-status button:hover{background:rgba(15,17,20,.1)}.ds-status button.go{background:#2336c9;border-color:#2336c9;color:#fff}.ds-status button:focus-visible{outline:2px solid #0f1114;outline-offset:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Answerable Manual Page",
+    "overview": "Every domain is a manual page, every track a numbered section, every drill mode a command flag. The interface borrows the Unix manual's grammar: a running header, bold section heads flush left with indented bodies, literals in a Korean coding face, and reverse video wherever attention or selection sits. Structure does the work; decoration does none.",
+    "keyCharacteristics": [
+      "Two grounds: terminal man (graphite, default) and printed manual (cool grey-white). Both are complete themes.",
+      "Reverse video marks selection, the active item, the Continue action, and the less-style status bar.",
+      "Square corners everywhere; 1px rules; no shadows.",
+      "Gothic A1 for prose and display; Nanum Gothic Coding for page names, marks, counts, code, answer options, and the typed prompt.",
+      "Keyboard-first drilling: 1-4 choose, Enter checks or advances, H shows the hint."
+    ],
+    "rules": [
+      { "name": "The Reverse Video Rule", "body": "Whatever is selected, active, or next is an ink block with paper text. Do not invent a second highlight style.", "section": "colors" },
+      { "name": "The Literal Rule", "body": "Ultramarine means \"this is a literal or has focus.\" It never decorates headings or backgrounds.", "section": "colors" },
+      { "name": "The Literal-Only Mono Rule", "body": "Monospace appears only for things a terminal would print: code, answers, counts, page names, flags. Prose is never set in mono.", "section": "typography" }
+    ],
+    "dos": [
+      "Do mark selection and the next action with reverse video (ink block, paper text).",
+      "Do keep every corner at 0px and every divider at 1px.",
+      "Do set code, answers, counts, and page names in Nanum Gothic Coding, prose in Gothic A1.",
+      "Do keep both themes complete; the dark (terminal) ground is the default.",
+      "Do keep the drill keyboard map (1-4, Enter, H) working when adding modes."
+    ],
+    "donts": [
+      "Don't bring back rounded floating cards, glow, or the token-wall backdrop.",
+      "Don't use shadows, gradients, or glass for depth.",
+      "Don't use ultramarine as a background field or heading color.",
+      "Don't put an eyebrow or kicker line above a heading; metadata lives in the tag gutter or after the content."
+    ]
+  }
+}
