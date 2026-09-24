@@ -103,7 +103,54 @@ export const uiStrings = {
   achAllTracksStartedDesc: { ko: "모든 트랙에서 최소 1개 클리어하세요.", en: "Land at least one clear in every track." },
   achStreakFiveDesc: { ko: "5연속 정답을 달성하세요.", en: "Reach a five-answer streak." },
   achHighAccuracyDesc: { ko: "10회 이상에서 85%+ 정확도를 유지하세요.", en: "Hold 85%+ accuracy across 10+ attempts." },
-  achFullMasteryDesc: { ko: "도메인의 모든 드릴을 완료하세요.", en: "Complete every drill in the domain." }
+  achFullMasteryDesc: { ko: "도메인의 모든 드릴을 완료하세요.", en: "Complete every drill in the domain." },
+
+  // manual shell (2026-09 redesign)
+  manualTitle: { ko: "MasteryDojo 매뉴얼", en: "MasteryDojo Manual" },
+  index: { ko: "목차", en: "Index" },
+  openIndex: { ko: "목차 열기", en: "Open index" },
+  closeIndex: { ko: "목차 닫기", en: "Close index" },
+  sectionDescription: { ko: "설명", en: "Description" },
+  sectionTracks: { ko: "트랙", en: "Tracks" },
+  sectionManuals: { ko: "매뉴얼", en: "Manuals" },
+  sectionSeeAlso: { ko: "참고", en: "See also" },
+  continueLabel: { ko: "이어하기", en: "Continue" },
+  startLabel: { ko: "시작하기", en: "Start" },
+  modeSuffix: { ko: "모드", en: "mode" },
+  drill: { ko: "드릴", en: "Drill" },
+  keyHints: { ko: "1–4 선택 · Enter 확인 · H 힌트", en: "1–4 choose · Enter check · H hint" },
+  keyHintsInput: { ko: "입력 후 Enter 확인 · H 힌트", en: "Type, then Enter to check · H hint" },
+  keyHintsSolved: { ko: "Enter 다음 드릴", en: "Enter next drill" },
+  emptyAnswer: {
+    ko: "먼저 답을 고르거나 입력하세요. 기록에는 남지 않았습니다.",
+    en: "Pick or type an answer first. Nothing was recorded."
+  },
+  feedbackCorrect: { ko: "정답", en: "Correct" },
+  feedbackMiss: { ko: "오답", en: "Not yet" },
+  feedbackEmpty: { ko: "빈 답", en: "Empty" },
+  sourceCode: { ko: "소스 코드 (GitHub)", en: "Source code (GitHub)" },
+  kanaCredit: { ko: "KanaDojo (영감 · 효과음 출처)", en: "KanaDojo (inspiration and click sounds)" },
+  emptyProgressTitle: { ko: "아직 기록이 없습니다", en: "No attempts yet" },
+  emptyProgressBody: {
+    ko: "첫 드릴을 풀면 XP, 정확도, 트랙별 진도가 여기에 쌓입니다.",
+    en: "Answer your first drill and XP, accuracy, and per-track progress collect here."
+  },
+  startTraining: { ko: "훈련 시작", en: "Start training" },
+  resetConfirm: {
+    ko: "이 도메인의 진행 기록을 모두 지울까요? 되돌릴 수 없습니다.",
+    en: "Clear all progress for this domain? This cannot be undone."
+  },
+  cancel: { ko: "취소", en: "Cancel" },
+  confirmReset: { ko: "모두 지우기", en: "Clear everything" },
+  drillsDone: { ko: "완료", en: "done" },
+  figureAlt: {
+    ko: "펼쳐진 기술 매뉴얼 위로 네 단계 계단이 이어지는 잉크 선화",
+    en: "Ink line drawing of an open technical manual with a four-step staircase rising from its pages"
+  },
+  emptyFigureAlt: {
+    ko: "빈 연습장과 연필이 놓인 잉크 선화",
+    en: "Ink line drawing of an empty practice notebook with a pencil"
+  }
 } as const satisfies Record<string, { ko: string; en: string }>;
 
 export function t(key: UiStringKey, lang: Language): string {
