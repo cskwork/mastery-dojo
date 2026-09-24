@@ -30,6 +30,11 @@ export function normalizeAnswer(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, " ").replace(/^['"]|['"]$/g, "");
 }
 
+// A blank submission is not an attempt: it must not cost XP, accuracy, or the streak.
+export function isBlankAnswer(value: string): boolean {
+  return normalizeAnswer(value) === "";
+}
+
 export function evaluateAnswer(drill: LearningDrill, value: string): boolean {
   const expected = [drill.answer, ...(drill.acceptedAnswers ?? [])];
   const normalized = normalizeAnswer(value);
